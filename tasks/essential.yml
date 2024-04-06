@@ -15,12 +15,13 @@
     line: "PasswordAuthentication no"
   register: sshd_config
 
-# - name: Enable passwordless sudo for "{{ username }}"
-#   lineinfile:
-#     dest: /etc/sudoers
-#     regexp: "^%wheel"
-#     line: "{{ username }} ALL=(ALL) NOPASSWD: ALL"
-#     validate: "usr/sbin/visudo -cf %s"
+- name: Enable passwordless sudo for "{{ username }}"
+  copy:
+    content: "{{ username }} ALL=(ALL) NOPASSWD: ALL"
+    dest: /private/etc/sudoers.d/custom
+    mode: 0440
+    validate: 'visudo -cf %s'
+  become: true
 
 - name: Restart SSH daemon
   service:
