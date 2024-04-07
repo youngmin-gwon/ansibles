@@ -1,7 +1,19 @@
-# - name: Update packages
-#   community.general.homebrew:
-#     update_homebrew: true
-#     upgrade_all: true
+- name: Install homebrew
+  include_role:
+    name: geerlingguy.mac.homebrew
+
+- name: Make sure homebrew bin is in path
+  ansible.builtin.lineinfile:
+    path: /etc/paths
+    state: present
+    line: '/opt/homebrew/bin'
+  become: true
+  become_user: root
+
+- name: Update packages
+  community.general.homebrew:
+    update_homebrew: true
+    upgrade_all: true
 
 # - name: Install essential packages
 #   community.general.homebrew:
@@ -14,14 +26,6 @@
     regexp: "^#PasswordAuthentication yes"
     line: "PasswordAuthentication no"
   register: sshd_config
-
-- name: Enable passwordless sudo for "{{ username }}"
-  copy:
-    content: "{{ username }} ALL=(ALL) NOPASSWD: ALL"
-    dest: /private/etc/sudoers.d/custom
-    mode: 0440
-    validate: 'visudo -cf %s'
-  become: true
 
 - name: Restart SSH daemon
   service:
