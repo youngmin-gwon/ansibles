@@ -1,0 +1,5 @@
+---
+- include_tasks: packages.yml
+- include_tasks: zsh.yml
+- include_tasks: languages.yml
+- include_tasks: vscode.yml

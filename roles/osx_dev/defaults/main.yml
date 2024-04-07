@@ -1,0 +1,25 @@
+---
+configure_sudoers: false
+sudoers_custom_config: |
+  %admin ALL=(ALL) NOPASSWD: ALL
+
+
+dotfiles_repo: https://github.com/geerlingguy/dotfiles.git
+dotfiles_repo_accept_hostkey: true
+dotfiles_repo_local_destination: ~/Development/GitHub/dotfiles
+dotfiles_files:
+  - .zshrc
+  - .gitignore
+  - .inputrc
+  - .osx
+  - .vimrc
+
+homebrew_cask_appdir: /Applications
+homebrew_cask_apps:
+  - docker
+  - firefox
+  - google-chrome
+  - transmit
+
+# See `geerlingguy.mas` role documentation for usage instructions.
+mas_installed_apps: []
