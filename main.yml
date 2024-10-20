@@ -1,0 +1,9 @@
+---
+- name: "Hello"
+  hosts: all
+  become: yes
+  roles:
+    # - role: unix
+    #   when: ansible_system == "Linux" or ansible_system == "Darwin"
+    - role: osx
+      when: ansible_os_family == "Darwin"

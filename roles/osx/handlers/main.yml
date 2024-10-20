@@ -1,0 +1,13 @@
+---
+- name: Restart Dock
+  ansible.builtin.command: killall Dock
+  changed_when: rc != 0
+
+- name: Restart Finder
+  ansible.builtin.command: killall Finder
+  changed_when: rc != 0
+
+- name: Reload shell
+  ansible.builtin.shell: zsh -c 'source ~/.zshrc'
+  ignore_errors: true
+  changed_when: rc != 0

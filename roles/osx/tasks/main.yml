@@ -1,0 +1,16 @@
+---
+- name: Configure Simulator settings
+  ansible.builtin.include_tasks: xcode.yml
+  when: ansible_os_family == "Darwin"
+
+- name: Configure system settings
+  ansible.builtin.include_tasks: system.yml
+  when: ansible_os_family == "Darwin"
+
+- name: Configure softwares
+  ansible.builtin.include_tasks: package.yml
+  when: ansible_os_family == "Darwin"
+
+- name: Configure dotfiles
+  ansible.builtin.include_tasks: dotfiles.yml
+  when: ansible_os_family == "Darwin"

@@ -1,0 +1,71 @@
+---
+osx_simulator_version: latest
+
+osx_xcode_path: "/Applications/Xcode.app"
+
+osx_login_hint_message: Enter your default login message
+
+osx_homebrew_packages:
+  - git
+  - git-lfs
+  - gnupg
+  - coreutils
+  - curl
+  - asdf
+  - awk
+  - bash-language-server
+  - bat
+  - entr
+  - ffmpeg
+  - fzf
+  - gitmoji
+  - helix
+  - lcov
+  - lf
+  - llvm
+  - marksman
+  - mas
+  - ncdu
+  - neofetch
+  - protobuf
+  - ripgrep
+  - shellcheck
+  - starship
+  - yabai
+  - skhd
+  - tldr
+  - tmux
+  - trash-cli
+  - tree
+  - lsd
+  - dockutil
+  - psutils
+  - fastlane
+
+osx_homebrew_cask_packages:
+  - alacritty
+  - android-studio
+  - cheatsheet
+  - espanso
+  - figma
+  - google-chrome
+  - karabiner-elements
+  - keka
+  - mactex-no-gui
+  - notion
+  - openinterminal
+  - raycast
+  - visual-studio-code
+  - xquartz
+  - intellij-idea-ce
+
+osx_homebrew_mas_packages:
+  - 497799835 # Xcode
+  - 409183694 # Keynote
+  - 409203825 # Pages
+  - 1584519802 # Vimlike
+  - 937984704 # Amphetamine
+  - 1592876082 # BetterPlayer
+  - 1538509686 # VisBug
+  - 869223134 # KakaoTalk
+  - 1437138382 # WhatFont

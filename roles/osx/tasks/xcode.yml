@@ -1,0 +1,56 @@
+---
+- name: Check if Xcode is installed
+  stat:
+    path: "{{ osx_xcode_path }}"
+  register: xcode_installed
+
+- name: Check if Xcode Command Line Tools are installed
+  shell: xcode-select --print-path
+  register: xcode_clt_check
+  changed_when: false
+  ignore_errors: true
+
+- name: Install Xcode Command Line Tools if not installed
+  command: xcode-select --install
+  when: xcode_clt_check.rc != 0
+
+- name: Install Xcode via the App Store (if Xcode is not installed)
+  shell: softwareupdate --install --all
+  when: not xcode_installed.stat.exists
+  register: xcode_install_output
+
+- name: Wait for Xcode installation to complete
+  pause:
+    minutes: 10
+  when: not xcode_installed.stat.exists
+
+- name: Get list of available simulators and extract the latest version
+  shell: |
+    xcrun simctl list runtimes | grep "iOS" | grep -o 'com.apple.CoreSimulator.SimRuntime.iOS-[0-9.]*' | sort -rV | head -n 1
+  register: latest_simulator
+  when: osx_simulator_version == "latest"
+  changed_when: false
+
+- name: Set the latest simulator version dynamically
+  set_fact:
+    simulator_version: "{{ latest_simulator.stdout | regex_replace('com.apple.CoreSimulator.SimRuntime.iOS-', '') }}"
+  when: osx_simulator_version == "latest"
+
+- name: Check if the desired simulator version is installed
+  shell: |
+    xcrun simctl list runtimes | grep -i "com.apple.CoreSimulator.SimRuntime.iOS-{{ simulator_version }}"
+  register: simulator_installed
+  changed_when: false
+  ignore_errors: true
+
+- name: Install the latest simulator if not present
+  command: >
+    xcrun simctl runtime install
+    com.apple.CoreSimulator.SimRuntime.iOS-{{ simulator_version }}
+  when: simulator_installed.rc != 0
+
+- name: Ensure the simulator is installed
+  shell: xcrun simctl list runtimes | grep -i "com.apple.CoreSimulator.SimRuntime.iOS-{{ simulator_version }}"
+  register: final_check
+  changed_when: false
+  failed_when: final_check.rc != 0
