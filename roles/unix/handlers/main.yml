@@ -1,0 +1,4 @@
+---
+- name: Reload shell environment
+  ansible.builtin.shell: zsh -c 'source ~/.zshrc'
+  ignore_errors: true

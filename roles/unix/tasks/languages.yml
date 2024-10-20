@@ -1,0 +1,52 @@
+---
+- name: Check if asdf is installed
+  ansible.builtin.command: asdf --version
+  register: asdf_check
+  changed_when: false
+  failed_when: asdf_check.rc != 0
+
+- name: Add asdf initialization to .zshrc if not present
+  ansible.builtin.lineinfile:
+    path: "{{ lookup('env', 'ZDOTDIR') | default(lookup('env', 'HOME')) + '/.zshrc' }}"
+    line: 'echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >> ${ZDOTDIR:-~}/.zshrc # asdf'
+    insertafter: EOF
+    state: present
+    regexp: '^echo -e "\\n\\. \\$\\(brew --prefix asdf\\)/libexec/asdf\\.sh" >> \\$\\{ZDOTDIR:-~\\}/\\.zshrc$'  # Prevent duplication
+  changed_when: asdf_check.rc == 0
+  when:
+    - ansible_facts['pkg_mgr'] == 'homebrew'  # Ensures Homebrew is the package manager
+    - asdf_check.rc == 0
+
+# - name: Add flutter to asdf
+#   command: asdf plugin-add flutter
+#   when: asdf_check.rc == 0
+#   register: plugin_added
+#   changed_when: plugin_added.rc == 0
+
+# - name: Install latest version of Flutter
+#   command: asdf install flutter {{ flutter_version }}
+#   when: asdf_check.rc == 0
+#   register: flutter_install
+#   changed_when: flutter_install.rc == 0
+
+# - name: Set global Flutter version
+#   command: asdf global flutter {{ flutter_version }}
+#   when: asdf_check.rc == 0
+#   changed_when: flutter_install.changed
+#   notify: Reload shell environment
+
+# - name: Check installed Flutter version
+#   command: asdf current flutter
+#   register: current_flutter
+#   changed_when: false
+
+# - name: Ensure Flutter is the latest version
+#   command: asdf install flutter {{ flutter_version }}
+#   when: current_flutter.stdout != flutter_version
+#   register: flutter_update
+#   changed_when: flutter_update.rc == 0
+
+# - name: Set global Flutter version after update
+#   command: asdf global flutter {{ flutter_version }}
+#   when: flutter_update.changed
+#   notify: Reload shell environment

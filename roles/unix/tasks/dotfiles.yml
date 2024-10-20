@@ -1,0 +1,49 @@
+---
+- name: Set files directory for unix role
+  ansible.builtin.set_fact:
+    current_files_directory: "{{ role_path }}/files"
+
+- name: Configure dotfiles
+  ansible.builtin.include_role:
+    name: dotfiles
+  vars:
+    base_path: role_path
+    file_directory: "{{ current_files_directory }}"
+
+- name: Set the $DOTFILES path for zsh
+  ansible.builtin.set_fact:
+    dotfiles_zsh_path: "{{ role_path }}/files/zsh"
+
+- name: Generate .zshrc from template
+  ansible.builtin.template:
+    src: "zshrc.j2"
+    dest: "{{ lookup('env', 'HOME') }}/.zshrc"
+
+- name: Check if Homebrew is installed
+  ansible.builtin.stat:
+    path: /opt/homebrew/bin/brew
+  register: homebrew_installed
+
+- name: Add Homebrew to PATH using lineinfile
+  ansible.builtin.lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.zshrc"
+    line: 'export PATH=/opt/homebrew/bin:$PATH  # brew'
+    insertafter: EOF
+    state: present
+  when:
+    - homebrew_installed.stat.exists
+
+- name: Check if GPG is installed
+  ansible.builtin.command:
+    cmd: gpg --version
+  register: gpg_installed
+  ignore_errors: true  # Continue even if GPG is not found
+
+- name: Add GPG line to .zshrc if GPG is installed
+  ansible.builtin.lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.zshrc"
+    line: 'export GPG_TTY=$(tty)  # GPG setup'
+    insertafter: EOF
+    state: present
+  when:
+    - gpg_installed.rc == 0  # Only run if GPG is installed

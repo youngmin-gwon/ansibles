@@ -1,0 +1,152 @@
+# Sets user-defined palette
+palette = "catppuccin_macchiato"
+
+format = """
+$os\
+$username\
+$hostname\
+$directory\
+$git_branch\
+$custom\
+$git_state\
+$git_status\
+$git_metrics\
+$dart\
+$rust\
+$golang\
+$python\
+$fill\
+$cmd_duration $jobs $time\
+$battery\
+$line_break\
+$character"""
+
+add_newline = true
+command_timeout = 1000
+
+[os]
+disabled = false
+
+[username]
+show_always = true
+format = '[$user]($style) '
+disabled = false
+
+[battery]
+full_symbol = '🔋 '
+charging_symbol = '⚡️ '
+discharging_symbol = '💀 '
+
+[fill]
+symbol = " "
+
+[git_branch]
+symbol = " "
+format = "[$symbol$branch]($style) "
+style = "bright-black"
+
+[jobs]
+symbol = ""
+style = "bold red"
+number_threshold = 1
+format = "[$symbol]($style)"
+
+[git_status]
+format = '([\[$all_status$ahead_behind\]]($style) )'
+style = "sapphire"
+
+[git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+style = "peach"
+
+[git_metrics]
+disabled = false
+
+[cmd_duration]
+format = "[$duration]($style)"
+style = "yellow"
+
+[memory_usage]
+symbol = " "
+
+[rust]
+format = '[$symbol($version)]($style)'
+
+[time]
+disabled = false
+style = "bold white"
+format = "[$time]($style)"
+
+[custom.stunnel]
+when = "ps aux | grep stunnel | grep -v grep"
+command = "ps -o etime= -p $(ps aux | grep stunnel | grep -v grep | awk '{print $2}')"
+style = "red"
+format = "[TUNNEL OPEN for $output]($style)"
+
+[dart]
+format = '[$symbol($version)]($style)'
+
+[golang]
+format = '[$symbol($version)]($style)'
+version_format = 'v${raw}'
+
+[docker_context]
+symbol = "🐳 "
+style = "bg:#06969A"
+format = '[[ $symbol $context ](bg:#06969A)]($style) $path'
+
+[custom.flavor]
+command = "echo $(cat .envrc.context)"
+when = "test -f .envrc.context"
+format = '[$symbol($output )]($style)'
+symbol = '☁️ '
+style = 'bold green'
+# require_repo = true
+
+[character]
+# Note the use of Catppuccin color 'maroon'
+success_symbol = "[[♥](green) ❯](maroon)"
+error_symbol = "[❯](red)"
+vimcmd_symbol = "[❮](green)"
+
+[directory]
+# Catppuccin 'lavender'
+style = "bold lavender"
+read_only = " "
+truncation_length = 4
+truncate_to_repo = false
+
+[directory.substitutions]
+"Documents" = "📄 "
+"Downloads" = "📥 "
+"Music" = "🎧 "
+"Pictures" = "📷 "
+
+# palette tables should be last in the config ⚓️
+[palettes.catppuccin_macchiato]
+rosewater = "#f4dbd6"
+flamingo = "#f0c6c6"
+pink = "#f5bde6"
+mauve = "#c6a0f6"
+red = "#ed8796"
+maroon = "#ee99a0"
+peach = "#f5a97f"
+yellow = "#eed49f"
+green = "#a6da95"
+teal = "#8bd5ca"
+sky = "#91d7e3"
+sapphire = "#7dc4e4"
+blue = "#8aadf4"
+lavender = "#b7bdf8"
+text = "#cad3f5"
+subtext1 = "#b8c0e0"
+subtext0 = "#a5adcb"
+overlay2 = "#939ab7"
+overlay1 = "#8087a2"
+overlay0 = "#6e738d"
+surface2 = "#5b6078"
+surface1 = "#494d64"
+surface0 = "#363a4f"
+base = "#24273a"
+mantle = "#1e2030"
+crust = "#181926"
