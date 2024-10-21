@@ -44,9 +44,8 @@ osx_homebrew_packages:
 
 osx_homebrew_cask_packages:
   - alacritty
-  - android-studio
+  - android-commandlinetools
   - cheatsheet
-  - espanso
   - figma
   - google-chrome
   - karabiner-elements
@@ -57,7 +56,6 @@ osx_homebrew_cask_packages:
   - raycast
   - visual-studio-code
   - xquartz
-  - intellij-idea-ce
 
 osx_homebrew_mas_packages:
   - 497799835 # Xcode
