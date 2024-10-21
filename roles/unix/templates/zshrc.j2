@@ -1,6 +1,10 @@
 # Declare $DOTFILES_ZSH path
 DOTFILES_ZSH="{{ dotfiles_zsh_path }}"
 
+# BEGIN CUSTOM CONFIG
+export DOCKER_DISPLAY=$(ifconfig en0 | grep inet\ | awk '{ print $2 ":0" }') # docker: x11
+# END CUSTOM CONFIG
+
 # load modules for zsh
 source $DOTFILES_ZSH/history.zsh
 source $DOTFILES_ZSH/git.zsh
@@ -10,6 +14,3 @@ source $DOTFILES_ZSH/functions.zsh
 source $DOTFILES_ZSH/aliases.zsh
 source /opt/homebrew/etc/profile.d/z.sh
 
-# software configs
-eval "$(starship init zsh)" # starship
-export DOCKER_DISPLAY=$(ifconfig en0 | grep inet\ | awk '{ print $2 ":0" }') # docker: x11
