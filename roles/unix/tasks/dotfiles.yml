@@ -18,32 +18,57 @@
   ansible.builtin.template:
     src: "zshrc.j2"
     dest: "{{ lookup('env', 'HOME') }}/.zshrc"
+    mode: '0664'
 
 - name: Check if Homebrew is installed
   ansible.builtin.stat:
     path: /opt/homebrew/bin/brew
   register: homebrew_installed
+  failed_when: false
+  changed_when: false
+  ignore_errors: true
 
 - name: Add Homebrew to PATH using lineinfile
   ansible.builtin.lineinfile:
     path: "{{ lookup('env', 'HOME') }}/.zshrc"
-    line: 'export PATH=/opt/homebrew/bin:$PATH  # brew'
-    insertafter: EOF
+    line: 'export PATH=/opt/homebrew/bin:$PATH # brew'
+    insertbefore: '^{{ custom_config_end_delimiter }}'
     state: present
   when:
     - homebrew_installed.stat.exists
+  notify: Reload shell
 
 - name: Check if GPG is installed
   ansible.builtin.command:
     cmd: gpg --version
   register: gpg_installed
-  ignore_errors: true  # Continue even if GPG is not found
+  failed_when: false
+  changed_when: false
+  ignore_errors: true
 
 - name: Add GPG line to .zshrc if GPG is installed
   ansible.builtin.lineinfile:
     path: "{{ lookup('env', 'HOME') }}/.zshrc"
-    line: 'export GPG_TTY=$(tty)  # GPG setup'
-    insertafter: EOF
+    line: 'export GPG_TTY=$(tty) # GPG setup'
+    insertbefore: '^{{ custom_config_end_delimiter }}'
     state: present
   when:
     - gpg_installed.rc == 0  # Only run if GPG is installed
+  notify: Reload shell
+
+- name: Check if Starship is installed
+  ansible.builtin.command:
+    cmd: starship --version
+  register: starship_check
+  failed_when: false
+  changed_when: false
+  ignore_errors: true
+
+- name: Add Starship init line to .zshrc if Starship is installed
+  ansible.builtin.lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.zshrc"
+    line: 'eval "$(starship init zsh)" # starship'
+    insertbefore: '^{{ custom_config_end_delimiter }}'
+    state: present
+  when: starship_check.rc == 0
+  notify: Reload shell

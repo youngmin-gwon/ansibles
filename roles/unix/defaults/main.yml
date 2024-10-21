@@ -1,2 +1,4 @@
 ---
 flutter_version: "latest"
+
+custom_config_end_delimiter: "# END CUSTOM CONFIG"
