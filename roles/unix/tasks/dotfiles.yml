@@ -72,3 +72,26 @@
     state: present
   when: starship_check.rc == 0
   notify: Reload shell
+
+- name: Check if Android Command Line Tools is installed
+  ansible.builtin.stat:
+    path: /opt/homebrew/share/android-commandlinetools
+  register: android_installed
+  failed_when: false
+  changed_when: false
+  ignore_errors: true
+
+- name: Add Android Command Line Tools to PATH
+  ansible.builtin.blockinfile:
+    path: "{{ lookup('env', 'HOME') }}/.zshrc"
+    block: |
+      export ANDROID_SDK_ROOT=/opt/homebrew/share/android-commandlinetools
+      export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
+      export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
+      export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
+    insertbefore: '^{{ custom_config_end_delimiter }}'
+    state: present
+    marker: "# {mark} Android SDK"
+  when:
+    - android_installed.stat.exists
+  notify: Reload shell
