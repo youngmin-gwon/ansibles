@@ -1,0 +1,7 @@
+- name: Change default shell to zsh
+  ansible.builtin.shell: chsh -s $(which zsh)
+  become: true
+  become_user: "{{ ansible_user_id }}"
+  register: shell_change
+  changed_when: false
+  failed_when: shell_change.rc != 0
