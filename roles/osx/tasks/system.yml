@@ -6,7 +6,6 @@
     type: bool
     value: false
     state: present
-  when: ansible_system == "Darwin"
   notify: Restart Dock
 
 - name: Set dock hidden
@@ -41,7 +40,6 @@
     type: bool
     value: false
     state: present
-  when: ansible_system == "Darwin"
 
 - name: Set menu bar hidden
   community.general.osx_defaults:
