@@ -2,16 +2,16 @@
 - name: "Set up macOS environment"
   hosts: all
   roles:
-    # - role: packages
-    #   become: false
-    # - role: shell
-    #   become: true
+    - role: shell
+      become: true
+    - role: packages
+      become: false
     - role: git
       become: false
-    # - role: osx
-    #   become: true
-    # - role: aerospace
-    #   become: false
-    #   when: ansible_system == "Darwin"
-    # - role: unix
-    #   when: ansible_system == "Linux" or ansible_system == "Darwin"
+    - role: osx
+      become: true
+    - role: aerospace
+      become: false
+      when: ansible_system == "Darwin"
+    - role: unix
+      when: ansible_system == "Linux" or ansible_system == "Darwin"
