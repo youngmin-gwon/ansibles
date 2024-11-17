@@ -2,8 +2,6 @@
 - name: "Set up macOS environment"
   hosts: all
   roles:
-    - role: shell
-      become: true
     - role: packages
       become: false
     - role: git
