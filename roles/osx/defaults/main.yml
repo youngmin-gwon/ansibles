@@ -1,6 +1,8 @@
 ---
-osx_simulator_version: latest
+simulator_version: latest
 
-osx_xcode_path: "/Applications/Xcode.app"
+xcode_path: "/Applications/Xcode.app"
 
-osx_login_hint_message: Enter your default login message
+login_hint_message: Enter your default login message
+
+screenshot_dir_path: "{{ lookup('env', 'HOME') }}/Screenshots"

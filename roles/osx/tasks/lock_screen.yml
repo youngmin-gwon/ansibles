@@ -1,0 +1,18 @@
+---
+- name: Set screensaver to start after 20 minutes of inactivity
+  community.general.osx_defaults:
+    domain: com.apple.screensaver
+    key: idleTime
+    value: 1200  # 20 mins (in seconds)
+    state: present
+  become: false
+
+- name: Set display sleep time when on battery to 30 minutes (1800 seconds)
+  ansible.builtin.command: pmset -b displaysleep 30
+  become: true
+  changed_when: false
+
+- name: Set display sleep time when on power adapter to 30 minutes (1800 seconds)
+  ansible.builtin.command: pmset -c displaysleep 30
+  become: true
+  changed_when: false

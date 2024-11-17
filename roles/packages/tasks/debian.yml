@@ -1,0 +1,65 @@
+---
+- name: Ensure APT is installed
+  stat:
+    path: /usr/bin/apt
+  register: apt_installed
+
+- name: Fail if APT is not installed
+  fail:
+    msg: "APT is not installed. This is required for package installation."
+  when: apt_installed.stat.exists == false
+
+- name: Add Helix editor PPA
+  ansible.builtin.apt_repository:
+    repo: ppa:maveonair/helix-editor
+    state: present
+  when: apt_installed.stat.exists
+
+- name: Add Google Chrome APT repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main"
+    state: present
+    filename: google-chrome
+  when: apt_installed.stat.exists
+
+- name: Add Google Chrome GPG key
+  ansible.builtin.apt_key:
+    url: https://dl.google.com/linux/linux_signing_key.pub
+    state: present
+  when: apt_installed.stat.exists
+
+- name: Add Visual Studio Code APT repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+    state: present
+    filename: vscode
+  when: apt_installed.stat.exists
+
+- name: Add Visual Studio Code GPG key
+  ansible.builtin.apt_key:
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+  when: apt_installed.stat.exists
+
+- name: Add Spotify repository signing key
+  apt_key:
+    url: https://download.spotify.com/debian/pubkey_7A3A762FAFD4A51F.gpg
+    state: present
+
+- name: Add Spotify repository
+  apt_repository:
+    repo: deb http://repository.spotify.com stable non-free
+    state: present
+    filename: spotify
+
+- name: Update the APT package cache
+  ansible.builtin.apt:
+    update_cache: yes
+  when: apt_installed.stat.exists
+
+- name: Install required packages
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    pkg: "{{ common_packages + debian_gui_packages }}"
+    state: present
+  when: apt_installed.stat.exists

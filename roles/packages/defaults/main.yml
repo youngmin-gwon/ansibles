@@ -1,0 +1,70 @@
+---
+common_packages:
+  - git
+  - git-lfs
+  - gnupg
+  - coreutils
+  - curl
+  - wget
+  - zsh
+  - bash-language-server
+  - bat
+  - entr
+  - ffmpeg
+  - fzf
+  - lcov
+  - lf
+  - llvm
+  - ncdu
+  - neofetch
+  - protobuf
+  - ripgrep
+  - shellcheck
+  - starship
+  - tldr
+  - tmux
+  - trash-cli
+  - tree
+  - lsd
+  - helix
+  - asdf
+
+mac_only_packages:
+  - awk
+  - gitmoji
+  - marksman
+  - mas
+
+mac_gui_packages:
+  - alacritty
+  - android-commandlinetools
+  - cheatsheet
+  - figma
+  - google-chrome
+  - karabiner-elements
+  - keka
+  - mactex-no-gui
+  - notion
+  - openinterminal
+  - raycast
+  - visual-studio-code
+  - xquartz
+  - spotify
+  - nikitabobko/tap/aerospace
+  - chatgpt
+
+mac_gui_app_store_packages:
+  - 497799835 # Xcode
+  - 899247664 # TestFlight
+  - 1450874784 # Transporter
+  - 409183694 # Keynote
+  - 409203825 # Pages
+  - 1584519802 # Vimlike
+  - 937984704 # Amphetamine
+  - 1592876082 # BetterPlayer
+  - 1437138382 # WhatFont
+
+debian_gui_packages:
+  - google-chrome-stable
+  - code
+  - spotify-client

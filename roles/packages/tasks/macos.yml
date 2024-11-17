@@ -1,0 +1,71 @@
+---
+- name: Ensure Homebrew is installed
+  ansible.builtin.stat:
+    path: /usr/local/bin/brew
+  register: homebrew_check
+
+- name: Install Homebrew if the package manager is not installed
+  ansible.builtin.shell: >
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  become: true
+  when:
+    - homebrew_check.stat.exists
+  changed_when: false
+
+- name: Update homebrew
+  community.general.homebrew:
+    update_homebrew: false
+  when:
+    - ansible_system == "Darwin"
+    - not homebrew_check.stat.exists
+  become: false
+
+- name: Install homebrew packages
+  community.general.homebrew:
+    state: present
+    name: "{{ common_packages + mac_only_packages }}"
+  become: false
+
+- name: Install homebrew cask packages
+  community.general.homebrew_cask:
+    state: present
+    name: "{{ mac_gui_packages }}"
+  become: false
+
+- name: Install homebrew mas packages
+  community.general.mas:
+    state: present
+    id: "{{ mac_gui_app_store_packages }}"
+  become: false
+
+
+# - name: Add Google Calendar as a web app to Dock
+#   ansible.builtin.command: >
+#     osascript -e '
+#     tell application "Safari"
+#         activate
+#         make new document
+#         set URL of document 1 to "https://calendar.google.com/"
+#         delay 3 -- Wait for the page to load
+#         tell application "System Events"
+#             tell process "Safari"
+#                 set fileMenu to menu "File" of menu bar 1
+#                 set addToDockItem to menu item 1 of fileMenu whose name starts with "Add to Dock"
+#                 click addToDockItem
+#                 delay 3 -- Wait for the dialog to appear
+#                 -- Change the name
+#                 keystroke tab -- Move to the name field
+#                 delay 1 -- Short delay to ensure the field is active
+#                 keystroke "a" using {command down} -- Select all text in the name field
+#                 keystroke "Google Calendar" -- Type the new name
+#                 delay 1 -- Short delay to ensure the field is active
+#                 -- Click the Add button
+#                 click button "Add" of sheet 1 of window 1
+#             end tell
+#         end tell
+#         -- Optionally close the Safari window
+#         close document 1
+#     end tell'
+#   when: ansible_os_family == "Darwin" and ansible_distribution_version is version('14.0', '>=')
+#   become: false
+

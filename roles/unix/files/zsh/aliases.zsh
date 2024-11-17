@@ -21,7 +21,6 @@ alias gbf='git branch | head -1 | xargs' # top branch
 alias gl=pretty_git_log
 alias gla=pretty_git_log_all
 alias git-current-branch="git branch | grep \* | cut -d ' ' -f2"
-alias gec='git status | grep "both modified:" | cut -d ":" -f 2 | trim | xargs hx -'
 alias gcan='gc --amend --no-edit'
 
 alias gp="git push -u 2>&1 | tee >(cat) | grep \"pull/new\" | awk '{print \$2}' | xargs open"

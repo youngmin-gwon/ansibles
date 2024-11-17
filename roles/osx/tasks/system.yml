@@ -1,79 +1,22 @@
 ---
-- name: Disable 'Automatically rearrange Spaces based on most recent use'
-  community.general.osx_defaults:
-    domain: com.apple.dock
-    key: mru-spaces
-    type: bool
-    value: false
-    state: present
-  notify: Restart Dock
-
-- name: Set dock hidden
-  community.general.osx_defaults:
-    domain: com.apple.dock
-    key: autohide
-    type: bool
-    value: true
-    state: present
-  notify: Restart Dock
-
-- name: Disable automatic spelling correction
-  community.general.osx_defaults:
-    domain: NSGlobalDomain
-    key: NSAutomaticSpellingCorrectionEnabled
-    type: bool
-    value: false
-    state: present
-
-- name: Disable smart quotes
-  community.general.osx_defaults:
-    domain: NSGlobalDomain
-    key: NSAutomaticQuoteSubstitutionEnabled
-    type: bool
-    value: false
-    state: present
-
-- name: Disable smart dashes
-  community.general.osx_defaults:
-    domain: NSGlobalDomain
-    key: NSAutomaticDashSubstitutionEnabled
-    type: bool
-    value: false
-    state: present
-
-- name: Set menu bar hidden
-  community.general.osx_defaults:
-    domain: NSGlobalDomain
-    key: _HIHideMenuBar
-    type: bool
-    value: true
-    state: present
-
-- name: Set dark mode
-  community.general.osx_defaults:
-    domain: NSGlobalDomain
-    key: AppleInterfaceStyle
-    type: string
-    value: Dark
-    state: present
-
-- name: Set preferred languages to English and Korean
-  community.general.osx_defaults:
-    domain: NSGlobalDomain
-    key: AppleLanguages
-    type: array
-    value:
-      - en-US
-      - ko-KR
-    state: present
-
-# REF: this always returns "changed" even though nothing changed
-- name: Set a message when the screen is locked
-  community.general.osx_defaults:
-    domain: /Library/Preferences/com.apple.loginwindow
-    key: LoginwindowText
-    type: string
-    value: "{{ osx_login_hint_message }}"
-    state: present
+- name: Disable the sound effects on boot
+  ansible.builtin.shell: nvram SystemAudioVolume=" "
   become: true
   changed_when: false
+
+- name: Enable HiDPI display modes (requires restart)
+  community.general.osx_defaults:
+    domain: /Library/Preferences/com.apple.windowserver
+    key: DisplayResolutionEnabled
+    type: bool
+    value: true
+    state: present
+  become: true
+
+- name: Disable the "Are you sure you want to open this application?"" dialog
+  community.general.osx_defaults:
+    domain: com.apple.LaunchServices
+    key: LSQuarantine
+    type: bool
+    value: false
+  become: false

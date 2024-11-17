@@ -38,7 +38,7 @@
     loop_var: content
 
 - name: Create symlinks for each entry in links.prop
-  file:
+  ansible.builtin.file:
     src: "{{ item.split('=')[0] | regex_replace('\\$DOTFILES', file_directory) }}"
     dest: "{{ item.split('=')[1] | regex_replace('\\$HOME', lookup('env', 'HOME')) }}"
     state: link

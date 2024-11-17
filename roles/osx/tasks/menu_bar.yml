@@ -1,0 +1,31 @@
+---
+- name: Show battery percentage
+  community.general.osx_defaults:
+    domain: com.apple.menuextra.battery
+    key: ShowPercent
+    type: bool
+    value: true
+    state: present
+  become: false
+
+- name: Show volume in menu bar
+  community.general.osx_defaults:
+    domain: com.apple.systemuiserver
+    key: menuExtras
+    type: array
+    value:
+      - "/System/Library/CoreServices/Menu Extras/Clock.menu"
+      - "/System/Library/CoreServices/Menu Extras/Battery.menu"
+      - "/System/Library/CoreServices/Menu Extras/AirPort.menu"
+      - "/System/Library/CoreServices/Menu Extras/Volume.menu"
+    state: present
+  become: false
+
+- name: Show volume indicator
+  community.general.osx_defaults:
+    domain: com.apple.systemuiserver
+    key: "NSStatusItem Visible com.apple.menuextra.volume"
+    type: bool
+    value: true
+    state: present
+  become: false

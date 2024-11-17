@@ -1,0 +1,132 @@
+---
+- name: Close any opened System Preferences panes
+  ansible.builtin.shell: osascript -e 'tell application "System Preferences" to quit'
+  changed_when: false
+
+- name: Set UI preferences
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    # Dark mode
+    - { key: "AppleInterfaceStyle", type: "string", value: "Dark" }
+    # Accent color
+    - { key: "AppleAccentColor", type: "string", value: "-1" }
+    # Highlight color
+    - { key: "AppleHighlightColor", type: "string", value: "0.847059 0.847059 0.862745 Graphite" }
+    # Menu bar
+    - { key: "_HIHideMenuBar", type: "bool", value: "false" }
+  become: false
+  tags: osx, ui
+
+- name: Set clock preferences
+  community.general.osx_defaults:
+    domain: com.apple.menuextra.clock
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    # Digital
+    - { key: "IsAnalog", type: "bool", value: "false" }
+    # Date format
+    - { key: "DateFormat", type: "string", value: "EEE MMM d h:mm a" }
+  become: false
+  tags: osx, clock
+
+- name: Set metrics Unit
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    # Length: Centimeter
+    - { key: "AppleMeasurementUnits", type: "string", value: "Centimeters" }
+    # Temperature: Celsius
+    - { key: "AppleTemperatureUnit", type: "string", value: "Celsius" }
+    # Metrics
+    - { key: "AppleMetricUnits", type: "bool", value: "true" }
+  become: false
+  tags: osx, metrics
+
+- name: Set language preferences
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    # Enabled languages
+    - { key: "AppleLanguages", type: "array", value: ["en", "ko"] }
+    # Locale
+    - { key: "AppleLocale", type: "string", value: "ko_KR@currency=KRW" }
+  become: false
+  tags: osx, language
+
+- name: Set text input preferences
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    # Disable spelling correction
+    - { key: "NSAutomaticSpellingCorrectionEnabled", type: "bool", value: "false" }
+    # Disable smart quote
+    - { key: "NSAutomaticQuoteSubstitutionEnabled", type: "bool", value: "false" }
+    # Disable smart dash
+    - { key: "NSAutomaticDashSubstitutionEnabled", type: "bool", value: "false" }
+    # Disable auto capitalization
+    - { key: "NSAutomaticCapitalizationEnabled", type: "bool", value: "false" }
+    # Enable full keyboard access for all controls (e.g. enable Tab in modal dialogs)
+    - { key: "AppleKeyboardUIMode", type: "int", value: "3" }
+    # Disable press-and-hold for keys in favor of key repeat
+    - { key: "ApplePressAndHoldEnabled", type: "bool", value: "false" }
+    # Increase key repeat rate 1
+    - { key: "KeyRepeat", type: "int", value: "2" }
+    # Increase key repeat rate 2
+    - { key: "InitialKeyRepeat", type: "int", value: "10" }
+  become: false
+  tags: osx, input
+
+- name: Set the timezone to Asia/Seoul
+  ansible.builtin.command:
+    cmd: systemsetup -settimezone "Asia/Seoul"
+  become: true
+  changed_when: false
+
+- name: Enable subpixel font rendering on non-Apple LCDs
+  # Reference: https://github.com/kevinSuttle/macOS-Defaults/issues/17#issuecomment-266633501
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: AppleFontSmoothing
+    type: int
+    value: 1
+    state: present
+  become: false
+
+- name: Enable font smoothing
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: CGFontRenderingFontSmoothingDisabled
+    type: bool
+    value: false
+    state: present
+  become: false
+
+- name: Set a message when the screen is locked
+  community.general.osx_defaults:
+    domain: /Library/Preferences/com.apple.loginwindow
+    key: LoginwindowText
+    type: string
+    value: "{{ login_hint_message }}"
+    state: present
+  become: true
+  changed_when: false

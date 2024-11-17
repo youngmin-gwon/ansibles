@@ -1,13 +1,25 @@
 ---
-- name: Restart Dock
+- name: Kill Dock
   ansible.builtin.command: killall Dock
-  changed_when: rc != 0
+  tags: osx
 
-- name: Restart Finder
+- name: Kill Finder
   ansible.builtin.command: killall Finder
+  tags: osx
+
+- name: Kill Transmission
+  ansible.builtin.command: killall Transmission
   changed_when: rc != 0
+  tags: osx
+
+- name: Kill Safari
+  ansible.builtin.command: killall Safari
+  changed_when: rc != 0
+  ignore_errors: true
+  tags: osx
 
 - name: Reload shell
   ansible.builtin.shell: zsh -c 'source ~/.zshrc'
   ignore_errors: true
   changed_when: rc != 0
+  tags: osx
