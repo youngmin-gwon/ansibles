@@ -1,0 +1,162 @@
+---
+
+- name: Ensure .config/git directory exists
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/.gitconfig"
+    state: touch
+    mode: "0644"
+  changed_when: false
+
+- name: Set init.defaultBranch
+  community.general.git_config:
+    name: init.defaultBranch
+    scope: global
+    value: main
+
+- name: Link gitignore
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/gitignore"
+    dest: "{{ lookup('env', 'HOME') }}/.config/git/gitignore"
+    state: link
+    force: yes
+    follow: false
+    mode: 0644
+
+- name: Set global .gitignore
+  ansible.builtin.git_config:
+    name: core.excludesfile
+    value: "{{ lookup('env', 'HOME') }}/.config/git/gitignore"
+    scope: global
+
+- name: Set editor
+  ansible.builtin.git_config:
+    name: core.editor
+    value: "hx"
+    scope: global
+
+- name: Set precomposeunicode
+  ansible.builtin.git_config:
+    name: core.precomposeunicode
+    value: true
+    scope: global
+  when: ansible_os_family == "Darwin"
+
+- name: Set diff.colorMoved
+  community.general.git_config:
+    name: diff.colorMoved
+    scope: global
+    value: zebra
+
+- name: Set fetch.prune
+  community.general.git_config:
+    name: fetch.prune
+    scope: global
+    value: true
+
+- name: Set pull.rebase
+  community.general.git_config:
+    name: pull.rebase
+    scope: global
+    value: true
+
+- name: Set pull.ff
+  community.general.git_config:
+    name: pull.ff
+    scope: global
+    value: "only"
+
+- name: Set rebase.autoStash
+  community.general.git_config:
+    name: rebase.autoStash
+    scope: global
+    value: true
+
+- name: Set up Git aliases
+  ansible.builtin.git_config:
+    name: "alias.{{ item.name }}"
+    value: "{{ item.value }}"
+    scope: global
+  loop:
+    - { name: a, value: add }
+    - { name: b, value: branch }
+    - { name: ba, value: branch --all }
+    - { name: bd, value: branch -D }
+    - { name: c, value: commit }
+    - { name: ca, value: commit -a }
+    - { name: cm, value: commit -m }
+    - { name: cam, value: commit -am }
+    - { name: d, value: diff -w }
+    - { name: dst, value: diff -w --staged }
+    - { name: dc, value: diff -w --cached }
+    - { name: st, value: status }
+    - { name: rba, value: rebase --abort }
+    - { name: rbc, value: rebase --continue }
+
+- name: Ensure .config/git directory exists
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/.config/git"
+    state: directory
+    mode: 0755
+
+- name: Link global.commit.template
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/commit.template"
+    dest: "{{ lookup('env', 'HOME') }}/.config/git/commit_template"
+    state: link
+    force: yes
+    follow: false
+    mode: 0644
+
+- name: Set commit.template
+  community.general.git_config:
+    name: commit.template
+    scope: global
+    value: "{{ lookup('env', 'HOME') }}/.config/git/commit_template"
+
+- name: Set user.name
+  community.general.git_config:
+    name: user.name
+    scope: global
+    value: "{{ github_name }}"
+
+- name: Set user.email
+  community.general.git_config:
+    name: user.email
+    scope: global
+    value: "{{ github_email }}"
+
+# - name: Set user.signingkey
+#   community.general.git_config:
+#     name: user.signingkey
+#     scope: global
+#     value: {{ lookup('env', 'HOME') }}/.ssh/id_ed25519.pub
+
+# - name: Set gpg.format
+#   community.general.git_config:
+#     name: gpg.format
+#     scope: global
+#     value: ssh
+
+- name: Set commit.gpgsign
+  community.general.git_config:
+    name: commit.gpgsign
+    scope: global
+    value: true
+
+- name: Set tag.gpgsign
+  community.general.git_config:
+    name: tag.gpgsign
+    scope: global
+    value: true
+
+- name: Set gpg.program
+  community.general.git_config:
+    name: gpg.program
+    scope: global
+    value: "gpg"
+
+- name: Set user.signingkey
+  community.general.git_config:
+    name: user.signingkey
+    scope: global
+    value: "{{ github_signingkey }}"

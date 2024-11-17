@@ -1,7 +1,0 @@
-username: youngmin
-packages:
-  - git
-  - neofetch
-
-
-shell: /usr/bin/fish

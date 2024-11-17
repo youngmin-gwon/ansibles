@@ -1,0 +1,7 @@
+*.DS_Store
+*.LSOverride
+.envrc
+.direnv
+.bundle
+node_modules
+Thumbs.db
