@@ -23,3 +23,14 @@
     path: "{{ github_ssh_key_path }}"
     mode: '0600'
   when: ssh_key_file.stat.exists
+
+- name: Configure SSH for GitHub
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env.HOME }}/.ssh/config"
+    create: yes
+    mode: '0600'
+    block: |
+      Host github.com
+        AddKeysToAgent yes
+        IdentityFile ~/.ssh/github
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - GitHub"
