@@ -28,6 +28,7 @@ common_packages:
   - lsd
   - helix
   - asdf
+  - podman
 
 mac_only_packages:
   - awk
