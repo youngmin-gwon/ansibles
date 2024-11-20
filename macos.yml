@@ -8,8 +8,7 @@
       become: false
     - role: osx
       become: true
-    - role: aerospace
-      become: false
       when: ansible_system == "Darwin"
     - role: unix
       when: ansible_system == "Linux" or ansible_system == "Darwin"
+      become: false
