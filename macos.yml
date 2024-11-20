@@ -12,3 +12,6 @@
     - role: unix
       when: ansible_system == "Linux" or ansible_system == "Darwin"
       become: false
+    - role: languages
+      when: ansible_system == "Linux" or ansible_system == "Darwin"
+      become: false

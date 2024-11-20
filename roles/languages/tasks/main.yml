@@ -1,0 +1,13 @@
+---
+- name: Configure language manager on macOS
+  ansible.builtin.include_tasks: macos.yml
+  when: ansible_system == "Darwin"
+
+- name: Configure direnv
+  ansible.builtin.include_tasks: direnv.yml
+
+- name: Configure flutter
+  ansible.builtin.include_tasks: flutter.yml
+
+- name: Configure rust
+  ansible.builtin.include_tasks: rust.yml

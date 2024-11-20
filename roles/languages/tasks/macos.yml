@@ -1,0 +1,17 @@
+---
+- name: Check if asdf is installed
+  ansible.builtin.command: asdf --version
+  register: asdf_check
+  changed_when: false
+  failed_when: asdf_check.rc != 0
+
+- name: Add asdf initialization to .zshrc if not present
+  ansible.builtin.lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.zshrc"
+    line: ". /opt/homebrew/opt/asdf/libexec/asdf.sh"
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+    state: present
+  changed_when: asdf_check.rc == 0
+  when:
+    - ansible_facts['pkg_mgr'] == 'homebrew' # Ensures Homebrew is the package manager
+    - asdf_check.rc == 0
