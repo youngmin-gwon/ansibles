@@ -1,29 +1,29 @@
 ---
 - name: Set up rust to install
-  command: asdf plugin-add rust https://github.com/asdf-community/asdf-rust.git
+  ansible.builtin.command: asdf plugin-add rust https://github.com/asdf-community/asdf-rust.git
   when: asdf_check.rc == 0
   register: plugin_added
   changed_when: plugin_added.rc == 0
 
 - name: Install latest version of rust
-  command: asdf install rust {{ latest_version }}
+  ansible.builtin.command: asdf install rust {{ latest_version }}
   when: asdf_check.rc == 0
   register: rust_install
   changed_when: rust_install.rc == 0
 
 - name: Set global rust version
-  command: asdf global rust {{ latest_version }}
+  ansible.builtin.command: asdf global rust {{ latest_version }}
   when: asdf_check.rc == 0
   changed_when: rust_install.changed
   notify: Reload shell
 
 - name: Check installed rust version
-  command: asdf current rust
+  ansible.builtin.command: asdf current rust
   register: current_rust
   changed_when: false
 
 - name: Ensure rust is the latest version
-  command: asdf install rust {{ latest_version }}
+  ansible.builtin.command: asdf install rust {{ latest_version }}
   when: current_rust.stdout != latest_version
   register: flutter_update
   changed_when: flutter_update.rc == 0
