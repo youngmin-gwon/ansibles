@@ -3,7 +3,7 @@
   community.general.osx_defaults:
     domain: com.apple.screensaver
     key: idleTime
-    value: 1200  # 20 mins (in seconds)
+    value: 1200 # 20 mins (in seconds)
     state: present
   become: false
 

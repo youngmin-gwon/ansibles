@@ -37,8 +37,6 @@
     state: present
     id: "{{ mac_gui_app_store_packages }}"
   become: false
-
-
 # - name: Add Google Calendar as a web app to Dock
 #   ansible.builtin.command: >
 #     osascript -e '

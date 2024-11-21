@@ -18,7 +18,7 @@
   ansible.builtin.template:
     src: "zshrc.j2"
     dest: "{{ lookup('env', 'HOME') }}/.zshrc"
-    mode: '0664'
+    mode: "0664"
 
 - name: Check if Homebrew is installed
   ansible.builtin.stat:
@@ -31,8 +31,8 @@
 - name: Add Homebrew to PATH using lineinfile
   ansible.builtin.lineinfile:
     path: "{{ lookup('env', 'HOME') }}/.zshrc"
-    line: 'export PATH=/opt/homebrew/bin:$PATH # brew'
-    insertbefore: '^{{ custom_config_end_delimiter }}'
+    line: "export PATH=/opt/homebrew/bin:$PATH # brew"
+    insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
   when:
     - homebrew_installed.stat.exists
@@ -49,11 +49,11 @@
 - name: Add GPG line to .zshrc if GPG is installed
   ansible.builtin.lineinfile:
     path: "{{ lookup('env', 'HOME') }}/.zshrc"
-    line: 'export GPG_TTY=$(tty) # GPG setup'
-    insertbefore: '^{{ custom_config_end_delimiter }}'
+    line: "export GPG_TTY=$(tty) # GPG setup"
+    insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
   when:
-    - gpg_installed.rc == 0  # Only run if GPG is installed
+    - gpg_installed.rc == 0 # Only run if GPG is installed
   notify: Reload shell
 
 - name: Check if Starship is installed
@@ -68,7 +68,7 @@
   ansible.builtin.lineinfile:
     path: "{{ lookup('env', 'HOME') }}/.zshrc"
     line: 'eval "$(starship init zsh)" # starship'
-    insertbefore: '^{{ custom_config_end_delimiter }}'
+    insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
   when: starship_check.rc == 0
   notify: Reload shell
@@ -89,7 +89,7 @@
       export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
       export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
       export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
-    insertbefore: '^{{ custom_config_end_delimiter }}'
+    insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
     marker: "# {mark} Android SDK"
   when:

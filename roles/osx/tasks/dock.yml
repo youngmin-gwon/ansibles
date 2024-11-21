@@ -8,33 +8,33 @@
     state: present
   with_items:
     # Enable highlight hover effect for the grid view of a stack (Dock)
-    - {key: "mouse-over-hilite-stack", type: "bool", value: "true"}
+    - { key: "mouse-over-hilite-stack", type: "bool", value: "true" }
     # Set the icon size (px) of Dock items
-    - {key: "tilesize", type: "float", value: "50"}
+    - { key: "tilesize", type: "float", value: "50" }
     # Set the icon maximum size (px) of Dock items
-    - {key: "largesize", type: "float", value: "60"}
+    - { key: "largesize", type: "float", value: "60" }
     # Set magnification for Dock items
-    - {key: "magnification", type: "int", value: "1"}
+    - { key: "magnification", type: "int", value: "1" }
     # Show indicator lights for open applications in the Dock
-    - {key: "show-process-indicators", type: "bool", value: "true"}
+    - { key: "show-process-indicators", type: "bool", value: "true" }
     # Minimize windows into their application's icon
-    - {key: "minimize-to-application", type: "bool", value: "true"}
+    - { key: "minimize-to-application", type: "bool", value: "true" }
     # Change minimize/maximize window effect
-    - {key: "mineffect", type: "string", value: "scale"}
+    - { key: "mineffect", type: "string", value: "scale" }
     # Speed up Mission Control animations
-    - {key: "expose-animation-duration", type: "float", value: "0.1"}
+    - { key: "expose-animation-duration", type: "float", value: "0.1" }
     # Enable group windows by application
-    - {key: "expose-group-apps", type: "bool", value: "true"}
+    - { key: "expose-group-apps", type: "bool", value: "true" }
     # Don’t show Dashboard as a Space
-    - {key: "dashboard-in-overlay", type: "bool", value: "false"}
+    - { key: "dashboard-in-overlay", type: "bool", value: "false" }
     # Don't show recent applications in Dock
-    - {key: "show-recents", type: "bool", value: "false"}
+    - { key: "show-recents", type: "bool", value: "false" }
     # Disable 'Automatically rearrange Spaces based on most recent use'
-    - {key: "mru-spaces", type: "bool", value: "false"}
+    - { key: "mru-spaces", type: "bool", value: "false" }
     # Don't animate opening applications from the Dock
-    - {key: "launchanim", type: "bool", value: "false"}
+    - { key: "launchanim", type: "bool", value: "false" }
     # Enable 'Automatically hide and show the Dock'
-    - {key: "autohide", type: "bool", value: "true"}
+    - { key: "autohide", type: "bool", value: "true" }
   become: false
   notify: Kill Dock
   tags: osx, dock

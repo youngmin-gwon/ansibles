@@ -8,27 +8,27 @@
   ansible.builtin.file:
     path: "{{ github_ssh_key_path | dirname }}"
     state: directory
-    mode: '0700'
+    mode: "0700"
   when: not ssh_key_file.stat.exists
 
 - name: Add SSH private key if absent
   ansible.builtin.copy:
     content: "{{ github_ssh_private_key }}"
     dest: "{{ github_ssh_key_path }}"
-    mode: '0600'
+    mode: "0600"
   when: not ssh_key_file.stat.exists
 
 - name: Verify SSH private key permissions
   ansible.builtin.file:
     path: "{{ github_ssh_key_path }}"
-    mode: '0600'
+    mode: "0600"
   when: ssh_key_file.stat.exists
 
 - name: Configure SSH for GitHub
   ansible.builtin.blockinfile:
     path: "{{ ansible_env.HOME }}/.ssh/config"
     create: yes
-    mode: '0600'
+    mode: "0600"
     block: |
       Host github.com
         AddKeysToAgent yes

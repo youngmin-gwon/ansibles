@@ -47,7 +47,7 @@
     state: present
 
 - name: Add Spotify repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: deb http://repository.spotify.com stable non-free
     state: present
     filename: spotify
