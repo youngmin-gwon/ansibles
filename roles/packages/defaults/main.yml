@@ -53,6 +53,7 @@ mac_gui_packages:
   - spotify
   - nikitabobko/tap/aerospace
   - chatgpt
+  - linear-linear
 
 mac_gui_app_store_packages:
   - 497799835 # Xcode
