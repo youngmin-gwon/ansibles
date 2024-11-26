@@ -1,4 +1,0 @@
----
-- name: Configure dotfiles
-  ansible.builtin.include_tasks: dotfiles.yml
-  when: ansible_system == "Linux" or ansible_system == "Darwin"

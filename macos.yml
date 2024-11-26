@@ -4,14 +4,15 @@
   roles:
     # - role: packages
     #   become: false
-    # - role: git
-    #   become: false
+    - role: shell
+      become: true
+    - role: dotfiles
+      become: false
+    - role: git
+      become: false
     - role: osx
       become: true
       when: ansible_system == "Darwin"
-    - role: unix
-      when: ansible_system == "Linux" or ansible_system == "Darwin"
-      become: false
     - role: languages
       when: ansible_system == "Linux" or ansible_system == "Darwin"
       become: false

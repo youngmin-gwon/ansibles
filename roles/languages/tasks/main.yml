@@ -4,10 +4,10 @@
   when: ansible_system == "Darwin"
 
 - name: Configure direnv
-  ansible.builtin.include_tasks: direnv.yml
+  ansible.builtin.include_tasks: languages/direnv.yml
 
 - name: Configure flutter
-  ansible.builtin.include_tasks: flutter.yml
+  ansible.builtin.include_tasks: languages/flutter.yml
 
 - name: Configure rust
-  ansible.builtin.include_tasks: rust.yml
+  ansible.builtin.include_tasks: languages/rust.yml

@@ -1,48 +1,99 @@
 ---
-- name: Find all subdirectories inside the root directory
-  ansible.builtin.find:
-    paths: "{{ file_directory }}"
-    recurse: no
-    file_type: directory
-  register: subdirectories
+- name: Set files directory for unix role
+  ansible.builtin.set_fact:
+    file_directories:
+      - "{{ role_path }}/files/unix"
+      - "{{ role_path }}/files/macos"
 
-- name: Check if links.prop exists in the subdirectories
+- name: Configure dotfiles
+  ansible.builtin.include_tasks:
+    file: symlink.yml
+  # vars:
+  #   base_path: role_path
+  #   file_directories: "{{ file_directories }}"
+
+- name: Set the $DOTFILES path in zsh
+  ansible.builtin.set_fact:
+    dotfiles_zsh_path: "{{ role_path }}/files/unix/zsh"
+
+- name: Generate .zshrc from template
+  ansible.builtin.template:
+    src: "zshrc.j2"
+    dest: "{{ lookup('env', 'HOME') }}/.zshrc"
+    mode: "0664"
+
+- name: Check if Homebrew is installed
   ansible.builtin.stat:
-    path: "{{ item.path }}/links.prop"
-  register: stat_results
-  with_items: "{{ subdirectories.files }}"
-
-
-- name: Create list of directories containing links.prop with full file path
-  ansible.builtin.set_fact:
-    directories_with_links_prop: "{{ stat_results.results | selectattr('stat.exists') | map(attribute='item.path') | map('regex_replace', '$', '/links.prop') | list }}"
-
-- name: Read the links.prop file if it exists
-  ansible.builtin.command: cat "{{ item }}"
-  register: links_content
+    path: /opt/homebrew/bin/brew
+  register: homebrew_installed
+  failed_when: false
   changed_when: false
-  when: (directories_with_links_prop | default([])) | length > 0
-  with_items: "{{ directories_with_links_prop }}"
+  ignore_errors: true
 
-- name: Initialize an empty list to hold all links
-  ansible.builtin.set_fact:
-    links_lines: []
-  when: (directories_with_links_prop | default([])) | length > 0
+- name: Add Homebrew to PATH using lineinfile
+  ansible.builtin.lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.zshrc"
+    line: "export PATH=/opt/homebrew/bin:$PATH # brew"
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+    state: present
+  when:
+    - homebrew_installed.stat.exists
+  notify: Reload shell
 
-- name: Ensure links_lines is a list (even if single line)
-  ansible.builtin.set_fact:
-    links_lines: "{{ links_lines + (content.stdout_lines | default([content.stdout])) }}"
-  when: (directories_with_links_prop | default([])) | length > 0
-  loop: "{{ links_content.results }}"
-  loop_control:
-    loop_var: content
+- name: Check if GPG is installed
+  ansible.builtin.command:
+    cmd: gpg --version
+  register: gpg_installed
+  failed_when: false
+  changed_when: false
+  ignore_errors: true
 
-- name: Create symlinks for each entry in links.prop
-  ansible.builtin.file:
-    src: "{{ item.split('=')[0] | regex_replace('\\$DOTFILES', file_directory) }}"
-    dest: "{{ item.split('=')[1] | regex_replace('\\$HOME', lookup('env', 'HOME')) }}"
-    state: link
-    force: yes
-    follow: false
-  with_items: "{{ links_lines }}"
-  when: (links_lines | default([]) | length > 0)
+- name: Add GPG line to .zshrc if GPG is installed
+  ansible.builtin.lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.zshrc"
+    line: "export GPG_TTY=$(tty) # GPG setup"
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+    state: present
+  when:
+    - gpg_installed.rc == 0 # Only run if GPG is installed
+  notify: Reload shell
+
+- name: Check if Starship is installed
+  ansible.builtin.command:
+    cmd: starship --version
+  register: starship_check
+  failed_when: false
+  changed_when: false
+  ignore_errors: true
+
+- name: Add Starship init line to .zshrc if Starship is installed
+  ansible.builtin.lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.zshrc"
+    line: 'eval "$(starship init zsh)" # starship'
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+    state: present
+  when: starship_check.rc == 0
+  notify: Reload shell
+
+- name: Check if Android Command Line Tools is installed
+  ansible.builtin.stat:
+    path: /opt/homebrew/share/android-commandlinetools
+  register: android_installed
+  failed_when: false
+  changed_when: false
+  ignore_errors: true
+
+- name: Add Android Command Line Tools to PATH
+  ansible.builtin.blockinfile:
+    path: "{{ lookup('env', 'HOME') }}/.zshrc"
+    block: |
+      export ANDROID_SDK_ROOT=/opt/homebrew/share/android-commandlinetools
+      export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
+      export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
+      export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+    state: present
+    marker: "# {mark} Android SDK"
+  when:
+    - android_installed.stat.exists
+  notify: Reload shell

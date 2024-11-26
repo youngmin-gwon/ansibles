@@ -17,9 +17,3 @@
   changed_when: rc != 0
   ignore_errors: true
   tags: osx
-
-- name: Reload shell
-  ansible.builtin.shell: zsh -c 'source ~/.zshrc'
-  ignore_errors: true
-  changed_when: rc != 0
-  tags: osx
