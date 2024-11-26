@@ -681,8 +681,6 @@
   "git.autofetch": true,
   "editor.renderWhitespace": "all",
   "editor.copyWithSyntaxHighlighting": true,
-  "cloudcode.duetAI.project": "single-outrider-430308-k2",
-  "cloudcode.project": "single-outrider-430308-k2",
   "diffEditor.codeLens": true,
   "diffEditor.ignoreTrimWhitespace": false
 }
