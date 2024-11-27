@@ -1,0 +1,7 @@
+---
+- name: Ensure Alacritty is installed
+  community.general.homebrew_cask:
+    state: present
+    name: alacritty
+  become: false
+  tags: macos

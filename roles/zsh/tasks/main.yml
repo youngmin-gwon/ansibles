@@ -1,0 +1,22 @@
+---
+- name: Ensure zsh on macOS
+  ansible.builtin.include_tasks: macos/dotfile.yml
+  when: ansible_system == "Darwin"
+  tags: macos
+
+- name: Ensure zsh on Debian-based Linux
+  ansible.builtin.include_tasks: debian/dotfile.yml
+  when: ansible_facts['os_family'] == 'Debian'
+  tags: debian
+
+- name: Set the $DOTFILES path in zsh
+  ansible.builtin.set_fact:
+    dotfiles_zsh_path: "{{ role_path }}/files"
+  tags: unix
+
+- name: Generate .zshrc from template
+  ansible.builtin.template:
+    src: "zshrc.j2"
+    dest: "{{ lookup('env', 'HOME') }}/.zshrc"
+    mode: "0664"
+  tags: unix

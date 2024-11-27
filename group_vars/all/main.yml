@@ -1,2 +1,3 @@
 ---
+custom_config_start_delimiter: "# START CUSTOM CONFIG"
 custom_config_end_delimiter: "# END CUSTOM CONFIG"

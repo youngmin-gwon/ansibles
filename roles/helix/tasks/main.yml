@@ -1,0 +1,16 @@
+---
+- name: Ensure Helix when macOS
+  ansible.builtin.include_tasks: macos.yml
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Link directory from role files to local destination
+  ansible.builtin.file:
+    src: "{{ role_path }}/files"
+    dest: "{{ lookup('env', 'HOME') }}/.config/helix"
+    state: link
+    mode: "0644"
+    force: true
+    follow: false
+  become: false
+  tags: unix

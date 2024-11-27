@@ -1,0 +1,24 @@
+---
+- name: Ensure Android Command Line Tools in macOS
+  community.general.homebrew_cask:
+    name: android-commandlinetools
+    state: present
+  become: false
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Add Android Command Line Tools to PATH
+  ansible.builtin.blockinfile:
+    path: "{{ lookup('env', 'HOME') }}/.zshrc"
+    block: |
+      export ANDROID_SDK_ROOT=/opt/homebrew/share/android-commandlinetools
+      export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
+      export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
+      export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+    state: present
+    marker: "# {mark} Android SDK"
+  when: ansible_os_family == "Darwin"
+  notify: Reload shell
+  become: false
+  tags: macos

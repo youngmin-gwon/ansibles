@@ -1,6 +1,0 @@
----
-- name: Reload shell
-  ansible.builtin.shell: zsh -c 'source ~/.zshrc'
-  ignore_errors: true
-  changed_when: false
-  tags: dotfiles

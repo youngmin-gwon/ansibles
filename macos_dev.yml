@@ -1,0 +1,36 @@
+---
+- name: "Set up macOS environment"
+  hosts: all
+  roles:
+    - role: package_manager
+      become: true
+    - role: zsh
+      become: true
+    - role: packages
+      become: true
+    - role: git
+      become: true
+    - role: starship
+      become: false
+    - role: tmux
+      become: false
+    - role: helix
+      become: false
+    - role: android_sdk
+      become: false
+    - role: vscode
+      become: false
+    - role: aerospace
+      become: false
+    - role: alacritty
+      become: false
+    # - role: dotfiles
+    #   become: false
+    # - role: git
+    #   become: false
+    # - role: osx
+    #   become: true
+    #   when: ansible_system == "Darwin"
+    # - role: languages
+    #   when: ansible_system == "Linux" or ansible_system == "Darwin"
+    #   become: false

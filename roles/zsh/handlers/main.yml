@@ -1,0 +1,5 @@
+- name: Reload shell
+  ansible.builtin.shell: "zsh -c \"source {{ lookup('env', 'HOME') }}/.zshrc\""
+  failed_when: false
+  changed_when: false
+  ignore_errors: false

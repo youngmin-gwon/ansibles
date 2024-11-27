@@ -1,0 +1,7 @@
+---
+- name: Ensure starship in macOS
+  ansible.builtin.homebrew:
+    name: tmux
+    state: present
+  become: false
+  tags: macos

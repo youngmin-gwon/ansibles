@@ -1,0 +1,7 @@
+---
+- name: Ensure VSCode in macOS
+  community.general.homebrew_cask:
+    state: present
+    name: visual-studio-code
+  become: false
+  tags: macos

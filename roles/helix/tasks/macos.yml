@@ -1,0 +1,7 @@
+---
+- name: Ensure Helix in macOS
+  community.general.homebrew_cask:
+    state: present
+    name: alacritty
+  become: false
+  tags: macos

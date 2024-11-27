@@ -1,0 +1,20 @@
+---
+- name: Ensure Homebrew is installed
+  ansible.builtin.stat:
+    path: /opt/homebrew/bin/brew
+  register: homebrew_installed
+  failed_when: false
+  changed_when: false
+  ignore_errors: true
+  when: ansible_system == "Darwin"
+  tags: macos
+
+- name: Install Homebrew if the package manager is not installed
+  ansible.builtin.shell: >
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  become: true
+  when:
+    - ansible_system == "Darwin"
+    - homebrew_installed.stat.exists
+  changed_when: false
+  tags: macos

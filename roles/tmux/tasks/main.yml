@@ -1,0 +1,16 @@
+---
+- name: Ensure tmux in macOS
+  ansible.builtin.include_tasks: macos.yml
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Link config file from role files to local destination
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/tmux.conf"
+    dest: "{{ lookup('env', 'HOME') }}/.tmux.conf"
+    state: link
+    mode: "0644"
+    force: true
+    follow: false
+  become: false
+  tags: unix
