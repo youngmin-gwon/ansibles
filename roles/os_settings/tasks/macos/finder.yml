@@ -3,6 +3,7 @@
   ansible.builtin.shell: osascript -e 'tell application "Finder" to quit'
   changed_when: false
   become: false
+  tags: macos
 
 - name: Set Finder settings
   community.general.osx_defaults:
@@ -45,4 +46,4 @@
     # Disable the warning before emptying the Trash
     - { key: "WarnOnEmptyTrash", type: "bool", value: "false" }
   become: false
-  tags: osx, finder
+  tags: macos

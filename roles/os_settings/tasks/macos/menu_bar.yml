@@ -7,6 +7,7 @@
     value: true
     state: present
   become: false
+  tags: macos
 
 - name: Show volume in menu bar
   community.general.osx_defaults:
@@ -20,6 +21,7 @@
       - "/System/Library/CoreServices/Menu Extras/Volume.menu"
     state: present
   become: false
+  tags: macos
 
 - name: Show volume indicator
   community.general.osx_defaults:
@@ -29,3 +31,4 @@
     value: true
     state: present
   become: false
+  tags: macos

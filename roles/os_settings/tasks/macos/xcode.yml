@@ -4,6 +4,7 @@
     path: "{{ xcode_path }}"
   become: false
   register: xcode_installed
+  tags: macos
 
 - name: Check if Xcode Command Line Tools are installed
   ansible.builtin.shell: xcode-select --print-path
@@ -11,23 +12,27 @@
   register: xcode_clt_check
   changed_when: false
   ignore_errors: true
+  tags: macos
 
 - name: Install Xcode Command Line Tools if not installed
   ansible.builtin.command: xcode-select --install
   become: false
   when: xcode_clt_check.rc != 0
+  tags: macos
 
 - name: Install Xcode via the App Store (if Xcode is not installed)
   ansible.builtin.shell: softwareupdate --install --all
   become: false
   when: not xcode_installed.stat.exists
   register: xcode_install_output
+  tags: macos
 
 - name: Wait for Xcode installation to complete
   pause:
     minutes: 10
   become: false
   when: not xcode_installed.stat.exists
+  tags: macos
 
 - name: Get list of available simulators and extract the latest version
   ansible.builtin.shell: |
@@ -36,12 +41,14 @@
   register: latest_simulator
   when: simulator_version == "latest"
   changed_when: false
+  tags: macos
 
 - name: Set the latest simulator version dynamically
   ansible.builtin.set_fact:
     simulator_version: "{{ latest_simulator.stdout | regex_replace('com.apple.CoreSimulator.SimRuntime.iOS-', '') }}"
   become: false
   when: simulator_version == "latest"
+  tags: macos
 
 - name: Check if the desired simulator version is installed
   ansible.builtin.shell: |
@@ -49,6 +56,7 @@
   register: simulator_installed
   changed_when: false
   ignore_errors: true
+  tags: macos
 
 - name: Install the latest simulator if not present
   ansible.builtin.command: >
@@ -56,6 +64,7 @@
     com.apple.CoreSimulator.SimRuntime.iOS-{{ simulator_version }}
   become: false
   when: simulator_installed.rc != 0
+  tags: macos
 
 - name: Ensure the simulator is installed
   ansible.builtin.shell: xcrun simctl list runtimes | grep -i "com.apple.CoreSimulator.SimRuntime.iOS-{{ simulator_version }}"
@@ -63,6 +72,7 @@
   register: final_check
   changed_when: false
   failed_when: final_check.rc != 0
+  tags: macos
 
 - name: Set Simulator settings
   community.general.osx_defaults:
@@ -93,4 +103,4 @@
     # Set simulator to always appear on top of other windows
     - { key: "AXInspectorEnabled", type: "bool", value: "true" }
   become: false
-  tags: osx, simulator
+  tags: macos

@@ -37,4 +37,4 @@
     - { key: "autohide", type: "bool", value: "true" }
   become: false
   notify: Kill Dock
-  tags: osx, dock
+  tags: macos

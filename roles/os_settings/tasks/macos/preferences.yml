@@ -2,6 +2,7 @@
 - name: Close any opened System Preferences panes
   ansible.builtin.shell: osascript -e 'tell application "System Preferences" to quit'
   changed_when: false
+  tags: macos
 
 - name: Set UI preferences
   community.general.osx_defaults:
@@ -24,7 +25,7 @@
     # Menu bar
     - { key: "_HIHideMenuBar", type: "bool", value: "false" }
   become: false
-  tags: osx, ui
+  tags: macos
 
 - name: Set clock preferences
   community.general.osx_defaults:
@@ -39,7 +40,7 @@
     # Date format
     - { key: "DateFormat", type: "string", value: "EEE MMM d h:mm a" }
   become: false
-  tags: osx, clock
+  tags: macos
 
 - name: Set metrics Unit
   community.general.osx_defaults:
@@ -56,7 +57,7 @@
     # Metrics
     - { key: "AppleMetricUnits", type: "bool", value: "true" }
   become: false
-  tags: osx, metrics
+  tags: macos
 
 - name: Set language preferences
   community.general.osx_defaults:
@@ -71,7 +72,7 @@
     # Locale
     - { key: "AppleLocale", type: "string", value: "ko_KR@currency=KRW" }
   become: false
-  tags: osx, language
+  tags: macos
 
 - name: Set text input preferences
   community.general.osx_defaults:
@@ -110,13 +111,14 @@
     # Increase key repeat rate 2
     - { key: "InitialKeyRepeat", type: "int", value: "10" }
   become: false
-  tags: osx, input
+  tags: macos
 
 - name: Set the timezone to Asia/Seoul
   ansible.builtin.command:
     cmd: systemsetup -settimezone "Asia/Seoul"
   become: true
   changed_when: false
+  tags: macos
 
 - name: Enable subpixel font rendering on non-Apple LCDs
   # Reference: https://github.com/kevinSuttle/macOS-Defaults/issues/17#issuecomment-266633501
@@ -127,6 +129,7 @@
     value: 1
     state: present
   become: false
+  tags: macos
 
 - name: Enable font smoothing
   community.general.osx_defaults:
@@ -136,6 +139,7 @@
     value: false
     state: present
   become: false
+  tags: macos
 
 - name: Set a message when the screen is locked
   community.general.osx_defaults:
@@ -146,3 +150,4 @@
     state: present
   become: true
   changed_when: false
+  tags: macos

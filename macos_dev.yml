@@ -3,11 +3,11 @@
   hosts: all
   roles:
     - role: package_manager
-      become: true
+      become: false
     - role: zsh
       become: true
     - role: packages
-      become: true
+      become: false
     - role: gpg
       become: false
     - role: git
@@ -26,9 +26,7 @@
       become: false
     - role: alacritty
       become: false
-    # - role: osx
-    #   become: true
-    #   when: ansible_system == "Darwin"
+    - role: os_settings
+      become: true
     - role: languages
-      when: ansible_system == "Linux" or ansible_system == "Darwin"
       become: false

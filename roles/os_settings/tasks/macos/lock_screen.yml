@@ -6,13 +6,16 @@
     value: 1200 # 20 mins (in seconds)
     state: present
   become: false
+  tags: macos
 
 - name: Set display sleep time when on battery to 30 minutes (1800 seconds)
   ansible.builtin.command: pmset -b displaysleep 30
   become: true
   changed_when: false
+  tags: macos
 
 - name: Set display sleep time when on power adapter to 30 minutes (1800 seconds)
   ansible.builtin.command: pmset -c displaysleep 30
   become: true
   changed_when: false
+  tags: macos

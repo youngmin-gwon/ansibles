@@ -28,4 +28,4 @@
   become: true
   notify:
     - Kill Transmission
-  tags: osx, transmission
+  tags: macos

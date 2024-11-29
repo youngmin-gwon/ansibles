@@ -3,6 +3,7 @@
   ansible.builtin.shell: nvram SystemAudioVolume=" "
   become: true
   changed_when: false
+  tags: macos
 
 - name: Enable HiDPI display modes (requires restart)
   community.general.osx_defaults:
@@ -12,6 +13,7 @@
     value: true
     state: present
   become: true
+  tags: macos
 
 - name: Disable the "Are you sure you want to open this application?"" dialog
   community.general.osx_defaults:
@@ -20,3 +22,4 @@
     type: bool
     value: false
   become: false
+  tags: macos
