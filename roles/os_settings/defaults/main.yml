@@ -3,6 +3,7 @@ simulator_version: latest
 
 xcode_path: "/Applications/Xcode.app"
 
+# recommend overriding this variable if you wanna put personal information
 login_hint_message: Enter your default login message
 
 screenshot_dir_path: "{{ lookup('env', 'HOME') }}/Screenshots"
