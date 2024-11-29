@@ -6,15 +6,26 @@
   failed_when: false
   changed_when: false
   ignore_errors: true
+  become: false
   when: ansible_system == "Darwin"
   tags: macos
 
 - name: Install Homebrew if the package manager is not installed
   ansible.builtin.shell: >
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-  become: true
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  become: false
   when:
-    - ansible_system == "Darwin"
-    - homebrew_installed.stat.exists
+    - ansible_os_family == "Darwin"
+    - not homebrew_installed.stat.exists
   changed_when: false
+  tags: macos
+
+- name: Add Homebrew to PATH using lineinfile
+  ansible.builtin.lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.zshrc"
+    line: "export PATH=/opt/homebrew/bin:$PATH # brew"
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+    state: present
+  notify: Reload shell
+  become: false
   tags: macos

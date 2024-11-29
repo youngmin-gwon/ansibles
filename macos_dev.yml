@@ -8,8 +8,10 @@
       become: true
     - role: packages
       become: true
+    - role: gpg
+      become: false
     - role: git
-      become: true
+      become: false
     - role: starship
       become: false
     - role: tmux
@@ -24,13 +26,9 @@
       become: false
     - role: alacritty
       become: false
-    # - role: dotfiles
-    #   become: false
-    # - role: git
-    #   become: false
     # - role: osx
     #   become: true
     #   when: ansible_system == "Darwin"
-    # - role: languages
-    #   when: ansible_system == "Linux" or ansible_system == "Darwin"
-    #   become: false
+    - role: languages
+      when: ansible_system == "Linux" or ansible_system == "Darwin"
+      become: false

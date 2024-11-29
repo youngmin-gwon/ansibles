@@ -5,12 +5,16 @@
     state: touch
     mode: "0644"
   changed_when: false
+  become: false
+  tags: unix
 
 - name: Set init.defaultBranch
   community.general.git_config:
     name: init.defaultBranch
     scope: global
     value: main
+  become: false
+  tags: unix
 
 - name: Link gitignore
   ansible.builtin.file:
@@ -20,55 +24,73 @@
     force: yes
     follow: false
     mode: 0644
+  become: false
+  tags: unix
 
 - name: Set global .gitignore
   ansible.builtin.git_config:
     name: core.excludesfile
     value: "{{ lookup('env', 'HOME') }}/.config/git/gitignore"
     scope: global
+  become: false
+  tags: unix
 
 - name: Set editor
   ansible.builtin.git_config:
     name: core.editor
     value: "hx"
     scope: global
+  become: false
+  tags: unix
 
 - name: Set precomposeunicode
   ansible.builtin.git_config:
     name: core.precomposeunicode
     value: true
     scope: global
+  become: false
   when: ansible_os_family == "Darwin"
+  tags: unix
 
 - name: Set diff.colorMoved
   community.general.git_config:
     name: diff.colorMoved
     scope: global
     value: zebra
+  become: false
+  tags: unix
 
 - name: Set fetch.prune
   community.general.git_config:
     name: fetch.prune
     scope: global
     value: true
+  become: false
+  tags: unix
 
 - name: Set pull.rebase
   community.general.git_config:
     name: pull.rebase
     scope: global
     value: true
+  become: false
+  tags: unix
 
 - name: Set pull.ff
   community.general.git_config:
     name: pull.ff
     scope: global
     value: "only"
+  become: false
+  tags: unix
 
 - name: Set rebase.autoStash
   community.general.git_config:
     name: rebase.autoStash
     scope: global
     value: true
+  become: false
+  tags: unix
 
 - name: Set up Git aliases
   ansible.builtin.git_config:
@@ -90,12 +112,16 @@
     - { name: st, value: status }
     - { name: rba, value: rebase --abort }
     - { name: rbc, value: rebase --continue }
+  become: false
+  tags: unix
 
 - name: Ensure .config/git directory exists
   ansible.builtin.file:
     path: "{{ lookup('env', 'HOME') }}/.config/git"
     state: directory
     mode: 0755
+  become: false
+  tags: unix
 
 - name: Link global.commit.template
   ansible.builtin.file:
@@ -105,51 +131,53 @@
     force: yes
     follow: false
     mode: 0644
+  become: false
+  tags: unix
 
 - name: Set commit.template
   community.general.git_config:
     name: commit.template
     scope: global
     value: "{{ lookup('env', 'HOME') }}/.config/git/commit_template"
+  become: false
+  tags: unix
 
 - name: Set user.name
   community.general.git_config:
     name: user.name
     scope: global
     value: "{{ github_name }}"
+  become: false
+  tags: unix
 
 - name: Set user.email
   community.general.git_config:
     name: user.email
     scope: global
     value: "{{ github_email }}"
-
-# - name: Set gpg.format
-#   community.general.git_config:
-#     name: gpg.format
-#     scope: global
-#     value: ssh
-
-- name: Set commit.gpgsign
-  community.general.git_config:
-    name: commit.gpgsign
-    scope: global
-    value: true
+  become: false
+  tags: unix
 
 - name: Set tag.gpgsign
   community.general.git_config:
     name: tag.gpgsign
     scope: global
     value: true
+  become: false
+  tags: unix
 
 - name: Set gpg.program
   community.general.git_config:
     name: gpg.program
     scope: global
     value: "gpg"
+  become: false
+  tags: unix
 
 - name: Set user.signingkey
   community.general.git_config:
     name: user.signingkey
     scope: global
-    value: "{{ github_signingkey }}"
+    value: "{{ gpg_signing_key }}"
+  become: false
+  tags: unix

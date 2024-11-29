@@ -1,0 +1,33 @@
+---
+- name: Ensure gpg in macOS
+  ansible.builtin.include_tasks: macos.yml
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Check if GPG key already exists
+  ansible.builtin.command: "gpg --list-keys {{ gpg_signing_key }}"
+  register: gpg_key_check
+  ignore_errors: true
+  tags: unix
+
+- name: Import GPG public key if not already present
+  ansible.builtin.command: "gpg --import"
+  args:
+    stdin: "{{ gpg_public_key }}"
+  # when: gpg_key_check.rc != 0
+  # changed_when: gpg_key_check.rc != 0
+  tags: unix
+
+- name: Import GPG private key if not already present
+  ansible.builtin.command: "gpg --import"
+  args:
+    stdin: "{{ gpg_private_key }}"
+  # when: gpg_key_check.rc != 0
+  # changed_when: gpg_key_check.rc != 0
+  tags: unix
+
+- name: Verify GPG key presence
+  ansible.builtin.command: "gpg --list-keys {{ gpg_key_id }}"
+  register: gpg_verify
+  failed_when: gpg_verify.rc != 0
+  tags: unix

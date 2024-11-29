@@ -1,0 +1,8 @@
+---
+- name: Ensure git in macOS
+  community.general.homebrew:
+    name: git
+    state: present
+  become: false
+  when: ansible_os_family == "Darwin"
+  tags: macos

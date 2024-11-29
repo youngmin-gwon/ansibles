@@ -4,40 +4,33 @@
     name: package_manager
   tags: macos
 
-- name: Add Homebrew to PATH using lineinfile
-  ansible.builtin.lineinfile:
-    path: "{{ lookup('env', 'HOME') }}/.zshrc"
-    line: "export PATH=/opt/homebrew/bin:$PATH # brew"
-    insertbefore: "^{{ custom_config_end_delimiter }}"
-    state: present
-  notify: Reload shell
-  become: false
-  tags: macos
-
-- name: Update homebrew
+- name: Update Homebrew
   community.general.homebrew:
     update_homebrew: false
-  when: ansible_system == "Darwin"
+  when: ansible_os_family == "Darwin"
   become: false
   tags: macos
 
-- name: Install homebrew packages
+- name: Install Homebrew packages
   community.general.homebrew:
     state: present
     name: "{{ common_packages + mac_only_packages }}"
+    upgrade_all: false
   become: false
   tags: macos
 
-- name: Install homebrew cask packages
+- name: Install Homebrew cask packages
   community.general.homebrew_cask:
     state: present
     name: "{{ mac_gui_packages }}"
+    upgrade_all: false
   become: false
   tags: macos
 
-- name: Install homebrew mas packages
+- name: Install Homebrew mas packages
   community.general.mas:
     state: present
     id: "{{ mac_gui_app_store_packages }}"
+    upgrade_all: false
   become: false
   tags: macos

@@ -3,26 +3,34 @@
   ansible.builtin.stat:
     path: "{{ github_ssh_key_path }}"
   register: ssh_key_file
+  become: false
+  tags: unix
 
 - name: Ensure .ssh directory exists
   ansible.builtin.file:
     path: "{{ github_ssh_key_path | dirname }}"
     state: directory
     mode: "0700"
+  become: false
   when: not ssh_key_file.stat.exists
+  tags: unix
 
 - name: Add SSH private key if absent
   ansible.builtin.copy:
     content: "{{ github_ssh_private_key }}"
     dest: "{{ github_ssh_key_path }}"
     mode: "0600"
+  become: false
   when: not ssh_key_file.stat.exists
+  tags: unix
 
 - name: Verify SSH private key permissions
   ansible.builtin.file:
     path: "{{ github_ssh_key_path }}"
     mode: "0600"
+  become: false
   when: ssh_key_file.stat.exists
+  tags: unix
 
 - name: Configure SSH for GitHub
   ansible.builtin.blockinfile:
@@ -34,3 +42,5 @@
         AddKeysToAgent yes
         IdentityFile ~/.ssh/github
     marker: "# {mark} ANSIBLE MANAGED BLOCK - GitHub"
+  become: false
+  tags: unix
