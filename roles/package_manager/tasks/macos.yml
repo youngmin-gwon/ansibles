@@ -20,12 +20,15 @@
   changed_when: false
   tags: macos
 
-- name: Add Homebrew to PATH using lineinfile
+- name: Ensure .zshrc includes Homebrew path for Apple Silicon-based machine
   ansible.builtin.lineinfile:
     path: "{{ lookup('env', 'HOME') }}/.zshrc"
     line: "export PATH=/opt/homebrew/bin:$PATH # brew"
-    insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
-  notify: Reload shell
+    create: yes
+    insertbefore: "^{{ custom_config_end_delimiter }}"
   become: false
+  when:
+    - ansible_os_family == "Darwin"
+    - ansible_facts['pkg_mgr'] == 'homebrew' # Ensures Homebrew is the package manager
   tags: macos
