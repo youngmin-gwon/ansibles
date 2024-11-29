@@ -24,7 +24,7 @@
     - ansible_os_family == "Darwin"
 
 - name: Enable Rosetta for GUI application
-  ansible.builtin.command: echo "a" |  softwareupdate --install-rosetta
+  ansible.builtin.command: softwareupdate --install-rosetta --agree-to-license
   register: rosetta_install
   changed_when: rosetta_install.rc != 0
   become: false
