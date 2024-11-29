@@ -4,6 +4,7 @@
     path: "{{ screenshot_dir_path }}"
     state: directory
   become: false
+  tags: macos
 
 - name: Set Screenshot settings
   community.general.osx_defaults:
@@ -19,4 +20,4 @@
     #  - Other options BMP, GIF, JPG, PDF, TIFF
     - { key: "type", type: "string", value: "png" }
   become: false
-  tags: osx, screenshot
+  tags: macos
