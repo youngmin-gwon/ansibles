@@ -52,13 +52,6 @@
 
 - name: Accept Flutter android licenses
   ansible.builtin.shell: |
-    flutter doctor --android-licenses <<EOF
-    y
-    y
-    y
-    y
-    y
-    y
-    EOF
+    yes | flutter doctor --android-licenses
   changed_when: false
   become: false
