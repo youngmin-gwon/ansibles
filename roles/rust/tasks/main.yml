@@ -1,0 +1,44 @@
+---
+- name: Check if Rust plugin is already added
+  ansible.builtin.command: asdf plugin list
+  register: plugin_list
+  changed_when: false
+  failed_when: false
+  become: false
+  tags: unix
+
+- name: Add Rust plugin if not already added
+  ansible.builtin.command: asdf plugin add rust https://github.com/asdf-community/asdf-rust.git
+  when: "'rust' not in plugin_list.stdout"
+  register: plugin_added
+  changed_when: plugin_added.rc == 0
+  become: false
+  tags: unix
+
+- name: Check if Rust is already installed
+  ansible.builtin.command: asdf list rust
+  register: rust_list
+  failed_when: false
+  changed_when: false
+  tags: unix
+
+- name: Get the latest version of Rust
+  ansible.builtin.command: asdf latest rust
+  register: rust_latest
+  changed_when: false
+  tags: unix
+
+- name: Install latest version of Rust if not already installed
+  ansible.builtin.command: asdf install rust {{ rust_latest.stdout }}
+  when: rust_latest.stdout not in rust_list.stdout
+  register: rust_install
+  failed_when: "'already installed' not in rust_install.stdout and rust_install.rc != 0"
+  changed_when: rust_install.rc == 0
+  tags: unix
+
+- name: Set global Rust version
+  ansible.builtin.command: asdf global rust {{ rust_latest.stdout }}
+  when: rust_latest.stdout not in rust_list.stdout
+  changed_when: rust_install.changed
+  become: false
+  tags: unix

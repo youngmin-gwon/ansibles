@@ -1,5 +1,5 @@
 ---
-- name: Ensure ASDF in macOS
+- name: Ensure asdf in macOS
   community.general.homebrew:
     state: present
     name:
@@ -22,10 +22,3 @@
   when:
     - ansible_facts['pkg_mgr'] == "homebrew" # Ensures Homebrew is the package manager
     - ansible_os_family == "Darwin"
-
-- name: Enable Rosetta for GUI application
-  ansible.builtin.command: softwareupdate --install-rosetta --agree-to-license
-  register: rosetta_install
-  changed_when: rosetta_install.rc != 0
-  become: false
-  tags: macos

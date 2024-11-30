@@ -1,0 +1,60 @@
+---
+- name: Ensure Android Command Line Tools in macOS
+  community.general.homebrew_cask:
+    name: android-commandlinetools
+    state: present
+  when: ansible_os_family == "Darwin"
+  become: false
+  tags: macos
+
+- name: Define required Android SDK directories
+  ansible.builtin.set_fact:
+    android_sdk_directories:
+      - name: "platform-tools"
+        sdkmanager_arg: "platform-tools"
+      - name: "platforms"
+        sdkmanager_arg: "platforms;android-34"
+      - name: "system-images"
+        sdkmanager_arg: "system-images;android-34;google_atd;arm64-v8a"
+      - name: "build-tools"
+        sdkmanager_arg: "build-tools;34.0.0"
+  tags: macos
+
+- name: Check if required Android SDK directories exist
+  ansible.builtin.stat:
+    path: "/opt/homebrew/share/android-commandlinetools/{{ item.name }}"
+  with_items: "{{ android_sdk_directories }}"
+  register: sdk_directories_status
+  tags: macos
+
+- name: Install missing Android SDK components
+  ansible.builtin.command: sdkmanager --install "{{ item.item.sdkmanager_arg }}"
+  args:
+    stdin: "y\n"
+  when: not item.stat.exists
+  with_items: "{{ sdk_directories_status.results }}"
+  changed_when: not item.stat.exists
+  register: sdkmanager_install
+  tags: macos
+
+- name: Check if Android SDK licenses directory exists
+  ansible.builtin.stat:
+    path: "/opt/homebrew/share/android-commandlinetools/licenses"
+  register: android_sdk_licenses_directory
+  tags: macos
+
+- name: Count items in the directory
+  ansible.builtin.find:
+    paths: "/opt/homebrew/share/android-commandlinetools/licenses"
+    file_type: any
+  register: android_sdk_licenses
+  when: android_sdk_licenses_directory.stat.exists
+  tags: macos
+
+- name: Agree on Android licenses
+  ansible.builtin.shell: |
+    yes | sdkmanager --licenses
+  when: not (android_sdk_licenses_directory.stat.exists and android_sdk_licenses.matched >= 6)
+  changed_when: not (android_sdk_licenses_directory.stat.exists and android_sdk_licenses.matched >= 6)
+  become: false
+  tags: macos

@@ -1,0 +1,5 @@
+---
+- name: Configure language manager in macOS
+  ansible.builtin.include_tasks: macos.yml
+  when: ansible_system == "Darwin"
+  tags: macos

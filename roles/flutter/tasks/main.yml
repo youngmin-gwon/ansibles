@@ -1,0 +1,64 @@
+---
+- name: Enable Rosetta for GUI application
+  ansible.builtin.command: softwareupdate --install-rosetta --agree-to-license
+  register: rosetta_install
+  changed_when: rosetta_install.rc != 0
+  become: false
+  tags: macos
+
+- name: Check if Flutter plugin is already added
+  ansible.builtin.command: asdf plugin list
+  register: plugin_list
+  changed_when: false
+  failed_when: false
+  become: false
+  tags: unix
+
+- name: Add Flutter plugin if not already added
+  ansible.builtin.command: asdf plugin add flutter
+  when: "'flutter' not in plugin_list.stdout"
+  register: plugin_added
+  changed_when: plugin_added.rc == 0
+  become: false
+  tags: unix
+
+- name: Check if Flutter is already installed
+  ansible.builtin.command: asdf list flutter
+  register: flutter_list
+  failed_when: false
+  changed_when: false
+  tags: unix
+
+- name: Get the latest version of Flutter
+  ansible.builtin.command: asdf latest flutter
+  register: flutter_latest
+  changed_when: false
+  tags: unix
+
+- name: Install latest version of Flutter if not already installed
+  ansible.builtin.command: asdf install flutter {{ flutter_latest.stdout }}
+  when: flutter_latest.stdout not in flutter_list.stdout
+  register: flutter_install
+  failed_when: "'already installed' not in flutter_install.stdout and flutter_install.rc != 0"
+  changed_when: flutter_install.rc == 0
+  tags: unix
+
+- name: Set global Flutter version
+  ansible.builtin.command: asdf global flutter {{ flutter_latest.stdout }}
+  when: flutter_latest.stdout not in flutter_list.stdout
+  changed_when: flutter_install.changed
+  become: false
+  tags: unix
+
+- name: Accept Flutter android licenses
+  ansible.builtin.shell: |
+    flutter doctor --android-licenses <<EOF
+    y
+    y
+    y
+    y
+    y
+    y
+    EOF
+  changed_when: false
+  become: false
