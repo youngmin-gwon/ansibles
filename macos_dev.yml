@@ -28,11 +28,15 @@
       become: false
     - role: language_manager
       become: false
+    - role: rust
+      become: false
+    - role: java
+      become: false
+    - role: kotlin
+      become: false
     - role: android
       become: false
     - role: direnv
-      become: false
-    - role: rust
       become: false
     - role: flutter
       become: false
