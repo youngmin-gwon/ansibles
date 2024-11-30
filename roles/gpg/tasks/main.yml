@@ -7,6 +7,7 @@
 - name: Check if GPG key already exists
   ansible.builtin.command: "gpg --list-keys {{ gpg_signing_key }}"
   register: gpg_key_check
+  changed_when: false
   ignore_errors: true
   tags: unix
 
@@ -21,6 +22,7 @@
 - name: Verify GPG key presence
   ansible.builtin.command: "gpg --list-keys {{ gpg_key_id }}"
   register: gpg_verify
+  changed_when: false
   failed_when: gpg_verify.rc != 0
   when: gpg_key_check.rc != 0
   tags: unix

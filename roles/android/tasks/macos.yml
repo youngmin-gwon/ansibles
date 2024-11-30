@@ -52,7 +52,7 @@
   tags: macos
 
 - name: Agree on Android licenses
-  ansible.builtin.shell: |
+  ansible.builtin.command: |
     yes | sdkmanager --licenses
   when: not (android_sdk_licenses_directory.stat.exists and android_sdk_licenses.matched >= 6)
   changed_when: not (android_sdk_licenses_directory.stat.exists and android_sdk_licenses.matched >= 6)

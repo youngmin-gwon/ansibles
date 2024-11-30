@@ -1,6 +1,6 @@
 ---
 - name: Disable the sound effects on boot
-  ansible.builtin.shell: nvram SystemAudioVolume=" "
+  ansible.builtin.command: nvram SystemAudioVolume=" "
   become: true
   changed_when: false
   tags: macos

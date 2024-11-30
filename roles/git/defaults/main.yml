@@ -1,1 +1,2 @@
-github_ssh_key_path: "~/.ssh/github"
+---
+git_github_ssh_key_path: "~/.ssh/github"

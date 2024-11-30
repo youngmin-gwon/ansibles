@@ -1,13 +1,13 @@
 ---
 - name: Ensure APT is installed
-  stat:
+  ansible.builtin.stat:
     path: /usr/bin/apt
   register: apt_installed
 
 - name: Fail if APT is not installed
-  fail:
+  ansible.builtin.fail:
     msg: "APT is not installed. This is required for package installation."
-  when: apt_installed.stat.exists == false
+  when: not apt_installed.stat.exists
 
 - name: Add Helix editor PPA
   ansible.builtin.apt_repository:
@@ -42,7 +42,7 @@
   when: apt_installed.stat.exists
 
 - name: Add Spotify repository signing key
-  apt_key:
+  ansible.builtin.apt_key:
     url: https://download.spotify.com/debian/pubkey_7A3A762FAFD4A51F.gpg
     state: present
 
@@ -60,6 +60,6 @@
 - name: Install required packages
   ansible.builtin.apt:
     name: "{{ item }}"
-    pkg: "{{ common_packages + debian_gui_packages }}"
+    pkg: "{{ packages_common_packages + packages_debian_gui_packages }}"
     state: present
   when: apt_installed.stat.exists

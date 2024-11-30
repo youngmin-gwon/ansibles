@@ -1,5 +1,5 @@
 ---
-common_packages:
+packages_common_packages:
   - git
   - git-lfs
   - gnupg
@@ -30,13 +30,13 @@ common_packages:
   - asdf
   - podman
 
-mac_only_packages:
+packages_mac_only_packages:
   - awk
   - gitmoji
   - marksman
   - mas
 
-mac_gui_packages:
+packages_mac_gui_packages:
   - alacritty
   - android-commandlinetools
   - cheatsheet
@@ -55,7 +55,7 @@ mac_gui_packages:
   - chatgpt
   - linear-linear
 
-mac_gui_app_store_packages:
+packages_mac_gui_app_store_packages:
   - 497799835 # Xcode
   - 899247664 # TestFlight
   - 1450874784 # Transporter
@@ -66,7 +66,7 @@ mac_gui_app_store_packages:
   - 1592876082 # BetterPlayer
   - 1437138382 # WhatFont
 
-debian_gui_packages:
+packages_debian_gui_packages:
   - google-chrome-stable
   - code
   - spotify-client

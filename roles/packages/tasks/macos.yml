@@ -14,7 +14,7 @@
 - name: Install Homebrew packages
   community.general.homebrew:
     state: present
-    name: "{{ common_packages + mac_only_packages }}"
+    name: "{{ packages_common_packages + packages_mac_only_packages }}"
     upgrade_all: false
   become: false
   tags: macos
@@ -22,7 +22,7 @@
 - name: Install Homebrew cask packages
   community.general.homebrew_cask:
     state: present
-    name: "{{ mac_gui_packages }}"
+    name: "{{ packages_mac_gui_packages }}"
     upgrade_all: false
   become: false
   tags: macos
@@ -30,7 +30,7 @@
 - name: Install Homebrew mas packages
   community.general.mas:
     state: present
-    id: "{{ mac_gui_app_store_packages }}"
+    id: "{{ packages_mac_gui_app_store_packages }}"
     upgrade_all: false
   become: false
   tags: macos

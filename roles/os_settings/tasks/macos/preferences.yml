@@ -1,6 +1,6 @@
 ---
 - name: Close any opened System Preferences panes
-  ansible.builtin.shell: osascript -e 'tell application "System Preferences" to quit'
+  ansible.builtin.command: osascript -e 'tell application "System Preferences" to quit'
   changed_when: false
   tags: macos
 
@@ -146,7 +146,7 @@
     domain: /Library/Preferences/com.apple.loginwindow
     key: LoginwindowText
     type: string
-    value: "{{ login_hint_message }}"
+    value: "{{ os_settings_login_hint_message }}"
     state: present
   become: true
   changed_when: false

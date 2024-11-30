@@ -1,6 +1,6 @@
 ---
 - name: Close any opened Finder panes
-  ansible.builtin.shell: osascript -e 'tell application "Finder" to quit'
+  ansible.builtin.command: osascript -e 'tell application "Finder" to quit'
   changed_when: false
   become: false
   tags: macos

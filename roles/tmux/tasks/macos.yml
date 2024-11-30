@@ -1,6 +1,6 @@
 ---
 - name: Ensure tmux in macOS
-  ansible.builtin.homebrew:
+  community.general.homebrew:
     name: tmux
     state: present
   become: false

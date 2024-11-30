@@ -51,7 +51,7 @@
   tags: unix
 
 - name: Accept Flutter android licenses
-  ansible.builtin.shell: |
+  ansible.builtin.command: |
     yes | flutter doctor --android-licenses
   changed_when: false
   become: false
