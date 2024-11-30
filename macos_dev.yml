@@ -2,6 +2,8 @@
 - name: "Set up macOS environment"
   hosts: all
   roles:
+    - role: os_settings
+      become: true
     - role: package_manager
       become: false
     - role: zsh
@@ -18,15 +20,19 @@
       become: false
     - role: helix
       become: false
-    - role: android_sdk
-      become: false
-    - role: vscode
-      become: false
     - role: aerospace
       become: false
     - role: alacritty
       become: false
-    - role: os_settings
-      become: true
-    - role: languages
+    - role: vscode
+      become: false
+    - role: language_manager
+      become: false
+    - role: android
+      become: false
+    - role: direnv
+      become: false
+    - role: rust
+      become: false
+    - role: flutter
       become: false
