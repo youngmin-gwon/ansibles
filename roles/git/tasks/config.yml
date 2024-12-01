@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ lookup('env', 'HOME') }}/.gitconfig"
     state: touch
-    mode: "0644"
+    mode: 0644
   changed_when: false
   become: false
   tags: unix

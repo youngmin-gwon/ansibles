@@ -27,6 +27,7 @@
     state: present
     create: yes
     insertbefore: "^{{ custom_config_end_delimiter }}"
+    mode: 0644
   become: false
   when:
     - ansible_os_family == "Darwin"

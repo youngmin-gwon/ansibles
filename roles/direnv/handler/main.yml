@@ -1,0 +1,7 @@
+---
+- name: Configure direnv
+  ansible.builtin.command: asdf direnv setup --shell bash --version {{ latest_version }}
+  changed_when: true
+  failed_when: false
+  become: false
+  tags: unix

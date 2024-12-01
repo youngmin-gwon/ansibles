@@ -9,7 +9,7 @@
     src: "{{ role_path }}/files/settings.json"
     dest: "{{ lookup('env', 'HOME') }}/Library/Application Support/Code/User/settings.json"
     state: link
-    mode: "0644"
+    mode: 0644
     force: true
     follow: false
   become: false
@@ -21,7 +21,7 @@
     src: "{{ role_path }}/files/keybindings.json"
     dest: "{{ lookup('env', 'HOME') }}/Library/Application Support/Code/User/keybindings.json"
     state: link
-    mode: "0644"
+    mode: 0644
     force: true
     follow: false
   become: false
@@ -33,7 +33,7 @@
     src: "{{ role_path }}/files/snippets"
     dest: "{{ lookup('env', 'HOME') }}/Library/Application Support/Code/User/snippets"
     state: link
-    mode: "0644"
+    mode: 0644
     force: true
     follow: false
   become: false

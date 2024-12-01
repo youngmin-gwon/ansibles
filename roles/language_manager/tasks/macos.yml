@@ -16,6 +16,7 @@
     line: ". /opt/homebrew/opt/asdf/libexec/asdf.sh"
     state: present
     create: yes
+    mode: 0644
     insertbefore: "^{{ custom_config_end_delimiter }}"
   become: false
   tags: macos

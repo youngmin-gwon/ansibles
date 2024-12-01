@@ -9,7 +9,7 @@
     src: "{{ role_path }}/files"
     dest: "{{ lookup('env', 'HOME') }}/.config/helix"
     state: link
-    mode: "0644"
+    mode: 0755
     force: true
     follow: false
   become: false

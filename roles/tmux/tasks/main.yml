@@ -9,7 +9,7 @@
     src: "{{ role_path }}/files/tmux.conf"
     dest: "{{ lookup('env', 'HOME') }}/.tmux.conf"
     state: link
-    mode: "0644"
+    mode: 0644
     force: true
     follow: false
   become: false

@@ -1,10 +1,12 @@
 ---
 - name: Kill Dock
   ansible.builtin.command: killall Dock
+  changed_when: rc != 0
   tags: macos
 
 - name: Kill Finder
   ansible.builtin.command: killall Finder
+  changed_when: rc != 0
   tags: macos
 
 - name: Kill Transmission
@@ -15,5 +17,4 @@
 - name: Kill Safari
   ansible.builtin.command: killall Safari
   changed_when: rc != 0
-  ignore_errors: true
   tags: macos

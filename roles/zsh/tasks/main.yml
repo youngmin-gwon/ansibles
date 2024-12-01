@@ -18,5 +18,5 @@
   ansible.builtin.template:
     src: "zshrc.j2"
     dest: "{{ lookup('env', 'HOME') }}/.zshrc"
-    mode: "0664"
+    mode: 0664
   tags: unix

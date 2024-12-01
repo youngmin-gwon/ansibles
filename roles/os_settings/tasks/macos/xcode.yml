@@ -18,36 +18,44 @@
   ansible.builtin.command: xcode-select --install
   become: false
   when: xcode_clt_check.rc != 0
+  changed_when: xcode_clt_check.rc != 0
   tags: macos
 
 - name: Install Xcode via the App Store (if Xcode is not installed)
   ansible.builtin.command: softwareupdate --install --all
   become: false
   when: not xcode_installed.stat.exists
+  changed_when: not xcode_installed.stat.exists
   register: xcode_install_output
   tags: macos
 
-- name: Wait for Xcode installation to complete
-  ansible.builtin.pause:
-    minutes: 10
-  become: false
-  when: not xcode_installed.stat.exists
+- name: Get list of available simulators as JSON
+  ansible.builtin.command: xcrun simctl list runtimes -j
+  register: simulator_json
+  changed_when: false
   tags: macos
 
-- name: Get list of available simulators and extract the latest version
-  ansible.builtin.shell: |
-    xcrun simctl list runtimes | grep "iOS" | grep -o 'com.apple.CoreSimulator.SimRuntime.iOS-[0-9.]*' | sort -rV | head -n 1
-  become: false
-  register: latest_simulator
-  when: os_settings_simulator_version == "latest"
-  changed_when: false
+- name: Extract iOS runtime identifiers from JSON
+  ansible.builtin.set_fact:
+    runtime_identifiers: >
+      {{
+        (simulator_json.stdout | from_json).runtimes |
+        selectattr('identifier', 'match', 'com.apple.CoreSimulator.SimRuntime.iOS-.*') |
+        map(attribute='identifier') |
+        list
+      }}
   tags: macos
 
 - name: Set the latest simulator version dynamically
   ansible.builtin.set_fact:
-    os_settings_simulator_version: "{{ latest_simulator.stdout | regex_replace('com.apple.CoreSimulator.SimRuntime.iOS-', '') }}"
-  become: false
-  when: os_settings_simulator_version == "latest"
+    os_settings_simulator_version: >
+      {{
+        runtime_identifiers |
+        sort(reverse=true) |
+        first |
+        regex_replace('com.apple.CoreSimulator.SimRuntime.iOS-', '')
+      }}
+  when: runtime_identifiers | length > 0
   tags: macos
 
 - name: Check if the desired simulator version is installed
@@ -60,14 +68,18 @@
 
 - name: Install the latest simulator if not present
   ansible.builtin.command: >
-    xcrun simctl runtime install
-    com.apple.CoreSimulator.SimRuntime.iOS-{{ os_settings_simulator_version }}
+    xcrun simctl runtime install \
+      com.apple.CoreSimulator.SimRuntime.iOS-{{ os_settings_simulator_version }}
   become: false
   when: simulator_installed.rc != 0
+  changed_when: simulator_installed.rc != 0
   tags: macos
 
 - name: Ensure the simulator is installed
-  ansible.builtin.shell: xcrun simctl list runtimes | grep -i "com.apple.CoreSimulator.SimRuntime.iOS-{{ os_settings_simulator_version }}"
+  ansible.builtin.shell:
+    cmd: set -o pipefail && xcrun simctl list runtimes |
+      grep -i "com.apple.CoreSimulator.SimRuntime.iOS-{{ os_settings_simulator_version }}"
+    executable: /bin/bash
   become: false
   register: final_check
   changed_when: false

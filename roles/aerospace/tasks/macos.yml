@@ -10,7 +10,7 @@
   ansible.builtin.file:
     path: "{{ lookup('env', 'HOME') }}/.config/aerospace"
     state: directory
-    mode: "0755"
+    mode: 0755
   become: false
   tags: macos
 
@@ -19,7 +19,7 @@
     src: "{{ role_path }}/files/config.toml"
     dest: "{{ lookup('env', 'HOME') }}/.config/aerospace/aerospace.toml"
     state: link
-    mode: "0644"
+    mode: 0644
     force: true
     follow: false
   become: false
