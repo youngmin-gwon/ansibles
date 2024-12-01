@@ -35,6 +35,7 @@ packages_mac_only_packages:
   - gitmoji
   - marksman
   - mas
+  - cocoapods
 
 packages_mac_gui_packages:
   - alacritty
