@@ -26,7 +26,7 @@
     line: "export PATH=/opt/homebrew/bin:$PATH # brew"
     state: present
     create: yes
-    insertbefore: "^{{ custom_config_end_delimiter }}"
+    insertafter: "^{{ custom_config_start_delimiter }}"
     mode: 0644
   become: false
   notify: Reload shell
