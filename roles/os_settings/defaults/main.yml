@@ -1,8 +1,4 @@
 ---
-os_settings_simulator_version: latest
-
-os_settings_xcode_path: "/Applications/Xcode.app"
-
 # recommend overriding this variable if you wanna put personal information
 os_settings_login_hint_message: Enter your default login message
 

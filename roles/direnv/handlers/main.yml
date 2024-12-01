@@ -1,6 +1,14 @@
 ---
 - name: Configure direnv
-  ansible.builtin.command: asdf direnv setup --shell zsh --version {{ latest_version }}
+  ansible.builtin.command: asdf direnv setup --shell zsh --version latest
+  changed_when: true
+  failed_when: false
+  become: false
+  notify: Set global direnv version
+  tags: unix
+
+- name: Set global direnv version
+  ansible.builtin.command: asdf global direnv latest
   changed_when: true
   failed_when: false
   become: false
@@ -17,4 +25,5 @@
     insertbefore: "^{{ custom_config_end_delimiter }}"
   become: false
   when: ansible_env.SHELL | basename == "zsh"
+  notify: Reload shell
   tags: unix

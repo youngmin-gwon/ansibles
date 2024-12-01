@@ -1,0 +1,31 @@
+---
+- name: Set Simulator settings
+  community.general.osx_defaults:
+    domain: com.apple.iphonesimulator
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    # Show single touches
+    - { key: "ShowSingleTouches", type: "bool", value: "true" }
+    # Enable the Internal Debug Menu
+    - { key: "IncludeInternalDebugMenu", type: "bool", value: "true" }
+    # Set slow animations for debugging (optional)
+    - { key: "SlowAnimations", type: "bool", value: "true" }
+    # Highlight clipped views (optional)
+    - { key: "HighlightClippedViews", type: "bool", value: "true" }
+    # Show device bezels (optional)
+    - { key: "ShowDeviceBezels", type: "bool", value: "true" }
+    # Show status bar touches (optional)
+    - { key: "ShowStatusBarTouches", type: "bool", value: "true" }
+    # Show taps in simulator screen recordings
+    - { key: "ShowTouchesInScreenRecording", type: "bool", value: "true" }
+    # Show FPS in simulator for performance monitoring
+    - { key: "ShowFPS", type: "bool", value: "true" }
+    # Set simulator to always appear on top of other windows
+    - { key: "AlwaysOnTop", type: "bool", value: "true" }
+    # Set simulator to always appear on top of other windows
+    - { key: "AXInspectorEnabled", type: "bool", value: "true" }
+  become: false
+  tags: macos

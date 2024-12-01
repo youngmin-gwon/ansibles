@@ -1,9 +1,4 @@
 ---
-- name: Configure Simulator settings
-  ansible.builtin.include_tasks: xcode.yml
-  when: ansible_os_family == "Darwin"
-  tags: macos
-
 - name: Configure System settings
   ansible.builtin.include_tasks: system.yml
   when: ansible_os_family == "Darwin"
@@ -49,7 +44,7 @@
   when: ansible_os_family == "Darwin"
   tags: macos
 
-- name: Configure Xcode settings
-  ansible.builtin.include_tasks: xcode.yml
+- name: Configure Simulator settings
+  ansible.builtin.include_tasks: simulator.yml
   when: ansible_os_family == "Darwin"
   tags: macos

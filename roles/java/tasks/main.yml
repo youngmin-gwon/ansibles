@@ -31,7 +31,7 @@
   tags: unix
 
 - name: Set global Java version
-  ansible.builtin.command: asdf global java {{ java_latest.stdout }}
+  ansible.builtin.command: asdf global java temurin-21.0.2+13.0.LTS
   when: "'temurin-21.0.2+13.0.LTS' not in java_list.stdout"
   changed_when: java_install.changed
   become: false

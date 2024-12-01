@@ -29,6 +29,7 @@
     insertbefore: "^{{ custom_config_end_delimiter }}"
     mode: 0644
   become: false
+  notify: Reload shell
   when:
     - ansible_os_family == "Darwin"
     - ansible_facts['pkg_mgr'] == 'homebrew' # Ensures Homebrew is the package manager

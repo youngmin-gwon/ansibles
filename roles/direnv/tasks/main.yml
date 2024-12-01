@@ -11,7 +11,7 @@
   ansible.builtin.command: asdf plugin add direnv
   when: "'direnv' not in plugin_list.stdout"
   register: plugin_added
-  changed_when: plugin_added.rc != 0
+  changed_when: plugin_added.rc == 0
   become: false
   notify: Configure direnv
   tags: unix

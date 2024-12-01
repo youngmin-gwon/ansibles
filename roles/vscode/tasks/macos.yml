@@ -6,6 +6,14 @@
   become: false
   tags: macos
 
+- name: Ensure destination directory exists
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/Library/Application Support/Code/User"
+    state: directory
+    mode: 0755
+  become: false
+  tags: unix
+
 - name: Link settings from role files to local destination
   ansible.builtin.file:
     src: "{{ role_path }}/files/settings.json"

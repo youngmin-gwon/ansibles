@@ -8,11 +8,11 @@
   become: false
   tags: unix
 
-- name: Set init.defaultBranch
-  community.general.git_config:
-    name: init.defaultBranch
-    scope: global
-    value: main
+- name: Ensure destination directory exists
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/.config/git"
+    state: directory
+    mode: 0755
   become: false
   tags: unix
 
@@ -24,6 +24,14 @@
     force: yes
     follow: false
     mode: 0644
+  become: false
+  tags: unix
+
+- name: Set init.defaultBranch
+  community.general.git_config:
+    name: init.defaultBranch
+    scope: global
+    value: main
   become: false
   tags: unix
 

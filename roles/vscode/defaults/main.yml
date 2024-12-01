@@ -6,7 +6,7 @@ vscode_extensions:
   - alefragnani.project-manager
   - alexisvt.flutter-snippets
   - aykutsarac.jsoncrack-vscode
-  - bendixma.dart-data-class-generator
+  # - bendixma.dart-data-class-generator
   - bierner.markdown-mermaid
   - bierner.markdown-preview-github-styles
   - bpruitt-goddard.mermaid-markdown-syntax-highlighting
@@ -57,8 +57,8 @@ vscode_extensions:
   - ms-vscode.remote-explorer
   - ms-vscode.remote-repositories
   - ms-vscode.test-adapter-converter
-  - ms-vsliveshare.vsliveshare
-  - ms-vsliveshare.vsliveshare-pack
+  # - ms-vsliveshare.vsliveshare
+  # - ms-vsliveshare.vsliveshare-pack
   - nash.awesome-flutter-snippets
   - oderwat.indent-rainbow
   - patbenatar.advanced-new-file

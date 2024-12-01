@@ -75,9 +75,9 @@
   "editor.insertSpaces": true,
   "editor.bracketPairColorization.enabled": true,
   "editor.stickyScroll.enabled": true,
-  "editor.fontFamily": "Hack Nerd Font, 'Courier New', monospace",
-  "editor.inlayHints.fontFamily": "Hack Nerd Font",
-  "debug.console.fontFamily": "Hack Nerd Font",
+  "editor.fontFamily": "MesloLGL Nerd Font, 'Courier New', monospace",
+  "editor.inlayHints.fontFamily": "MesloLGL Nerd Font",
+  "debug.console.fontFamily": "MesloLGL Nerd Font",
   "files.associations": {
     "*.dart": "dart"
   },

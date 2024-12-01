@@ -8,8 +8,6 @@
       become: false
     - role: zsh
       become: true
-    - role: packages
-      become: false
     - role: gpg
       become: false
     - role: git
@@ -28,6 +26,8 @@
       become: false
     - role: language_manager
       become: false
+    - role: direnv
+      become: false
     - role: rust
       become: false
     - role: java
@@ -36,7 +36,7 @@
       become: false
     - role: android
       become: false
-    - role: direnv
-      become: false
     - role: flutter
+      become: false
+    - role: packages
       become: false
