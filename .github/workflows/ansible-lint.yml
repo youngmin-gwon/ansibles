@@ -4,11 +4,23 @@ on:
     branches: ["main", "stable", "release/v*"]
   push:
     branches: ["main", "stable", "release/v*"]
+
 jobs:
   build:
-    name: Ansible Lint # Naming the build is important to use it as a status check
+    name: Ansible Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # Inject Ansible Vault Password
+      - name: Set Ansible Vault Password
+        env:
+          ANSIBLE_VAULT_PASSWORD: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
+        run: |
+          echo "Vault password set in environment variable."
+
+      # Run ansible-lint
       - name: Run ansible-lint
-        uses: ansible/ansible-lint@main # or version tag instead of 'main'
+        uses: ansible/ansible-lint@main
+        env:
+          ANSIBLE_VAULT_PASSWORD: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
