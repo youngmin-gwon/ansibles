@@ -24,6 +24,10 @@
       become: false
     - role: vscode
       become: false
+    - role: android
+      become: false
+    - role: ios
+      become: false
     - role: language_manager
       become: false
     - role: direnv
@@ -33,8 +37,6 @@
     - role: java
       become: false
     - role: kotlin
-      become: false
-    - role: android
       become: false
     - role: flutter
       become: false

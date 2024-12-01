@@ -1,0 +1,8 @@
+---
+- name: Install simulator runtime
+  ansible.builtin.command: xcodebuild -downloadPlatform iOS
+  changed_when: true
+  failed_when: false
+  become: false
+  when: ansible_os_family == "Darwin"
+  tags: macos

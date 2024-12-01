@@ -1,0 +1,9 @@
+---
+- name: Ensure package manager is installed
+  community.general.homebrew:
+    state: present
+    name: cocoapods
+  become: false
+  when: ansible_os_family == "Darwin"
+  notify: Install simulator runtime
+  tags: macos
