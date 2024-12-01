@@ -2,41 +2,41 @@
 - name: "Set up macOS environment"
   hosts: all
   roles:
-    # - role: os_settings
-    #   become: true
-    # - role: package_manager
-    #   become: false
-    # - role: zsh
-    #   become: true
-    # - role: packages
-    #   become: false
-    # - role: gpg
-    #   become: false
-    # - role: git
-    #   become: false
-    # - role: starship
-    #   become: false
-    # - role: tmux
-    #   become: false
-    # - role: helix
-    #   become: false
-    # - role: aerospace
-    #   become: false
-    # - role: alacritty
-    #   become: false
-    # - role: vscode
-    #   become: false
+    - role: os_settings
+      become: true
+    - role: package_manager
+      become: false
+    - role: zsh
+      become: true
+    - role: packages
+      become: false
+    - role: gpg
+      become: false
+    - role: git
+      become: false
+    - role: starship
+      become: false
+    - role: tmux
+      become: false
+    - role: helix
+      become: false
+    - role: aerospace
+      become: false
+    - role: alacritty
+      become: false
+    - role: vscode
+      become: false
     - role: language_manager
       become: false
-    # - role: rust
-    #   become: false
-    # - role: java
-    #   become: false
-    # - role: kotlin
-    #   become: false
-    # - role: android
-    #   become: false
+    - role: rust
+      become: false
+    - role: java
+      become: false
+    - role: kotlin
+      become: false
+    - role: android
+      become: false
     - role: direnv
       become: false
-    # - role: flutter
-    #   become: false
+    - role: flutter
+      become: false
