@@ -49,9 +49,3 @@
   changed_when: flutter_install.changed
   become: false
   tags: unix
-
-- name: Accept Flutter android licenses
-  ansible.builtin.command: |
-    yes | flutter doctor --android-licenses
-  changed_when: false
-  become: false
