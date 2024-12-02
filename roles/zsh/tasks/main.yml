@@ -19,7 +19,6 @@
     src: "zshrc.j2"
     dest: "{{ lookup('env', 'HOME') }}/.zshrc"
     mode: 0664
-  notify: Reload shell
   tags: unix
 
 - name: Ensure .zshrc includes Homebrew path for Apple Silicon-based machine
@@ -31,10 +30,8 @@
     insertafter: "^{{ custom_config_start_delimiter }}"
     mode: 0644
   become: false
-  notify: Reload shell
   when:
     - ansible_os_family == "Darwin"
-    - ansible_facts['pkg_mgr'] == 'homebrew'
   tags: macos
 
 - name: Reload shell

@@ -32,5 +32,4 @@
   notify: Reload shell
   when:
     - ansible_os_family == "Darwin"
-    - ansible_facts['pkg_mgr'] == 'homebrew' # Ensures Homebrew is the package manager
   tags: macos

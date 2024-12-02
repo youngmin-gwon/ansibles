@@ -4,6 +4,12 @@
   when: ansible_os_family == "Darwin"
   tags: macos
 
+- name: Reload shell
+  ansible.builtin.command: "zsh -c \"source {{ lookup('env', 'HOME') }}/.zshrc\""
+  failed_when: false
+  changed_when: false
+  ignore_errors: false
+
 - name: Check if GPG key already exists
   ansible.builtin.command: "gpg --list-keys {{ gpg_signing_key }}"
   register: gpg_key_check
