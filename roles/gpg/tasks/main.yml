@@ -9,6 +9,7 @@
   register: gpg_key_check
   changed_when: false
   ignore_errors: true
+  failed_when: false
   tags: unix
 
 - name: Import GPG private key if not already present

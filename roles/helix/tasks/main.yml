@@ -1,5 +1,5 @@
 ---
-- name: Ensure Helix when macOS
+- name: Ensure Helix in macOS
   ansible.builtin.include_tasks: macos.yml
   when: ansible_os_family == "Darwin"
   tags: macos

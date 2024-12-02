@@ -47,16 +47,10 @@
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
       ansible.builtin.meta: flush_handlers
 
-    - name: Configure starship settings
+    - name: Configure tmux settings
       ansible.builtin.include_role:
         name: tmux
       tags: macos
-
-    - name: Force all notified handlers to run at this point, not waiting for normal sync points
-      ansible.builtin.meta: flush_handlers
-
-    - name: Force all notified handlers to run at this point, not waiting for normal sync points
-      ansible.builtin.meta: flush_handlers
 
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
       ansible.builtin.meta: flush_handlers
@@ -88,22 +82,6 @@
     - name: Configure vscode settings
       ansible.builtin.include_role:
         name: vscode
-      tags: macos
-
-    - name: Force all notified handlers to run at this point, not waiting for normal sync points
-      ansible.builtin.meta: flush_handlers
-
-    - name: Configure android settings
-      ansible.builtin.include_role:
-        name: android
-      tags: macos
-
-    - name: Force all notified handlers to run at this point, not waiting for normal sync points
-      ansible.builtin.meta: flush_handlers
-
-    - name: Configure ios settings
-      ansible.builtin.include_role:
-        name: ios
       tags: macos
 
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
@@ -149,6 +127,22 @@
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
       ansible.builtin.meta: flush_handlers
 
+    - name: Configure android settings
+      ansible.builtin.include_role:
+        name: android
+      tags: macos
+
+    - name: Force all notified handlers to run at this point, not waiting for normal sync points
+      ansible.builtin.meta: flush_handlers
+
+    - name: Configure ios settings
+      ansible.builtin.include_role:
+        name: ios
+      tags: macos
+
+    - name: Force all notified handlers to run at this point, not waiting for normal sync points
+      ansible.builtin.meta: flush_handlers
+
     - name: Configure flutter settings
       ansible.builtin.include_role:
         name: flutter
@@ -161,6 +155,7 @@
       ansible.builtin.include_role:
         name: packages
       tags: macos
+
   handlers:
     - name: Reload shell
       ansible.builtin.command: "zsh -c \"source {{ lookup('env', 'HOME') }}/.zshrc\""
