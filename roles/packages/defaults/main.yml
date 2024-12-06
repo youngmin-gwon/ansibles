@@ -29,6 +29,7 @@ packages_common_packages:
   - helix
   - asdf
   - podman
+  - git-crypt
 
 packages_mac_only_packages:
   - awk
