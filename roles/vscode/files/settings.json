@@ -77,6 +77,16 @@
   "editor.stickyScroll.enabled": true,
   "editor.fontFamily": "MesloLGL Nerd Font, 'Courier New', monospace",
   "editor.inlayHints.fontFamily": "MesloLGL Nerd Font",
+  "editor.semanticTokenColorCustomizations": {
+    "enabled": true,
+    "rules": {
+      // for rust
+      "*.mutable": {
+        "underline": false,
+        "foreground": "#d9bbfc"
+      }
+    }
+  },
   "debug.console.fontFamily": "MesloLGL Nerd Font",
   "files.associations": {
     "*.dart": "dart"
