@@ -30,6 +30,10 @@ packages_common_packages:
   - asdf
   - podman
   - git-crypt
+  - zellij
+  - yazi
+  - ghostscript
+  - imagemagick
 
 packages_mac_only_packages:
   - awk
