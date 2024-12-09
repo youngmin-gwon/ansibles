@@ -7,11 +7,37 @@
   become: false
   tags: unix
 
+- name: Configure direnv
+  ansible.builtin.command: asdf direnv setup --shell zsh --version latest
+  changed_when: true
+  failed_when: false
+  become: false
+  tags: unix
+
+- name: Set global direnv version
+  ansible.builtin.command: asdf global direnv latest
+  changed_when: true
+  failed_when: false
+  become: false
+  tags: unix
+
 - name: Add Direnv plugin if not already added
   ansible.builtin.command: asdf plugin add direnv
   when: "'direnv' not in plugin_list.stdout"
   register: plugin_added
   changed_when: plugin_added.rc == 0
   become: false
-  notify: Configure direnv
+  tags: unix
+
+- name: Set direnv configuration in zsh
+  ansible.builtin.lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.zshrc"
+    line: "eval \"$(direnv hook zsh)\" # direnv"
+    state: present
+    create: yes
+    mode: 0644
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+  become: false
+  when: ansible_env.SHELL | basename == "zsh"
+  notify: Reload shell
   tags: unix
