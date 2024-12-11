@@ -9,14 +9,14 @@ config.font = wezterm.font("MesloLGL Nerd Font")
 config.font_size = 15
 
 -- Theme
-function get_appearance()
+local function get_appearance()
   if wezterm.gui then
     return wezterm.gui.get_appearance()
   end
   return 'Dark'
 end
 
-function scheme_for_appearance(appearance)
+local function scheme_for_appearance(appearance)
   if appearance:find 'Dark' then
     return 'Catppuccin Macchiato'
   else
@@ -24,7 +24,7 @@ function scheme_for_appearance(appearance)
   end
 end
 
-function background_color_for_appearance(appearance)
+local function background_color_for_appearance(appearance)
   if appearance:find 'Dark' then
     return '#24273a'
   else
@@ -32,7 +32,7 @@ function background_color_for_appearance(appearance)
   end
 end
 
-function hover_background_color_for_appearance(appearance)
+local function hover_background_color_for_appearance(appearance)
   if appearance:find 'Dark' then
     return '#1e2030'
   else
@@ -40,7 +40,7 @@ function hover_background_color_for_appearance(appearance)
   end
 end
 
-function hover_foreground_color_for_appearance(appearance)
+local function hover_foreground_color_for_appearance(appearance)
   if appearance:find 'Dark' then
     return '#f0c6c6'
   else
@@ -48,7 +48,7 @@ function hover_foreground_color_for_appearance(appearance)
   end
 end
 
-function inactive_background_color_for_appearance(appearance)
+local function inactive_background_color_for_appearance(appearance)
   if appearance:find 'Dark' then
     return '#24273a'
   else
@@ -56,7 +56,7 @@ function inactive_background_color_for_appearance(appearance)
   end
 end
 
-function inactive_foreground_color_for_appearance(appearance)
+local function inactive_foreground_color_for_appearance(appearance)
   if appearance:find 'Dark' then
     return '#a5adcb'
   else
@@ -64,7 +64,7 @@ function inactive_foreground_color_for_appearance(appearance)
   end
 end
 
-function active_background_color_for_appearance(appearance)
+local function active_background_color_for_appearance(appearance)
   if appearance:find 'Dark' then
     return '#5b6078'
   else
@@ -72,7 +72,7 @@ function active_background_color_for_appearance(appearance)
   end
 end
 
-function active_foreground_color_for_appearance(appearance)
+local function active_foreground_color_for_appearance(appearance)
   if appearance:find 'Dark' then
     return '#ed8796'
   else
