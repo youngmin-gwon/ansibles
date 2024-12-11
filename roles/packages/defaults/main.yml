@@ -34,6 +34,7 @@ packages_common_packages:
   - yazi
   - ghostscript
   - imagemagick
+  - wezterm
 
 packages_mac_only_packages:
   - awk
