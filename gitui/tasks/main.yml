@@ -1,0 +1,35 @@
+---
+- name: Ensure gitui in macOS
+  ansible.builtin.include_tasks: macos.yml
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Ensure destination directory exists
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/.config/gitui"
+    state: directory
+    mode: 0755
+  become: false
+  tags: unix
+
+- name: Link keybinding file from role files to local destination
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/key_bindings.ron"
+    dest: "{{ lookup('env', 'HOME') }}/.config/gitui/key_bindings.ron"
+    state: link
+    mode: 0644
+    force: true
+    follow: false
+  become: false
+  tags: unix
+
+- name: Link theme file from role files to local destination
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/theme"
+    dest: "{{ lookup('env', 'HOME') }}/.config/gitui/theme"
+    state: link
+    mode: 0644
+    force: true
+    follow: false
+  become: false
+  tags: unix

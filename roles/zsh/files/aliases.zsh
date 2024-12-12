@@ -29,7 +29,19 @@ alias gpf='git push --force-with-lease'
 alias gg='git branch | fzf | xargs git checkout'
 alias gup='git branch --set-upstream-to=origin/$(git-current-branch) $(git-current-branch)'
 
-note() {
+# Function to set aliases based on light/dark mode
+set_mode_aliases() {
+    if [[ $(defaults read -g AppleInterfaceStyle 2>/dev/null) == "Dark" ]]; then
+        alias gitui="gitui -t theme/dark.ron"
+    else
+        alias gitui="gitui -t theme/light.ron"
+    fi
+}
+
+# Call the function to set aliases on shell startup
+set_mode_aliases
+
+function note() {
     echo "date: $(date)" >> $HOME/drafts.txt
     echo "$@" >> $HOME/drafts.txt
     echo "" >> $HOME/drafts.txt

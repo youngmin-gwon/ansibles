@@ -35,6 +35,7 @@ packages_common_packages:
   - ghostscript
   - imagemagick
   - wezterm
+  - gitui
 
 packages_mac_only_packages:
   - awk
