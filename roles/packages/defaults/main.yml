@@ -10,12 +10,15 @@ packages_common_packages:
   - bash-language-server
   - bat
   - entr
+  - ffmpeg
+  - fzf
   - lcov
   - lf
   - llvm
   - ncdu
   - neofetch
   - protobuf
+  - ripgrep
   - shellcheck
   - starship
   - tldr
