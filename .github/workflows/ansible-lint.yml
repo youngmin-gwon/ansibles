@@ -8,21 +8,12 @@ on:
 jobs:
   build:
     name: Ansible Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-
-      # Inject Ansible Vault Password
-      - name: Set Ansible Vault Password
-        env:
-          ANSIBLE_VAULT_PASSWORD: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
-        run: |
-          echo "Vault password set in environment variable."
 
       # Run ansible-lint
       - name: Run ansible-lint
         uses: ansible/ansible-lint@main
         with:
           config: .ansible-lint.yml
-        env:
-          ANSIBLE_VAULT_PASSWORD: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
