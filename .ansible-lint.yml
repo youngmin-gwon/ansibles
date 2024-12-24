@@ -3,7 +3,7 @@ exclude_paths:
   - .git/
   - .github/
   - roles/git/vars/main.yml
-  - group_vars/all/gpg.yml
+  - group_vars/dev/gpg.yml
 
 warn_list:
   - package-latest
