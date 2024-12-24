@@ -1,7 +1,0 @@
----
-- name: Ensure gitui is installed
-  community.general.homebrew:
-    state: present
-    name: wezterm
-  become: false
-  tags: macos
