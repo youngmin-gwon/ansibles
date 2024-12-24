@@ -30,9 +30,12 @@
   tags: unix
 
 - name: Set direnv configuration in zsh
-  ansible.builtin.lineinfile:
+  ansible.builtin.blockinfile:
     path: "{{ lookup('env', 'HOME') }}/.zshrc"
-    line: "eval \"$(direnv hook zsh)\" # direnv"
+    block: |
+      eval \"$(direnv hook zsh)\"
+      source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
+    marker: "# {mark} direnv"
     state: present
     create: yes
     mode: 0644

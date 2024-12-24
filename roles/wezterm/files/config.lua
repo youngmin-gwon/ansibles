@@ -4,6 +4,9 @@ local wezterm = require 'wezterm'
 -- This will hold the configuration.
 local config = wezterm.config_builder()
 
+-- Set up "Do not ask confirmation when closing"
+config.window_close_confirmation = "NeverPrompt"
+
 -- Font
 config.font = wezterm.font("MesloLGL Nerd Font")
 config.font_size = 15
