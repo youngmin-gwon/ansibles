@@ -38,7 +38,7 @@
     marker: "# {mark} direnv"
     state: present
     create: yes
-    mode: 0644
+    mode: "0644"
     insertbefore: "^{{ custom_config_end_delimiter }}"
   become: false
   when: ansible_env.SHELL | basename == "zsh"

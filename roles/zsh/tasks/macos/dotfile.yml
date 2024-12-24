@@ -34,7 +34,7 @@
     state: present
     create: yes
     insertafter: "^{{ custom_config_start_delimiter }}"
-    mode: 0644
+    mode: "0644"
   become: false
   notify: Reload shell
   when:

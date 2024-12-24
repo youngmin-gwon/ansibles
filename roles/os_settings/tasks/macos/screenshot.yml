@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ os_settings_screenshot_dir_path }}"
     state: directory
-    mode: 0755
+    mode: "0755"
   become: false
   tags: macos
 
@@ -16,7 +16,11 @@
     state: present
   with_items:
     # Set screenshot location
-    - { key: "location", type: "string", value: "{{ os_settings_screenshot_dir_path }}" }
+    - {
+        key: "location",
+        type: "string",
+        value: "{{ os_settings_screenshot_dir_path }}",
+      }
     # Save screenshots in PNG format
     #  - Other options BMP, GIF, JPG, PDF, TIFF
     - { key: "type", type: "string", value: "png" }

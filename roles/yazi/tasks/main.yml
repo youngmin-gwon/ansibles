@@ -19,7 +19,7 @@
     marker: "# {mark} yazi"
     state: present
     create: yes
-    mode: 0644
+    mode: "0644"
     insertbefore: "^{{ custom_config_end_delimiter }}"
   become: false
   when: ansible_env.SHELL | basename == "zsh"
@@ -30,7 +30,7 @@
   ansible.builtin.file:
     path: "{{ lookup('env', 'HOME') }}/.config/yazi"
     state: directory
-    mode: 0755
+    mode: "0755"
   become: false
   tags: unix
 
@@ -39,7 +39,7 @@
     src: "{{ role_path }}/files"
     dest: "{{ lookup('env', 'HOME') }}/.config/yazi"
     state: link
-    mode: 0755
+    mode: "0755"
     force: true
     follow: false
   become: false

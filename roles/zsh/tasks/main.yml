@@ -18,7 +18,7 @@
   ansible.builtin.template:
     src: "zshrc.j2"
     dest: "{{ lookup('env', 'HOME') }}/.zshrc"
-    mode: 0664
+    mode: "0664"
   tags: unix
 
 - name: Ensure .zshrc includes Homebrew path for Apple Silicon-based machine
@@ -28,7 +28,7 @@
     state: present
     create: yes
     insertafter: "^{{ custom_config_start_delimiter }}"
-    mode: 0644
+    mode: "0644"
   become: false
   when:
     - ansible_os_family == "Darwin"

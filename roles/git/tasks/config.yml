@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ lookup('env', 'HOME') }}/.gitconfig"
     state: touch
-    mode: 0644
+    mode: "0644"
   changed_when: false
   become: false
   tags: unix
@@ -12,7 +12,7 @@
   ansible.builtin.file:
     path: "{{ lookup('env', 'HOME') }}/.config/git"
     state: directory
-    mode: 0755
+    mode: "0755"
   become: false
   tags: unix
 
@@ -23,7 +23,7 @@
     state: link
     force: yes
     follow: false
-    mode: 0644
+    mode: "0644"
   become: false
   tags: unix
 
@@ -127,7 +127,7 @@
   ansible.builtin.file:
     path: "{{ lookup('env', 'HOME') }}/.config/git"
     state: directory
-    mode: 0755
+    mode: "0755"
   become: false
   tags: unix
 
@@ -138,7 +138,7 @@
     state: link
     force: yes
     follow: false
-    mode: 0644
+    mode: "0644"
   become: false
   tags: unix
 
