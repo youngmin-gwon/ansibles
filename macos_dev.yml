@@ -63,9 +63,9 @@
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
       ansible.builtin.meta: flush_handlers
 
-    - name: Configure gitui settings
+    - name: Configure yazi settings
       ansible.builtin.include_role:
-        name: gitui
+        name: yazi
       tags: macos
 
     - name: Force all notified handlers to run at this point, not waiting for normal sync points

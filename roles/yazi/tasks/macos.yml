@@ -1,0 +1,25 @@
+---
+- name: Ensure prerequisites for yazi are installed
+  community.general.homebrew:
+    state: present
+    name:
+      - ffmpegthumbnailer
+      - ffmpeg
+      - sevenzip
+      - jq
+      - poppler
+      - fd
+      - ripgrep
+      - fzf
+      - zoxide
+      - imagemagick
+      - font-symbols-only-nerd-font
+  become: false
+  tags: macos
+
+- name: Ensure yazi is installed
+  community.general.homebrew:
+    state: present
+    name: yazi
+  become: false
+  tags: macos

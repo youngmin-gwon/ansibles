@@ -1,0 +1,46 @@
+---
+- name: Ensure yazi in macOS
+  ansible.builtin.include_tasks: macos.yml
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Set yazi configuration in zsh
+  ansible.builtin.blockinfile:
+    path: "{{ lookup('env', 'HOME') }}/.zshrc"
+    block: |
+      function y() {
+        local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+        yazi "$@" --cwd-file="$tmp"
+        if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+          builtin cd -- "$cwd"
+        fi
+        rm -f -- "$tmp"
+      }
+    marker: "# {mark} yazi"
+    state: present
+    create: yes
+    mode: 0644
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+  become: false
+  when: ansible_env.SHELL | basename == "zsh"
+  notify: Reload shell
+  tags: unix
+
+- name: Ensure destination directory exists
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/.config/yazi"
+    state: directory
+    mode: 0755
+  become: false
+  tags: unix
+
+- name: Link directory from role files to local destination
+  ansible.builtin.file:
+    src: "{{ role_path }}/files"
+    dest: "{{ lookup('env', 'HOME') }}/.config/yazi"
+    state: link
+    mode: 0755
+    force: true
+    follow: false
+  become: false
+  tags: unix
