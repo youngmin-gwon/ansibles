@@ -5,11 +5,15 @@ rules:
   line-length: disable
   truthy:
     allowed-values: ["true", "false", "yes", "no"]
+  comments-indentation: false
   comments:
     min-spaces-from-content: 1
   braces:
     min-spaces-inside: 0
     max-spaces-inside: 1
+  octal-values: # Add this section
+    forbid-implicit-octal: true
+    forbid-explicit-octal: true
 
 ignore: |
   .cache
