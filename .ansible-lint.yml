@@ -2,8 +2,7 @@
 exclude_paths:
   - .git/
   - .github/
-  - roles/git/vars/main.yml
-  - group_vars/dev/gpg.yml
+  - group_vars/dev/
   - /tmp/
 
 warn_list:
