@@ -1,6 +1,6 @@
 ---
 - name: "Set up macOS environment"
-  hosts: all
+  hosts: macos
   tasks:
     - name: Configure OS settings
       ansible.builtin.include_role:
