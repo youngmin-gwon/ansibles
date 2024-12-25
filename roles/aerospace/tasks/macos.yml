@@ -4,7 +4,7 @@
     state: present
     name: nikitabobko/tap/aerospace
   become: false
-  tags: macos
+  tags: dev, macos
 
 - name: Ensure destination directory exists
   ansible.builtin.file:
@@ -12,7 +12,7 @@
     state: directory
     mode: "0755"
   become: false
-  tags: macos
+  tags: dev, macos
 
 - name: Link file from role files to local destination
   ansible.builtin.file:
@@ -23,4 +23,4 @@
     force: true
     follow: false
   become: false
-  tags: macos
+  tags: dev, macos

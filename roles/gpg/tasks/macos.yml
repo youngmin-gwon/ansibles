@@ -4,7 +4,7 @@
     state: present
     name: gpg
   become: false
-  tags: macos
+  tags: dev, macos
 
 - name: Add GPG line to .zshrc if GPG is installed
   ansible.builtin.lineinfile:
@@ -13,4 +13,4 @@
     insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
   notify: Reload shell
-  tags: macos
+  tags: dev, macos

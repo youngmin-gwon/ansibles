@@ -8,7 +8,7 @@
   ignore_errors: true
   become: false
   when: ansible_system == "Darwin"
-  tags: macos
+  tags: dev, macos
 
 - name: Install Homebrew if the package manager is not installed
   ansible.builtin.shell: >
@@ -18,7 +18,7 @@
     - ansible_os_family == "Darwin"
     - not homebrew_installed.stat.exists
   changed_when: false
-  tags: macos
+  tags: dev, macos
 
 - name: Ensure .zshrc includes Homebrew path for Apple Silicon-based machine
   ansible.builtin.lineinfile:
@@ -32,4 +32,4 @@
   notify: Reload shell
   when:
     - ansible_os_family == "Darwin"
-  tags: macos
+  tags: dev, macos

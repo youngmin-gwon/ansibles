@@ -18,10 +18,14 @@
     - { key: "EncryptionRequire", type: "bool", value: "true" }
     # Setting up block list
     - { key: "BlocklistAutoUpdate", type: "bool", value: "true" }
-    - { key: "BlocklistURL", type: "string", value: "http://john.bitsurge.net/public/biglist.p2p.gz" }
+    - {
+        key: "BlocklistURL",
+        type: "string",
+        value: "http://john.bitsurge.net/public/biglist.p2p.gz",
+      }
     # Auto-resizing the window to fit transfers
     - { key: "AutoSize", type: "bool", value: "true" }
   become: true
   notify:
     - Kill Transmission
-  tags: macos
+  tags: dev, macos

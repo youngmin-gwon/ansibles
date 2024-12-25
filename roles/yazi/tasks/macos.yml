@@ -15,11 +15,11 @@
       - imagemagick
       - font-symbols-only-nerd-font
   become: false
-  tags: macos
+  tags: dev, macos
 
 - name: Ensure yazi is installed
   community.general.homebrew:
     state: present
     name: yazi
   become: false
-  tags: macos
+  tags: dev, macos

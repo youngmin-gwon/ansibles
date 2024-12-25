@@ -2,7 +2,7 @@
 - name: Ensure Alacritty in macOS
   ansible.builtin.include_tasks: macos.yml
   when: ansible_os_family == "Darwin"
-  tags: macos
+  tags: dev, macos
 
 - name: Ensure destination directory exists
   ansible.builtin.file:

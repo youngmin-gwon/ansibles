@@ -2,7 +2,7 @@
 - name: Install packages on macOS
   ansible.builtin.include_tasks: macos.yml
   when: ansible_os_family == "Darwin"
-  tags: macos
+  tags: dev, macos
 
 - name: Install packages on Debian-based Linux
   ansible.builtin.include_tasks: macos.yml

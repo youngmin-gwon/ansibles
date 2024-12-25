@@ -5,4 +5,4 @@
     state: present
   become: false
   when: ansible_os_family == "Darwin"
-  tags: macos
+  tags: dev, macos

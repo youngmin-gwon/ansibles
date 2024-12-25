@@ -2,7 +2,7 @@
 - name: Ensure starship in macOS
   ansible.builtin.include_tasks: macos.yml
   when: ansible_os_family == "Darwin"
-  tags: macos
+  tags: dev, macos
 
 - name: Link config file from role files to local destination
   ansible.builtin.file:

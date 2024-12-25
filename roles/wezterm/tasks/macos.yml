@@ -4,4 +4,4 @@
     state: present
     name: wezterm
   become: false
-  tags: macos
+  tags: dev, macos

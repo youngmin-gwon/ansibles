@@ -2,14 +2,14 @@
 - name: Ensure the package manager is installed
   ansible.builtin.include_role:
     name: package_manager
-  tags: macos
+  tags: dev, macos
 
 - name: Update Homebrew
   community.general.homebrew:
     update_homebrew: false
   when: ansible_os_family == "Darwin"
   become: false
-  tags: macos
+  tags: dev, macos
 
 - name: Install Homebrew packages
   community.general.homebrew:
@@ -17,7 +17,7 @@
     name: "{{ packages_common_packages + packages_mac_only_packages }}"
     upgrade_all: false
   become: false
-  tags: macos
+  tags: dev, macos
 
 - name: Install Homebrew cask packages
   community.general.homebrew_cask:
@@ -25,7 +25,7 @@
     name: "{{ packages_mac_gui_packages }}"
     upgrade_all: false
   become: false
-  tags: macos
+  tags: dev, macos
 
 - name: Install Homebrew mas packages
   community.general.mas:
@@ -33,4 +33,4 @@
     id: "{{ packages_mac_gui_app_store_packages }}"
     upgrade_all: false
   become: false
-  tags: macos
+  tags: dev, macos

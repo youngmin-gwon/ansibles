@@ -2,7 +2,7 @@
 - name: Ensure gpg in macOS
   ansible.builtin.include_tasks: macos.yml
   when: ansible_os_family == "Darwin"
-  tags: macos
+  tags: dev, macos
 
 - name: Reload shell
   ansible.builtin.command: "zsh -c \"source {{ lookup('env', 'HOME') }}/.zshrc\""

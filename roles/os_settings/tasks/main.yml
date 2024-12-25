@@ -2,4 +2,4 @@
 - name: Configure system settings in macOS
   ansible.builtin.include_tasks: macos/main.yml
   when: ansible_os_family == "Darwin"
-  tags: macos
+  tags: dev, macos

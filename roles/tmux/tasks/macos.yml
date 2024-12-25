@@ -4,4 +4,4 @@
     name: tmux
     state: present
   become: false
-  tags: macos
+  tags: dev, macos

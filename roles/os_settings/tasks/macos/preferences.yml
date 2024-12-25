@@ -2,7 +2,7 @@
 - name: Close any opened System Preferences panes
   ansible.builtin.command: osascript -e 'tell application "System Preferences" to quit'
   changed_when: false
-  tags: macos
+  tags: dev, macos
 
 - name: Set UI preferences
   community.general.osx_defaults:
@@ -17,11 +17,15 @@
     # Accent color
     - { key: "AppleAccentColor", type: "string", value: "-1" }
     # Highlight color
-    - { key: "AppleHighlightColor", type: "string", value: "0.847059 0.847059 0.862745 Graphite" }
+    - {
+        key: "AppleHighlightColor",
+        type: "string",
+        value: "0.847059 0.847059 0.862745 Graphite",
+      }
     # Menu bar
     - { key: "_HIHideMenuBar", type: "bool", value: "false" }
   become: false
-  tags: macos
+  tags: dev, macos
 
 - name: Set clock preferences
   community.general.osx_defaults:
@@ -36,7 +40,7 @@
     # Date format
     - { key: "DateFormat", type: "string", value: "EEE MMM d h:mm a" }
   become: false
-  tags: macos
+  tags: dev, macos
 
 - name: Set metrics Unit
   community.general.osx_defaults:
@@ -53,7 +57,7 @@
     # Metrics
     - { key: "AppleMetricUnits", type: "bool", value: "true" }
   become: false
-  tags: macos
+  tags: dev, macos
 
 - name: Set language preferences
   community.general.osx_defaults:
@@ -68,7 +72,7 @@
     # Locale
     - { key: "AppleLocale", type: "string", value: "ko_KR@currency=KRW" }
   become: false
-  tags: macos
+  tags: dev, macos
 
 - name: Set text input preferences
   community.general.osx_defaults:
@@ -79,11 +83,23 @@
     state: present
   with_items:
     # Disable spelling correction
-    - { key: "NSAutomaticSpellingCorrectionEnabled", type: "bool", value: "false" }
+    - {
+        key: "NSAutomaticSpellingCorrectionEnabled",
+        type: "bool",
+        value: "false",
+      }
     # Disable smart quote
-    - { key: "NSAutomaticQuoteSubstitutionEnabled", type: "bool", value: "false" }
+    - {
+        key: "NSAutomaticQuoteSubstitutionEnabled",
+        type: "bool",
+        value: "false",
+      }
     # Disable smart dash
-    - { key: "NSAutomaticDashSubstitutionEnabled", type: "bool", value: "false" }
+    - {
+        key: "NSAutomaticDashSubstitutionEnabled",
+        type: "bool",
+        value: "false",
+      }
     # Disable auto capitalization
     - { key: "NSAutomaticCapitalizationEnabled", type: "bool", value: "false" }
     # Enable full keyboard access for all controls (e.g. enable Tab in modal dialogs)
@@ -95,14 +111,14 @@
     # Increase key repeat rate 2
     - { key: "InitialKeyRepeat", type: "int", value: "10" }
   become: false
-  tags: macos
+  tags: dev, macos
 
 - name: Set the timezone to Asia/Seoul
   ansible.builtin.command:
     cmd: systemsetup -settimezone "Asia/Seoul"
   become: true
   changed_when: false
-  tags: macos
+  tags: dev, macos
 
 - name: Enable subpixel font rendering on non-Apple LCDs
   # Reference: https://github.com/kevinSuttle/macOS-Defaults/issues/17#issuecomment-266633501
@@ -113,7 +129,7 @@
     value: 1
     state: present
   become: false
-  tags: macos
+  tags: dev, macos
 
 - name: Enable font smoothing
   community.general.osx_defaults:
@@ -123,7 +139,7 @@
     value: false
     state: present
   become: false
-  tags: macos
+  tags: dev, macos
 
 - name: Set a message when the screen is locked
   community.general.osx_defaults:
@@ -134,4 +150,4 @@
     state: present
   become: true
   changed_when: false
-  tags: macos
+  tags: dev, macos
