@@ -7,10 +7,11 @@
   tags: dev, macos
 
 - name: Add GPG line to .zshrc if GPG is installed
-  ansible.builtin.lineinfile:
-    path: "{{ lookup('env', 'HOME') }}/.zshrc"
-    line: "export GPG_TTY=$(tty) # GPG setup"
+  ansible.builtin.blockinfile:
+    path: "{{ home_path }}/.zshrc"
+    block: "export GPG_TTY=$(tty)"
     insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
+    marker: "# --- {mark} gpg ---"
   notify: Reload shell
   tags: dev, macos

@@ -1,9 +1,13 @@
 ---
-- name: "Try Ubuntu Lab"
+- name: Configure ubuntu server
   hosts: home_lab
   tasks:
-    - name: Hello world
-      ansible.builtin.command: "echo \"Hello world!\""
-      failed_when: false
-      changed_when: false
-      ignore_errors: false
+    # - name: Configure docker
+    #   ansible.builtin.include_role:
+    #     name: docker
+    #   tags: server, debian
+
+    - name: Configure zsh
+      ansible.builtin.include_role:
+        name: zsh
+      tags: server, debian

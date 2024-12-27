@@ -2,4 +2,4 @@
 # recommend overriding this variable if you wanna put personal information
 os_settings_login_hint_message: Enter your default login message
 
-os_settings_screenshot_dir_path: "{{ lookup('env', 'HOME') }}/Screenshots"
+os_settings_screenshot_dir_path: "{{ home_path }}/Screenshots"

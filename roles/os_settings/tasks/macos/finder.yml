@@ -14,11 +14,7 @@
     state: present
   with_items:
     - { key: "NewWindowTarget", type: "string", value: "PfLo" }
-    - {
-        key: "NewWindowTargetPath",
-        type: "string",
-        value: "file://{{ ansible_env.HOME }}/",
-      }
+    - { key: "NewWindowTargetPath", type: "string", value: "file://{{ ansible_env.HOME }}/" }
     # Show icons for hard drives, servers, and removable media on the desktop
     - { key: "ShowExternalHardDrivesOnDesktop", type: "bool", value: "true" }
     - { key: "ShowHardDrivesOnDesktop", type: "bool", value: "true" }

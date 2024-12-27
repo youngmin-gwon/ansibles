@@ -1,0 +1,16 @@
+---
+- name: Ensure zsh is installed on Debian-based systems
+  ansible.builtin.apt:
+    name: zsh
+    state: present
+  become: true
+
+- name: Change admin default shell to zsh
+  ansible.builtin.shell: chsh -s $(which zsh)
+  become: true
+  changed_when: false
+
+- name: Change user default shell to zsh
+  ansible.builtin.shell: chsh -s $(which zsh) {{ ansible_user }}
+  become: true
+  changed_when: false

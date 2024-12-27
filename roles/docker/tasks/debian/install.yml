@@ -1,0 +1,60 @@
+---
+- name: Update packages
+  ansible.builtin.apt:
+    update_cache: yes
+  become: true
+
+- name: Install required packages
+  ansible.builtin.apt:
+    name:
+      - ca-certificates
+      - curl
+    state: present
+  become: true
+
+- name: Create directory /etc/apt/keyrings with appropriate permissions
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+  become: true
+
+- name: Download Docker GPG key
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    dest: /etc/apt/keyrings/docker.asc
+    mode: "0644"
+  become: true
+
+- name: Get architecture and version codename
+  ansible.builtin.shell: |
+    arch=$(dpkg --print-architecture)
+    version_codename=$(. /etc/os-release && echo "$VERSION_CODENAME")
+    echo "deb [arch=${arch} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu ${version_codename} stable"
+  register: repository_line
+  changed_when: false
+
+- name: Add Docker repository to sources.list
+  ansible.builtin.lineinfile:
+    path: /etc/apt/sources.list.d/docker.list
+    line: "{{ repository_line.stdout }}"
+    state: present
+    create: yes
+    mode: "0644"
+  become: true
+
+- name: Update packages after adding the Docker repository
+  ansible.builtin.apt:
+    update_cache: yes
+  become: true
+
+- name: Install docker-related packages
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: present
+  become: true

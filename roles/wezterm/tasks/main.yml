@@ -6,7 +6,7 @@
 
 - name: Ensure destination directory exists
   ansible.builtin.file:
-    path: "{{ lookup('env', 'HOME') }}/.config/wezterm"
+    path: "{{ dotfiles_directory_path }}/wezterm"
     state: directory
     mode: "0755"
   become: false
@@ -15,7 +15,7 @@
 - name: Link file from role files to local destination
   ansible.builtin.file:
     src: "{{ role_path }}/files/config.lua"
-    dest: "{{ lookup('env', 'HOME') }}/.config/wezterm/wezterm.lua"
+    dest: "{{ dotfiles_directory_path }}/wezterm/wezterm.lua"
     state: link
     mode: "0644"
     force: true

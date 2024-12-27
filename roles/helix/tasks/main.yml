@@ -7,7 +7,7 @@
 - name: Link directory from role files to local destination
   ansible.builtin.file:
     src: "{{ role_path }}/files"
-    dest: "{{ lookup('env', 'HOME') }}/.config/helix"
+    dest: "{{ dotfiles_directory_path }}/helix"
     state: link
     mode: "0755"
     force: true

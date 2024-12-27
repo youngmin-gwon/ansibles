@@ -1,7 +1,7 @@
 ---
 - name: Ensure .gitconfig file exists
   ansible.builtin.file:
-    path: "{{ lookup('env', 'HOME') }}/.gitconfig"
+    path: "{{ home_path }}/.gitconfig"
     state: touch
     mode: "0644"
   changed_when: false
@@ -10,7 +10,7 @@
 
 - name: Ensure destination directory exists
   ansible.builtin.file:
-    path: "{{ lookup('env', 'HOME') }}/.config/git"
+    path: "{{ dotfiles_directory_path }}/git"
     state: directory
     mode: "0755"
   become: false
@@ -19,7 +19,7 @@
 - name: Link gitignore
   ansible.builtin.file:
     src: "{{ role_path }}/files/gitignore"
-    dest: "{{ lookup('env', 'HOME') }}/.config/git/gitignore"
+    dest: "{{ dotfiles_directory_path }}/git/gitignore"
     state: link
     force: yes
     follow: false
@@ -38,7 +38,7 @@
 - name: Set global .gitignore
   community.general.git_config:
     name: core.excludesfile
-    value: "{{ lookup('env', 'HOME') }}/.config/git/gitignore"
+    value: "{{ dotfiles_directory_path }}/git/gitignore"
     scope: global
   become: false
   tags: unix
@@ -125,7 +125,7 @@
 
 - name: Ensure .config/git directory exists
   ansible.builtin.file:
-    path: "{{ lookup('env', 'HOME') }}/.config/git"
+    path: "{{ dotfiles_directory_path }}/git"
     state: directory
     mode: "0755"
   become: false
@@ -134,7 +134,7 @@
 - name: Link global.commit.template
   ansible.builtin.file:
     src: "{{ role_path }}/files/commit.template"
-    dest: "{{ lookup('env', 'HOME') }}/.config/git/commit_template"
+    dest: "{{ dotfiles_directory_path }}/git/commit_template"
     state: link
     force: yes
     follow: false
@@ -146,7 +146,7 @@
   community.general.git_config:
     name: commit.template
     scope: global
-    value: "{{ lookup('env', 'HOME') }}/.config/git/commit_template"
+    value: "{{ dotfiles_directory_path }}/git/commit_template"
   become: false
   tags: unix
 

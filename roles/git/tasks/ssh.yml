@@ -41,6 +41,6 @@
       Host github.com
         AddKeysToAgent yes
         IdentityFile ~/.ssh/github
-    marker: "# {mark} ANSIBLE MANAGED BLOCK - GitHub"
+    marker: "# --- {mark} ANSIBLE MANAGED BLOCK - GitHub ---"
   become: false
   tags: unix

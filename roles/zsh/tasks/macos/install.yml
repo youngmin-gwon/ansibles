@@ -1,22 +1,20 @@
 ---
-- name: Ensure Homebrew is installed
-  ansible.builtin.stat:
-    path: /opt/homebrew/bin/brew
-  register: homebrew_installed
-  failed_when: false
-  changed_when: false
-  ignore_errors: true
+- name: Ensure zsh is installed
+  community.general.homebrew:
+    name: zsh
+    state: present
   become: false
-  when: ansible_system == "Darwin"
   tags: dev, macos
 
-- name: Install Homebrew if the package manager is not installed
-  ansible.builtin.shell: >
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  become: false
-  when:
-    - ansible_os_family == "Darwin"
-    - not homebrew_installed.stat.exists
+- name: Change admin default shell to zsh
+  ansible.builtin.shell: chsh -s $(which zsh)
+  become: true
+  changed_when: false
+  tags: dev, macos
+
+- name: Change user default shell to zsh
+  ansible.builtin.shell: chsh -s $(which zsh) $(whoami)
+  become: true
   changed_when: false
   tags: dev, macos
 

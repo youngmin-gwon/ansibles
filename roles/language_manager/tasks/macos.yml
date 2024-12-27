@@ -11,13 +11,14 @@
   tags: dev, macos
 
 - name: Ensure .zshrc includes asdf initialization
-  ansible.builtin.lineinfile:
-    path: "{{ lookup('env', 'HOME') }}/.zshrc"
-    line: ". /opt/homebrew/opt/asdf/libexec/asdf.sh"
+  ansible.builtin.blockinfile:
+    path: "{{ home_path }}/.zshrc"
+    block: ". /opt/homebrew/opt/asdf/libexec/asdf.sh"
     state: present
     create: yes
     mode: "0644"
     insertbefore: "^{{ custom_config_end_delimiter }}"
+    marker: "# --- {mark} asdf ---"
   become: false
   notify: Reload shell
   when:

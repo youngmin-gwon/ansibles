@@ -75,14 +75,14 @@
 
 - name: Add Android Command Line Tools to PATH
   ansible.builtin.blockinfile:
-    path: "{{ lookup('env', 'HOME') }}/.zshrc"
+    path: "{{ home_path }}/.zshrc"
     block: |
       export ANDROID_SDK_ROOT=/opt/homebrew/share/android-commandlinetools
       export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
       export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
     insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
-    marker: "# {mark} Android SDK"
+    marker: "# --- {mark} Android SDK ---"
   when: ansible_os_family == "Darwin"
   # notify: Reload shell
   become: false

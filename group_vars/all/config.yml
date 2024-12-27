@@ -1,3 +1,6 @@
 ---
 custom_config_start_delimiter: "# START CUSTOM CONFIG"
 custom_config_end_delimiter: "# END CUSTOM CONFIG"
+
+home_path: "{{ lookup('env', 'HOME') }}"
+dotfiles_directory_path: "{{ home_path }}/.config"

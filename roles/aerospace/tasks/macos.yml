@@ -8,7 +8,7 @@
 
 - name: Ensure destination directory exists
   ansible.builtin.file:
-    path: "{{ lookup('env', 'HOME') }}/.config/aerospace"
+    path: "{{ dotfiles_directory_path }}/aerospace"
     state: directory
     mode: "0755"
   become: false
@@ -17,7 +17,7 @@
 - name: Link file from role files to local destination
   ansible.builtin.file:
     src: "{{ role_path }}/files/config.toml"
-    dest: "{{ lookup('env', 'HOME') }}/.config/aerospace/aerospace.toml"
+    dest: "{{ dotfiles_directory_path }}/aerospace/aerospace.toml"
     state: link
     mode: "0644"
     force: true

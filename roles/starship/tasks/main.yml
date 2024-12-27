@@ -7,7 +7,7 @@
 - name: Link config file from role files to local destination
   ansible.builtin.file:
     src: "{{ role_path }}/files/config.toml"
-    dest: "{{ lookup('env', 'HOME') }}/.config/starship.toml"
+    dest: "{{ dotfiles_directory_path }}/starship.toml"
     state: link
     mode: "0644"
     force: true
@@ -16,10 +16,11 @@
   tags: unix
 
 - name: Add Starship init line to .zshrc if Starship is installed
-  ansible.builtin.lineinfile:
-    path: "{{ lookup('env', 'HOME') }}/.zshrc"
-    line: 'eval "$(starship init zsh)" # starship'
+  ansible.builtin.blockinfile:
+    path: "{{ home_path }}/.zshrc"
+    block: 'eval "$(starship init zsh)"'
     insertbefore: "^{{ custom_config_end_delimiter }}"
+    marker: "# --- {mark} starship ---"
     state: present
   notify: Reload shell
   tags: unix
