@@ -1,14 +1,15 @@
-# Declare $DOTFILES_ZSH path
-DOTFILES_ZSH="{{ dotfiles_zsh_path }}"
-
 {{ custom_config_start_delimiter }}
 export DOCKER_DISPLAY=$(ifconfig en0 | grep inet\ | awk '{ print $2 ":0" }') # docker: x11
 {{ custom_config_end_delimiter }}
 
-# load modules for zsh
-source $DOTFILES_ZSH/history.zsh
-source $DOTFILES_ZSH/git.zsh
-source $DOTFILES_ZSH/config.zsh
-source $DOTFILES_ZSH/packages.zsh
-source $DOTFILES_ZSH/functions.zsh
-source $DOTFILES_ZSH/aliases.zsh
+{{ template_config_delimiter }}
+
+# Declare $DOTFILES_ZSH path
+DOTFILES_ZSH="{{ dotfiles_zsh_path }}"
+
+# Iterate through all files in the directory
+for file in "$DOTFILES_ZSH"/*; do
+  if [[ -f "$file" ]]; then
+    source "$file"
+  fi
+done

@@ -1,0 +1,7 @@
+---
+- name: Ensure trash-cli is installed
+  community.general.homebrew:
+    state: present
+    name: trash-cli
+  become: false
+  tags: dev, macos

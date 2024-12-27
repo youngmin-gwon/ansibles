@@ -6,7 +6,7 @@
 
 - name: Set yazi configuration in zsh
   ansible.builtin.blockinfile:
-    path: "{{ home_path }}/.zshrc"
+    path: "{{ dotfiles_directory_path }}/zsh/functions.zsh"
     block: |
       function y() {
         local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd

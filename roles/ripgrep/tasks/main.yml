@@ -1,0 +1,15 @@
+---
+- name: Ensure ripgrep in macOS
+  ansible.builtin.include_tasks: macos.yml
+  when: ansible_os_family == "Darwin"
+  tags: dev, macos
+
+- name: Add aliases in zsh configuration
+  ansible.builtin.lineinfile:
+    path: "{{ dotfiles_directory_path }}/zsh/aliases.zsh"
+    line: alias grep='rg'
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+    state: present
+  notify: Reload shell
+  become: false
+  tags: unix

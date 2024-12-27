@@ -1,0 +1,7 @@
+---
+- name: Ensure lsd is installed
+  community.general.homebrew:
+    state: present
+    name: lsd
+  become: false
+  tags: dev, macos

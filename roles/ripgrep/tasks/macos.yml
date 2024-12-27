@@ -1,0 +1,7 @@
+---
+- name: Ensure ripgrep is installed
+  community.general.homebrew:
+    state: present
+    name: ripgrep
+  become: false
+  tags: dev, macos

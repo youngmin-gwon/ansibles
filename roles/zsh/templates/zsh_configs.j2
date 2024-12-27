@@ -1,0 +1,24 @@
+{{ template_config_delimiter }}
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+setopt AUTO_CD
+setopt EXTENDED_GLOB
+setopt HIST_REDUCE_BLANKS
+setopt NO_BG_NICE       # don't nice background tasks
+setopt NO_CASE_GLOB     # Case insensitive globbing
+setopt NO_LIST_BEEP
+
+DISABLE_UNTRACKED_FILES_DIRTY="true" # makes repository status check for large repositories much faster
+DISABLE_AUTO_TITLE="true"
+
+setopt extended_history       # record timestamp of command in HISTFILE
+setopt hist_expire_dups_first # delete duplicates first when HISTFILE size exceeds HISTSIZE
+setopt hist_ignore_dups       # ignore duplicated commands history list
+setopt hist_ignore_space      # ignore commands that start with space
+setopt hist_verify            # show command with history expansion to user before running it
+setopt inc_append_history     # add commands to HISTFILE in order of execution
+setopt share_history          # share command history data
+
+{{ custom_config_start_delimiter }}
+{{ custom_config_end_delimiter }}

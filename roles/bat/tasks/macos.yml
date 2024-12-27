@@ -1,0 +1,7 @@
+---
+- name: Ensure bat is installed
+  community.general.homebrew:
+    state: present
+    name: bat
+  become: false
+  tags: dev, macos

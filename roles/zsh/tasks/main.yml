@@ -11,13 +11,53 @@
 
 - name: Set the $DOTFILES path in zsh
   ansible.builtin.set_fact:
-    dotfiles_zsh_path: "{{ role_path }}/files"
+    dotfiles_zsh_path: "{{ dotfiles_directory_path }}/zsh"
+  tags: unix
+
+- name: Ensure destination directory exists
+  ansible.builtin.file:
+    path: "{{ dotfiles_zsh_path }}"
+    state: directory
+    mode: "0755"
+  become: true
+  tags: unix
+
+- name: Link zsh packages file from role files to local destination
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/packages.zsh"
+    dest: "{{ dotfiles_zsh_path }}/packages.zsh"
+    state: link
+    mode: "0644"
+    force: true
+    follow: false
+  become: true
   tags: unix
 
 - name: Generate .zshrc from template
   ansible.builtin.template:
     src: "zshrc.j2"
     dest: "{{ home_path }}/.zshrc"
+    mode: "0664"
+  tags: unix
+
+- name: Generate alias file for zsh from template
+  ansible.builtin.template:
+    src: "zsh_aliases.j2"
+    dest: "{{ dotfiles_zsh_path }}/aliases.zsh"
+    mode: "0664"
+  tags: unix
+
+- name: Generate configuration file for zsh from template
+  ansible.builtin.template:
+    src: "zsh_configs.j2"
+    dest: "{{ dotfiles_zsh_path }}/configs.zsh"
+    mode: "0664"
+  tags: unix
+
+- name: Generate function file for zsh from template
+  ansible.builtin.template:
+    src: "zsh_functions.j2"
+    dest: "{{ dotfiles_zsh_path }}/functions.zsh"
     mode: "0664"
   tags: unix
 

@@ -14,3 +14,33 @@
     follow: false
   become: false
   tags: unix
+
+- name: Add aliases in zsh configuration
+  ansible.builtin.lineinfile:
+    path: "{{ dotfiles_directory_path }}/zsh/aliases.zsh"
+    line: alias vi='hx'
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+    state: present
+  notify: Reload shell
+  become: false
+  tags: unix
+
+- name: Add configurations in zsh configuration
+  ansible.builtin.lineinfile:
+    path: "{{ dotfiles_directory_path }}/zsh/configs.zsh"
+    line: export VISUAL=hx
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+    state: present
+  notify: Reload shell
+  become: false
+  tags: unix
+
+- name: Add configurations in zsh configuration
+  ansible.builtin.lineinfile:
+    path: "{{ dotfiles_directory_path }}/zsh/configs.zsh"
+    line: export EDITOR=hx
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+    state: present
+  notify: Reload shell
+  become: false
+  tags: unix
