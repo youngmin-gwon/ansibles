@@ -3,3 +3,4 @@
 
 # related to personal information
 roles/os_settings/vars/main.yml
+roles/git/files/config

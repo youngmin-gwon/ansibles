@@ -1,13 +1,4 @@
 ---
-- name: Ensure .gitconfig file exists
-  ansible.builtin.file:
-    path: "{{ home_path }}/.gitconfig"
-    state: touch
-    mode: "0644"
-  changed_when: false
-  become: false
-  tags: unix
-
 - name: Ensure destination directory exists
   ansible.builtin.file:
     path: "{{ dotfiles_directory_path }}/git"
@@ -16,14 +7,30 @@
   become: false
   tags: unix
 
-- name: Link gitignore
+- name: Link directory from role files to local destination
   ansible.builtin.file:
-    src: "{{ role_path }}/files/gitignore"
-    dest: "{{ dotfiles_directory_path }}/git/gitignore"
+    src: "{{ role_path }}/files"
+    dest: "{{ dotfiles_directory_path }}/git"
     state: link
-    force: yes
+    mode: "0755"
+    force: true
     follow: false
-    mode: "0644"
+  become: false
+  tags: unix
+
+- name: Set commit.template
+  community.general.git_config:
+    name: commit.template
+    scope: global
+    value: "{{ dotfiles_directory_path }}/git/commit.template"
+  become: false
+  tags: unix
+
+- name: Set global .gitignore
+  community.general.git_config:
+    name: core.excludesFile
+    value: "{{ dotfiles_directory_path }}/git/gitignore"
+    scope: global
   become: false
   tags: unix
 
@@ -32,14 +39,6 @@
     name: init.defaultBranch
     scope: global
     value: main
-  become: false
-  tags: unix
-
-- name: Set global .gitignore
-  community.general.git_config:
-    name: core.excludesfile
-    value: "{{ dotfiles_directory_path }}/git/gitignore"
-    scope: global
   become: false
   tags: unix
 
@@ -128,25 +127,6 @@
     path: "{{ dotfiles_directory_path }}/git"
     state: directory
     mode: "0755"
-  become: false
-  tags: unix
-
-- name: Link global.commit.template
-  ansible.builtin.file:
-    src: "{{ role_path }}/files/commit.template"
-    dest: "{{ dotfiles_directory_path }}/git/commit_template"
-    state: link
-    force: yes
-    follow: false
-    mode: "0644"
-  become: false
-  tags: unix
-
-- name: Set commit.template
-  community.general.git_config:
-    name: commit.template
-    scope: global
-    value: "{{ dotfiles_directory_path }}/git/commit_template"
   become: false
   tags: unix
 
