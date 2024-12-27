@@ -5,7 +5,7 @@
     state: directory
     mode: "0755"
   become: false
-  tags: dev, macos
+  tags: macos
 
 - name: Set Screenshot settings
   community.general.osx_defaults:
@@ -16,9 +16,13 @@
     state: present
   with_items:
     # Set screenshot location
-    - { key: "location", type: "string", value: "{{ os_settings_screenshot_dir_path }}" }
+    - {
+        key: "location",
+        type: "string",
+        value: "{{ os_settings_screenshot_dir_path }}",
+      }
     # Save screenshots in PNG format
     #  - Other options BMP, GIF, JPG, PDF, TIFF
     - { key: "type", type: "string", value: "png" }
   become: false
-  tags: dev, macos
+  tags: macos

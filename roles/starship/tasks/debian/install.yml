@@ -1,0 +1,20 @@
+---
+- name: Ensure prerequisite packages
+  ansible.builtin.apt:
+    name: curl
+    state: present
+  become: true
+  tags: debian
+
+- name: Install starship if not installed
+  ansible.builtin.blockinfile:
+    path: "{{ dotfiles_directory_path }}/zsh/configs.zsh"
+    block: |
+      if ! command -v starship &> /dev/null; then
+        curl -sS https://starship.rs/install.sh | sh
+      fi
+    marker: "# --- {mark} starship installation ---"
+    insertafter: "{{ custom_config_start_delimiter }}"
+    state: present
+    mode: "0644"
+  tags: debian

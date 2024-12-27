@@ -3,7 +3,7 @@
   ansible.builtin.command: osascript -e 'tell application "Finder" to quit'
   changed_when: false
   become: false
-  tags: dev, macos
+  tags: macos
 
 - name: Set Finder settings
   community.general.osx_defaults:
@@ -14,7 +14,11 @@
     state: present
   with_items:
     - { key: "NewWindowTarget", type: "string", value: "PfLo" }
-    - { key: "NewWindowTargetPath", type: "string", value: "file://{{ ansible_env.HOME }}/" }
+    - {
+        key: "NewWindowTargetPath",
+        type: "string",
+        value: "file://{{ ansible_env.HOME }}/",
+      }
     # Show icons for hard drives, servers, and removable media on the desktop
     - { key: "ShowExternalHardDrivesOnDesktop", type: "bool", value: "true" }
     - { key: "ShowHardDrivesOnDesktop", type: "bool", value: "true" }
@@ -42,4 +46,4 @@
     # Disable the warning before emptying the Trash
     - { key: "WarnOnEmptyTrash", type: "bool", value: "false" }
   become: false
-  tags: dev, macos
+  tags: macos

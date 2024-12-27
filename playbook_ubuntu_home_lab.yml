@@ -2,12 +2,52 @@
 - name: Configure ubuntu server
   hosts: home_lab
   tasks:
-    # - name: Configure docker
-    #   ansible.builtin.include_role:
-    #     name: docker
-    #   tags: server, debian
+    - name: Configure docker
+      ansible.builtin.include_role:
+        name: docker
+      tags: server, debian
 
     - name: Configure zsh
       ansible.builtin.include_role:
         name: zsh
+      tags: server, debian
+
+    - name: Force all notified handlers to run at this point, not waiting for normal sync points
+      ansible.builtin.meta: flush_handlers
+
+    - name: Configure starship
+      ansible.builtin.include_role:
+        name: starship
+      tags: server, debian
+
+    - name: Force all notified handlers to run at this point, not waiting for normal sync points
+      ansible.builtin.meta: flush_handlers
+
+    - name: Configure bat settings
+      ansible.builtin.include_role:
+        name: bat
+      tags: server, debian
+
+    - name: Force all notified handlers to run at this point, not waiting for normal sync points
+      ansible.builtin.meta: flush_handlers
+
+    - name: Configure lsd settings
+      ansible.builtin.include_role:
+        name: lsd
+      tags: server, debian
+
+    - name: Force all notified handlers to run at this point, not waiting for normal sync points
+      ansible.builtin.meta: flush_handlers
+
+    - name: Configure ripgrep settings
+      ansible.builtin.include_role:
+        name: ripgrep
+      tags: server, debian
+
+    - name: Force all notified handlers to run at this point, not waiting for normal sync points
+      ansible.builtin.meta: flush_handlers
+
+    - name: Configure trash-cli settings
+      ansible.builtin.include_role:
+        name: trash_cli
       tags: server, debian

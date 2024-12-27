@@ -2,16 +2,17 @@
 - name: Ensure zsh on macOS
   ansible.builtin.include_tasks: macos/install.yml
   when: ansible_system == "Darwin"
-  tags: dev, macos
+  tags: macos
 
 - name: Ensure zsh on Debian-based Linux
   ansible.builtin.include_tasks: debian/install.yml
   when: ansible_facts['os_family'] == 'Debian'
-  tags: server, debian
+  tags: debian
 
 - name: Set the $DOTFILES path in zsh
   ansible.builtin.set_fact:
     dotfiles_zsh_path: "{{ dotfiles_directory_path }}/zsh"
+  become: false
   tags: unix
 
 - name: Ensure destination directory exists
@@ -19,10 +20,10 @@
     path: "{{ dotfiles_zsh_path }}"
     state: directory
     mode: "0755"
-  become: true
+  become: false
   tags: unix
 
-- name: Link zsh packages file from role files to local destination
+- name: Link zsh packages file from role files to local destination when local
   ansible.builtin.file:
     src: "{{ role_path }}/files/packages.zsh"
     dest: "{{ dotfiles_zsh_path }}/packages.zsh"
@@ -30,7 +31,18 @@
     mode: "0644"
     force: true
     follow: false
-  become: true
+  when: is_local_connection
+  become: false
+  tags: unix
+
+- name: Copy zsh packages file from role files to local destination when not local
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/packages.zsh"
+    dest: "{{ dotfiles_zsh_path }}/packages.zsh"
+    mode: "0644"
+    force: true
+  when: not is_local_connection
+  become: false
   tags: unix
 
 - name: Generate .zshrc from template
@@ -38,6 +50,7 @@
     src: "zshrc.j2"
     dest: "{{ home_path }}/.zshrc"
     mode: "0664"
+  become: false
   tags: unix
 
 - name: Generate alias file for zsh from template
@@ -45,6 +58,7 @@
     src: "zsh_aliases.j2"
     dest: "{{ dotfiles_zsh_path }}/aliases.zsh"
     mode: "0664"
+  become: false
   tags: unix
 
 - name: Generate configuration file for zsh from template
@@ -52,6 +66,7 @@
     src: "zsh_configs.j2"
     dest: "{{ dotfiles_zsh_path }}/configs.zsh"
     mode: "0664"
+  become: false
   tags: unix
 
 - name: Generate function file for zsh from template
@@ -59,6 +74,7 @@
     src: "zsh_functions.j2"
     dest: "{{ dotfiles_zsh_path }}/functions.zsh"
     mode: "0664"
+  become: false
   tags: unix
 
 - name: Ensure .zshrc includes Homebrew path for Apple Silicon-based machine
@@ -66,14 +82,13 @@
     path: "{{ home_path }}/.zshrc"
     block: "export PATH=/opt/homebrew/bin:$PATH"
     state: present
-    create: yes
     insertafter: "^{{ custom_config_start_delimiter }}"
     marker: "# --- {mark} Homebrew ---"
     mode: "0644"
   become: false
   when:
     - ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos
 
 - name: Reload shell
   ansible.builtin.command: "zsh -c \"source {{ home_path }}/.zshrc\""

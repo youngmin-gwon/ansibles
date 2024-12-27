@@ -14,7 +14,7 @@
     state: present
   become: false
   when: rust_check.rc != 0
-  tags: dev, macos
+  tags: macos
 
 # Run rustup to install Rust if not installed
 - name: Install Rust using rustup

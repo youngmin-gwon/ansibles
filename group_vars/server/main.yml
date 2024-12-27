@@ -1,0 +1,3 @@
+---
+home_path: "{{ ansible_user_dir }}"
+dotfiles_directory_path: "{{ home_path }}/.config"

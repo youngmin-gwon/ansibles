@@ -1,7 +1,7 @@
 ---
-- name: Ensure lsd is installed
+- name: Ensure starship in macOS
   community.general.homebrew:
+    name: tmux
     state: present
-    name: lsd
   become: false
-  tags: dev, macos
+  tags: macos

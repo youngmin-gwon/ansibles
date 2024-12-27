@@ -1,5 +1,4 @@
 {{ custom_config_start_delimiter }}
-export DOCKER_DISPLAY=$(ifconfig en0 | grep inet\ | awk '{ print $2 ":0" }') # docker: x11
 {{ custom_config_end_delimiter }}
 
 {{ template_config_delimiter }}

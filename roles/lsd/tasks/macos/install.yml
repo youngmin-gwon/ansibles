@@ -1,7 +1,7 @@
 ---
-- name: Ensure bat is installed
+- name: Ensure lsd is installed
   community.general.homebrew:
     state: present
-    name: bat
+    name: lsd
   become: false
-  tags: dev, macos
+  tags: macos

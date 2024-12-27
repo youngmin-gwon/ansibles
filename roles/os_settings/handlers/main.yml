@@ -3,22 +3,22 @@
   ansible.builtin.command: killall Dock
   failed_when: false
   changed_when: false
-  tags: dev, macos
+  tags: macos
 
 - name: Kill Finder
   ansible.builtin.command: killall Finder
   failed_when: false
   changed_when: false
-  tags: dev, macos
+  tags: macos
 
 - name: Kill Transmission
   ansible.builtin.command: killall Transmission
   failed_when: false
   changed_when: false
-  tags: dev, macos
+  tags: macos
 
 - name: Kill Safari
   ansible.builtin.command: killall Safari
   failed_when: false
   changed_when: false
-  tags: dev, macos
+  tags: macos

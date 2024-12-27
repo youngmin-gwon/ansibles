@@ -4,4 +4,4 @@
     state: present
     name: ripgrep
   become: false
-  tags: dev, macos
+  tags: macos

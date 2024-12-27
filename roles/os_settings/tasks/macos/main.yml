@@ -2,49 +2,49 @@
 - name: Configure System settings
   ansible.builtin.include_tasks: system.yml
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos
 
 - name: Configure Preferences settings
   ansible.builtin.include_tasks: preferences.yml
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos
 
 - name: Configure Lock Screen settings
   ansible.builtin.include_tasks: lock_screen.yml
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos
 
 - name: Configure Menu Bar settings
   ansible.builtin.include_tasks: menu_bar.yml
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos
 
 - name: Configure Transmission settings
   ansible.builtin.include_tasks: transmission.yml
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos
 
 - name: Configure Dock settings
   ansible.builtin.include_tasks: dock.yml
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos
 
 - name: Configure Finder settings
   ansible.builtin.include_tasks: finder.yml
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos
 
 - name: Configure Screenshot settings
   ansible.builtin.include_tasks: screenshot.yml
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos
 
 - name: Configure Activity Monitor settings
   ansible.builtin.include_tasks: activity_monitor.yml
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos
 
 - name: Configure Simulator settings
   ansible.builtin.include_tasks: simulator.yml
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos

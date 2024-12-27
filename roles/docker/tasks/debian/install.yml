@@ -3,6 +3,7 @@
   ansible.builtin.apt:
     update_cache: yes
   become: true
+  tags: debian
 
 - name: Install required packages
   ansible.builtin.apt:
@@ -11,6 +12,7 @@
       - curl
     state: present
   become: true
+  tags: debian
 
 - name: Create directory /etc/apt/keyrings with appropriate permissions
   ansible.builtin.file:
@@ -18,6 +20,7 @@
     state: directory
     mode: "0755"
   become: true
+  tags: debian
 
 - name: Download Docker GPG key
   ansible.builtin.get_url:
@@ -25,6 +28,7 @@
     dest: /etc/apt/keyrings/docker.asc
     mode: "0644"
   become: true
+  tags: debian
 
 - name: Get architecture and version codename
   ansible.builtin.shell: |
@@ -33,6 +37,7 @@
     echo "deb [arch=${arch} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu ${version_codename} stable"
   register: repository_line
   changed_when: false
+  tags: debian
 
 - name: Add Docker repository to sources.list
   ansible.builtin.lineinfile:
@@ -42,11 +47,13 @@
     create: yes
     mode: "0644"
   become: true
+  tags: debian
 
 - name: Update packages after adding the Docker repository
   ansible.builtin.apt:
     update_cache: yes
   become: true
+  tags: debian
 
 - name: Install docker-related packages
   ansible.builtin.apt:
@@ -58,3 +65,4 @@
       - docker-compose-plugin
     state: present
   become: true
+  tags: debian

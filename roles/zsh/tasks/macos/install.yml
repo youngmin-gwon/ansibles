@@ -4,26 +4,25 @@
     name: zsh
     state: present
   become: false
-  tags: dev, macos
+  tags: macos
 
 - name: Change admin default shell to zsh
   ansible.builtin.shell: chsh -s $(which zsh)
   become: true
   changed_when: false
-  tags: dev, macos
+  tags: macos
 
 - name: Change user default shell to zsh
   ansible.builtin.shell: chsh -s $(which zsh) $(whoami)
   become: true
   changed_when: false
-  tags: dev, macos
+  tags: macos
 
 - name: Ensure .zshrc includes Homebrew path for Apple Silicon-based machine
   ansible.builtin.blockinfile:
     path: "{{ home_path }}/.zshrc"
     block: "export PATH=/opt/homebrew/bin:$PATH"
     state: present
-    create: yes
     insertafter: "^{{ custom_config_start_delimiter }}"
     mode: "0644"
     marker: "# --- {mark} Homebrew ---"
@@ -31,4 +30,4 @@
   notify: Reload shell
   when:
     - ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos

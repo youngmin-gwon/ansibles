@@ -1,7 +1,7 @@
 ---
-- name: Ensure starship in macOS
+- name: Ensure bat is installed
   community.general.homebrew:
-    name: tmux
     state: present
+    name: bat
   become: false
-  tags: dev, macos
+  tags: macos

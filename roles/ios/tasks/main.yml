@@ -6,4 +6,4 @@
   become: false
   when: ansible_os_family == "Darwin"
   notify: Install simulator runtime
-  tags: dev, macos
+  tags: macos

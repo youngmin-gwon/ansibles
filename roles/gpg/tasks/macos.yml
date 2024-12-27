@@ -4,7 +4,7 @@
     state: present
     name: gpg
   become: false
-  tags: dev, macos
+  tags: macos
 
 - name: Add GPG line to .zshrc if GPG is installed
   ansible.builtin.blockinfile:
@@ -14,4 +14,4 @@
     state: present
     marker: "# --- {mark} gpg ---"
   notify: Reload shell
-  tags: dev, macos
+  tags: macos

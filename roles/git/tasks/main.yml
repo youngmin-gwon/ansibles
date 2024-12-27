@@ -1,7 +1,7 @@
 ---
 - name: Ensure git in macOS
   ansible.builtin.include_tasks: macos.yml
-  tags: dev, macos
+  tags: macos
 
 - name: Configure git
   ansible.builtin.include_tasks: config.yml

@@ -1,8 +1,13 @@
 ---
-- name: Ensure lsd in macOS
-  ansible.builtin.include_tasks: macos.yml
+- name: Ensure bat in macOS
+  ansible.builtin.include_tasks: macos/install.yml
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos
+
+- name: Ensure bat in debian
+  ansible.builtin.include_tasks: debian/install.yml
+  when: ansible_os_family == "Debian"
+  tags: debian
 
 - name: Add aliases in zsh configuration
   ansible.builtin.lineinfile:
@@ -10,6 +15,5 @@
     line: alias cat='bat'
     insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
-  notify: Reload shell
   become: false
   tags: unix

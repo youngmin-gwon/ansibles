@@ -4,4 +4,4 @@
     state: present
     name: alacritty
   become: false
-  tags: dev, macos
+  tags: macos

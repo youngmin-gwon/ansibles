@@ -1,0 +1,7 @@
+---
+- name: Ensure trash-cli is installed on Debian-based systems
+  ansible.builtin.apt:
+    name: trash-cli
+    state: present
+  become: true
+  tags: debian

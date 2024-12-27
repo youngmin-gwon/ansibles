@@ -2,7 +2,7 @@
 - name: Ensure yazi in macOS
   ansible.builtin.include_tasks: macos.yml
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos
 
 - name: Set yazi configuration in zsh
   ansible.builtin.blockinfile:
@@ -18,7 +18,6 @@
       }
     marker: "# --- {mark} yazi ---"
     state: present
-    create: yes
     mode: "0644"
     insertbefore: "^{{ custom_config_end_delimiter }}"
   become: false
@@ -42,5 +41,16 @@
     mode: "0755"
     force: true
     follow: false
+  when: is_local_connection
+  become: false
+  tags: unix
+
+- name: Copy config file from role files to local destination when local
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files"
+    dest: "{{ dotfiles_directory_path }}/yazi"
+    mode: "0644"
+    force: true
+  when: not is_local_connection
   become: false
   tags: unix

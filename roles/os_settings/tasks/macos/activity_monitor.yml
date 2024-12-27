@@ -18,4 +18,4 @@
     # Sort Activity Monitor results in descending order
     - { key: "SortDirection", type: "int", value: "0" }
   become: false
-  tags: dev, macos
+  tags: macos

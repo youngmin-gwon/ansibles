@@ -4,7 +4,7 @@
     state: present
     name: visual-studio-code
   become: false
-  tags: dev, macos
+  tags: macos
 
 - name: Ensure destination directory exists
   ansible.builtin.file:
@@ -24,7 +24,7 @@
     follow: false
   become: false
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos
 
 - name: Link keybindings from role files to local destination
   ansible.builtin.file:
@@ -36,7 +36,7 @@
     follow: false
   become: false
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos
 
 - name: Link snippets from role files to local destination
   ansible.builtin.file:
@@ -48,4 +48,4 @@
     follow: false
   become: false
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos

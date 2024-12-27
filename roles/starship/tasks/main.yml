@@ -1,10 +1,15 @@
 ---
 - name: Ensure starship in macOS
-  ansible.builtin.include_tasks: macos.yml
+  ansible.builtin.include_tasks: macos/install.yml
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos
 
-- name: Link config file from role files to local destination
+- name: Ensure starship in debian
+  ansible.builtin.include_tasks: debian/install.yml
+  when: ansible_os_family == "Debian"
+  tags: debian
+
+- name: Link config file from role files to local destination when local
   ansible.builtin.file:
     src: "{{ role_path }}/files/config.toml"
     dest: "{{ dotfiles_directory_path }}/starship.toml"
@@ -12,6 +17,17 @@
     mode: "0644"
     force: true
     follow: false
+  when: is_local_connection
+  become: false
+  tags: unix
+
+- name: Copy config file from role files to local destination when local
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/config.toml"
+    dest: "{{ dotfiles_directory_path }}/starship.toml"
+    mode: "0644"
+    force: true
+  when: not is_local_connection
   become: false
   tags: unix
 
@@ -22,5 +38,4 @@
     insertbefore: "^{{ custom_config_end_delimiter }}"
     marker: "# --- {mark} starship ---"
     state: present
-  notify: Reload shell
   tags: unix

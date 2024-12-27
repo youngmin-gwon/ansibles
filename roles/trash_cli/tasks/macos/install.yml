@@ -4,4 +4,4 @@
     state: present
     name: trash-cli
   become: false
-  tags: dev, macos
+  tags: macos

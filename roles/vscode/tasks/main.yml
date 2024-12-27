@@ -2,7 +2,7 @@
 - name: Configure VSCode in macOS
   ansible.builtin.include_tasks: macos.yml
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos
 
 - name: Get list of installed VS Code extensions
   ansible.builtin.command:

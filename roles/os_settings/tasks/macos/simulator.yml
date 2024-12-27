@@ -28,4 +28,4 @@
     # Set simulator to always appear on top of other windows
     - { key: "AXInspectorEnabled", type: "bool", value: "true" }
   become: false
-  tags: dev, macos
+  tags: macos

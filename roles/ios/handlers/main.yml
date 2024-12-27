@@ -5,4 +5,4 @@
   failed_when: false
   become: false
   when: ansible_os_family == "Darwin"
-  tags: dev, macos
+  tags: macos

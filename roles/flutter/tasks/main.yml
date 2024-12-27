@@ -4,7 +4,7 @@
   register: rosetta_install
   changed_when: rosetta_install.rc != 0
   become: false
-  tags: dev, macos
+  tags: macos
 
 - name: Check if Flutter plugin is already added
   ansible.builtin.command: asdf plugin list
