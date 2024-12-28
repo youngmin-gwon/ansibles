@@ -1,6 +1,6 @@
 ---
 - name: Ensure Helix in macOS
-  ansible.builtin.include_tasks: macos.yml
+  ansible.builtin.include_tasks: macos/install.yml
   when: ansible_os_family == "Darwin"
   tags: macos
 
