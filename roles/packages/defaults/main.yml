@@ -20,24 +20,21 @@ packages_common_packages:
   - protobuf
   - ripgrep
   - shellcheck
-  - starship
   - tldr
   - tmux
   - trash-cli
   - tree
   - lsd
-  - helix
   - asdf
-  - podman
   - git-crypt
   - zellij
   - ghostscript
   - imagemagick
-  - wezterm
   - gitui
 
 packages_mac_only_packages:
   - awk
+  - starship
   - gitmoji
   - marksman
   - mas

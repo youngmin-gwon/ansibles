@@ -33,7 +33,7 @@
   become: false
   tags: unix
 
-- name: Link directory from role files to local destination
+- name: Link directory from role files to local destination when local
   ansible.builtin.file:
     src: "{{ role_path }}/files"
     dest: "{{ dotfiles_directory_path }}/yazi"
@@ -45,7 +45,7 @@
   become: false
   tags: unix
 
-- name: Copy config file from role files to local destination when local
+- name: Copy config file from role files to local destination when not local
   ansible.builtin.copy:
     src: "{{ role_path }}/files"
     dest: "{{ dotfiles_directory_path }}/yazi"

@@ -1,5 +1,5 @@
 ---
-- name: Ensure Helix in macOS
+- name: Ensure helix in macOS
   community.general.homebrew:
     state: present
     name: helix

@@ -23,7 +23,7 @@
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
       ansible.builtin.meta: flush_handlers
 
-    - name: Configure bat settings
+    - name: Configure bat
       ansible.builtin.include_role:
         name: bat
       tags: server, debian
@@ -31,7 +31,7 @@
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
       ansible.builtin.meta: flush_handlers
 
-    - name: Configure lsd settings
+    - name: Configure lsd
       ansible.builtin.include_role:
         name: lsd
       tags: server, debian
@@ -39,15 +39,17 @@
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
       ansible.builtin.meta: flush_handlers
 
-    - name: Configure ripgrep settings
+    - name: Configure ripgrep
       ansible.builtin.include_role:
         name: ripgrep
       tags: server, debian
 
-    - name: Force all notified handlers to run at this point, not waiting for normal sync points
-      ansible.builtin.meta: flush_handlers
-
-    - name: Configure trash-cli settings
+    - name: Configure trash-cli
       ansible.builtin.include_role:
         name: trash_cli
+      tags: server, debian
+
+    - name: Configure helix
+      ansible.builtin.include_role:
+        name: helix
       tags: server, debian

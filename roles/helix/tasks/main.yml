@@ -4,7 +4,12 @@
   when: ansible_os_family == "Darwin"
   tags: macos
 
-- name: Link directory from role files to local destination
+- name: Ensure Helix in debian
+  ansible.builtin.include_tasks: debian/install.yml
+  when: ansible_os_family == "Debian"
+  tags: debian
+
+- name: Link directory from role files to local destination when local
   ansible.builtin.file:
     src: "{{ role_path }}/files"
     dest: "{{ dotfiles_directory_path }}/helix"
@@ -12,6 +17,17 @@
     mode: "0755"
     force: true
     follow: false
+  when: is_local_connection
+  become: false
+  tags: unix
+
+- name: Copy directory from role files to local destination when not local
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/"
+    dest: "{{ dotfiles_directory_path }}/helix/"
+    mode: "0644"
+    force: true
+  when: not is_local_connection
   become: false
   tags: unix
 
@@ -21,7 +37,6 @@
     line: alias vi='hx'
     insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
-  notify: Reload shell
   become: false
   tags: unix
 
@@ -31,7 +46,6 @@
     line: export VISUAL=hx
     insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
-  notify: Reload shell
   become: false
   tags: unix
 
@@ -41,6 +55,5 @@
     line: export EDITOR=hx
     insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
-  notify: Reload shell
   become: false
   tags: unix
