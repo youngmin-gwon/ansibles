@@ -17,11 +17,7 @@
     # Accent color
     - { key: "AppleAccentColor", type: "string", value: "-1" }
     # Highlight color
-    - {
-        key: "AppleHighlightColor",
-        type: "string",
-        value: "0.847059 0.847059 0.862745 Graphite",
-      }
+    - { key: "AppleHighlightColor", type: "string", value: "0.847059 0.847059 0.862745 Graphite" }
     # Menu bar
     - { key: "_HIHideMenuBar", type: "bool", value: "false" }
   become: false
@@ -83,23 +79,11 @@
     state: present
   with_items:
     # Disable spelling correction
-    - {
-        key: "NSAutomaticSpellingCorrectionEnabled",
-        type: "bool",
-        value: "false",
-      }
+    - { key: "NSAutomaticSpellingCorrectionEnabled", type: "bool", value: "false" }
     # Disable smart quote
-    - {
-        key: "NSAutomaticQuoteSubstitutionEnabled",
-        type: "bool",
-        value: "false",
-      }
+    - { key: "NSAutomaticQuoteSubstitutionEnabled", type: "bool", value: "false" }
     # Disable smart dash
-    - {
-        key: "NSAutomaticDashSubstitutionEnabled",
-        type: "bool",
-        value: "false",
-      }
+    - { key: "NSAutomaticDashSubstitutionEnabled", type: "bool", value: "false" }
     # Disable auto capitalization
     - { key: "NSAutomaticCapitalizationEnabled", type: "bool", value: "false" }
     # Enable full keyboard access for all controls (e.g. enable Tab in modal dialogs)
