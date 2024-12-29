@@ -47,8 +47,8 @@
 
 - name: Copy config file from role files to local destination when not local
   ansible.builtin.copy:
-    src: "{{ role_path }}/files"
-    dest: "{{ dotfiles_directory_path }}/yazi"
+    src: "{{ role_path }}/files/"
+    dest: "{{ dotfiles_directory_path }}/yazi/"
     mode: "0644"
     force: true
   when: not is_local_connection
