@@ -53,3 +53,8 @@
       ansible.builtin.include_role:
         name: helix
       tags: server, debian
+
+    - name: Configure plex
+      ansible.builtin.include_role:
+        name: plex
+      tags: server, debian
