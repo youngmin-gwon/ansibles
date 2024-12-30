@@ -65,7 +65,6 @@ packages_mac_gui_app_store_packages:
   - 409201541 # Pages
   - 1584519802 # Vimlike
   - 937984704 # Amphetamine
-  - 1592876082 # BetterPlayer
   - 1437138382 # WhatFont
 
 packages_debian_gui_packages:
