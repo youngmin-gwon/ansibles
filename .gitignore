@@ -2,6 +2,5 @@
 **/.venv
 
 # related to personal information
-roles/os_settings/vars/main.yml
 roles/git/files/config
-roles/plex/vars/main.yml
+roles/*/vars/main.yml
