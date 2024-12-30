@@ -12,7 +12,7 @@
   when: docker_compose_installed.rc != 0
   tags: unix
 
-- name: Create Plex data directories
+- name: Create Plex directories
   ansible.builtin.file:
     path: "{{ plex_directory }}"
     state: directory

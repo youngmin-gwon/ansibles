@@ -97,9 +97,9 @@
   become: false
   tags: macos
 
-- name: Set the timezone to Asia/Seoul
+- name: Set the timezone
   ansible.builtin.command:
-    cmd: systemsetup -settimezone "Asia/Seoul"
+    cmd: systemsetup -settimezone "{{ timezone }}"
   become: true
   changed_when: false
   tags: macos

@@ -4,3 +4,4 @@ custom_config_start_delimiter: "# START CUSTOM CONFIG"
 custom_config_end_delimiter: "# END CUSTOM CONFIG"
 
 is_local_connection: "{{ ansible_connection == 'local' }}"
+timezone: "Asia/Seoul"
