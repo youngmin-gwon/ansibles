@@ -22,3 +22,17 @@ services:
       - {{ plex_config_directory }}:/config
       - {{ plex_transcode_directory }}:/transcode
       - {{ plex_data_directory }}:/data
+
+  tautulli:
+    container_name: tautulli
+    image: linuxserver/tautulli
+    restart: unless-stopped
+    volumes:
+      - {{ plex_monitor_config_directory }}:/config
+      - {{ plex_monitor_log_directory }}:/logs:ro
+    environment:
+      - PUID=${UID}
+      - PGID=$(id -g $USER)
+      - TZ={{ timezone }}
+    ports:
+      - "8181:8181"

@@ -1,8 +1,10 @@
 ---
 plex_directory: "/path/to/plex"
 plex_data_directory: "/path/to/plex/media"
-plex_transcode_directory: "{{ plex_directory }}/transcode"
 plex_config_directory: "{{ plex_directory }}/config"
+plex_transcode_directory: "{{ plex_directory }}/transcode"
+plex_monitor_config_directory: "{{ plex_directory }}/monitor/config"
+plex_monitor_log_directory: "{{ plex_directory }}/monitor/log"
 plex_claim_token: "your_claim_token"
 plex_ip_address: "{{ ansible_host }}"
 plex_hostname: "{{ ansible_hostname }}"
