@@ -1,0 +1,12 @@
+---
+- name: Get current interface name
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail #
+      ip route get 8.8.8.8 | awk '{print $5}'
+    executable: "{{ lookup('pipe', 'which $SHELL') }}"
+  register: interface_name
+  failed_when: false
+  changed_when: false
+#
+# TODO: set static ip for server
