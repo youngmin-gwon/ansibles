@@ -1,0 +1,12 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    environment:
+      DOMAIN: "https://vw.domain.tld"
+      ROCKET_PORT: 8080
+    volumes:
+      - {{ vaultwarden_data_directory }}:/data
+    ports:
+      - 8080:8080

@@ -1,0 +1,3 @@
+---
+vaultwarden_directory: /path/to/vault_warden
+vaultwarden_data_directory: "{{ vaultwarden_directory }}/data"
