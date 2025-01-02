@@ -1,0 +1,4 @@
+---
+duckdns_directory: /path/to/duckdns
+duckdns_token: your-token
+duckdns_subdomains: []
