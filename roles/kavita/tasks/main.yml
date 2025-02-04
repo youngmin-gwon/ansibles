@@ -1,0 +1,53 @@
+---
+- name: Check if Docker Compose is installed
+  ansible.builtin.command: docker -v
+  register: docker_compose_installed
+  changed_when: false
+  become: false
+  tags: unix
+
+- name: Install Docker (if not installed)
+  ansible.builtin.include_role:
+    name: docker
+  when: docker_compose_installed.rc != 0
+  tags: unix
+
+- name: Create directory for books
+  ansible.builtin.file:
+    path: "{{ kavita_books_directory }}"
+    state: directory
+    mode: '0755'
+  become: true
+  tags: unix
+
+- name: Create directory for comics
+  ansible.builtin.file:
+    path: "{{ kavita_comics_directory }}"
+    state: directory
+    mode: '0755'
+  become: true
+  tags: unix
+
+- name: Create directory for Kavita
+  ansible.builtin.file:
+    path: "{{ kavita_config_directory }}"
+    state: directory
+    mode: "0755"
+  become: true
+  tags: unix
+
+- name: Copy Docker Compose file
+  ansible.builtin.template:
+    src: "docker-compose.yml.j2"
+    dest: "{{ kavita_config_directory }}/docker-compose.yml"
+    mode: "0664"
+  become: true
+  tags: unix
+
+- name: Deploy Kavita with Docker Compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ kavita_config_directory }}"
+    files:
+      - docker-compose.yml
+  become: true
+  tags: unix
