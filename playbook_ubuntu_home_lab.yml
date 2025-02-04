@@ -2,59 +2,85 @@
 - name: Configure ubuntu server
   hosts: home_lab
   tasks:
-    - name: Configure docker
+    # - name: Configure zsh
+    #   ansible.builtin.include_role:
+    #     name: zsh
+    #   tags: server, debian
+
+    # - name: Force all notified handlers to run at this point, not waiting for normal sync points
+    #   ansible.builtin.meta: flush_handlers
+    #   tags: server, debian
+
+    # - name: Configure docker
+    #   ansible.builtin.include_role:
+    #     name: docker
+    #   tags: server, debian
+
+    # - name: Configure starship
+    #   ansible.builtin.include_role:
+    #     name: starship
+    #   tags: server, debian
+
+    # - name: Force all notified handlers to run at this point, not waiting for normal sync points
+    #   ansible.builtin.meta: flush_handlers
+
+    # - name: Configure bat
+    #   ansible.builtin.include_role:
+    #     name: bat
+    #   tags: server, debian
+
+    # - name: Force all notified handlers to run at this point, not waiting for normal sync points
+    #   ansible.builtin.meta: flush_handlers
+
+    # - name: Configure lsd
+    #   ansible.builtin.include_role:
+    #     name: lsd
+    #   tags: server, debian
+
+    # - name: Force all notified handlers to run at this point, not waiting for normal sync points
+    #   ansible.builtin.meta: flush_handlers
+
+    # - name: Configure ripgrep
+    #   ansible.builtin.include_role:
+    #     name: ripgrep
+    #   tags: server, debian
+
+    # - name: Configure trash-cli
+    #   ansible.builtin.include_role:
+    #     name: trash_cli
+    #   tags: server, debian
+
+    # - name: Configure helix
+    #   ansible.builtin.include_role:
+    #     name: helix
+    #   tags: server, debian
+
+    # - name: Configure plex
+    #   ansible.builtin.include_role:
+    #     name: plex
+    #   tags: server, debian
+
+    # - name: Configure homeassistant
+    #   ansible.builtin.include_role:
+    #     name: homeassistant
+    #   tags: server, debian
+
+    # - name: Configure duckdns
+    #   ansible.builtin.include_role:
+    #     name: duckdns
+    #   tags: server, debian
+
+    # - name: Configure vaultwarden
+    #   ansible.builtin.include_role:
+    #     name: vaultwarden
+    #   tags: server, debian
+
+    - name: Configure kavita
       ansible.builtin.include_role:
-        name: docker
+        name: kavita
       tags: server, debian
 
-    - name: Configure zsh
+    - name: Configure nginx manager
       ansible.builtin.include_role:
-        name: zsh
-      tags: server, debian
-
-    - name: Force all notified handlers to run at this point, not waiting for normal sync points
-      ansible.builtin.meta: flush_handlers
-
-    - name: Configure starship
-      ansible.builtin.include_role:
-        name: starship
-      tags: server, debian
-
-    - name: Force all notified handlers to run at this point, not waiting for normal sync points
-      ansible.builtin.meta: flush_handlers
-
-    - name: Configure bat
-      ansible.builtin.include_role:
-        name: bat
-      tags: server, debian
-
-    - name: Force all notified handlers to run at this point, not waiting for normal sync points
-      ansible.builtin.meta: flush_handlers
-
-    - name: Configure lsd
-      ansible.builtin.include_role:
-        name: lsd
-      tags: server, debian
-
-    - name: Force all notified handlers to run at this point, not waiting for normal sync points
-      ansible.builtin.meta: flush_handlers
-
-    - name: Configure ripgrep
-      ansible.builtin.include_role:
-        name: ripgrep
-      tags: server, debian
-
-    - name: Configure trash-cli
-      ansible.builtin.include_role:
-        name: trash_cli
-      tags: server, debian
-
-    - name: Configure helix
-      ansible.builtin.include_role:
-        name: helix
-      tags: server, debian
-
-    - name: Configure plex
-      ansible.builtin.include_role:
-        name: plex
+        name: nginx
       tags: server, debian
