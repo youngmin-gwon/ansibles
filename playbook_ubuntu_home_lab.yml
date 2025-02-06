@@ -75,9 +75,14 @@
     #     name: vaultwarden
     #   tags: server, debian
 
-    - name: Configure kavita
+    # - name: Configure kavita
+    #   ansible.builtin.include_role:
+    #     name: kavita
+    #   tags: server, debian
+
+    - name: Configure huly
       ansible.builtin.include_role:
-        name: kavita
+        name: huly
       tags: server, debian
 
     - name: Configure nginx manager

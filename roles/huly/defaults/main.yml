@@ -1,0 +1,4 @@
+---
+huly_version: v0.6.429
+huly_secret: 97856a4f12ba2297688318e6a7d3393856998e916ce196be7c1e96f0309275ae
+huly_directory: "{{ dotfiles_directory_path }}/huly"
