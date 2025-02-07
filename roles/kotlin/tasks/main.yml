@@ -37,7 +37,9 @@
   tags: unix
 
 - name: Set global Kotlin version
-  ansible.builtin.command: asdf global kotlin {{ kotlin_latest.stdout }}
+  ansible.builtin.command: asdf set kotlin {{ kotlin_latest.stdout }}
+  args:
+    chdir: "{{ ansible_env.HOME }}"
   when: kotlin_latest.stdout not in kotlin_list.stdout
   changed_when: kotlin_install.changed
   become: false

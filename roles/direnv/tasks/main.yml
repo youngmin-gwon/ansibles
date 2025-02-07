@@ -15,27 +15,32 @@
   become: false
   tags: unix
 
-- name: Set direnv configuration in zsh
-  ansible.builtin.blockinfile:
-    path: "{{ home_path }}/.zshrc"
-    block: |
-      eval "$(direnv hook zsh)"
-      source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
-    marker: "# --- {mark} direnv ---"
-    state: present
-    mode: "0644"
-    insertbefore: "^{{ custom_config_end_delimiter }}"
-  become: false
-  when: ansible_env.SHELL | basename == "zsh"
-  notify: Reload shell
+- name: Check if Direnv is already installed
+  ansible.builtin.command: asdf list direnv
+  register: direnv_list
+  failed_when: false
+  changed_when: false
   tags: unix
 
-- name: Configure direnv
-  ansible.builtin.command: asdf direnv setup --shell zsh --version latest
-  changed_when: true
-  failed_when: false
-  when:
-    - "'direnv' not in plugin_list.stdout"
-    - plugin_added.rc == 0
+- name: Get the latest version of Direnv
+  ansible.builtin.command: asdf latest direnv
+  register: direnv_latest
+  changed_when: false
+  tags: unix
+
+- name: Install latest version of Direnv if not already installed
+  ansible.builtin.command: asdf install direnv {{ direnv_latest.stdout }}
+  when: direnv_latest.stdout not in direnv_list.stdout
+  register: direnv_install
+  failed_when: "'already installed' not in direnv_install.stdout and direnv_install.rc != 0"
+  changed_when: direnv_install.rc == 0
+  tags: unix
+
+- name: Set global Direnv version
+  ansible.builtin.command: asdf set direnv {{ direnv_latest.stdout }}
+  args:
+    chdir: "{{ ansible_env.HOME }}"
+  when: direnv_latest.stdout not in direnv_list.stdout
+  changed_when: direnv_install.changed
   become: false
   tags: unix

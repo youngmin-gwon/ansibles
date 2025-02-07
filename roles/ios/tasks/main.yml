@@ -1,4 +1,12 @@
 ---
+- name: Ensure Xcode license is accepted
+  ansible.builtin.command: xcodebuild -license accept
+  when: ansible_os_family == "Darwin"
+  register: xcode_license_check
+  changed_when: false
+  become: true
+  tags: macos
+
 - name: Ensure package manager is installed
   community.general.homebrew:
     state: present

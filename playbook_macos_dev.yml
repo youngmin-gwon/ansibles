@@ -23,6 +23,14 @@
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
       ansible.builtin.meta: flush_handlers
 
+    - name: Configure packages settings
+      ansible.builtin.include_role:
+        name: packages
+      tags: macos
+
+    - name: Force all notified handlers to run at this point, not waiting for normal sync points
+      ansible.builtin.meta: flush_handlers
+
     - name: Configure gpg
       ansible.builtin.include_role:
         name: gpg
@@ -42,14 +50,6 @@
     - name: Configure starship
       ansible.builtin.include_role:
         name: starship
-      tags: macos
-
-    - name: Force all notified handlers to run at this point, not waiting for normal sync points
-      ansible.builtin.meta: flush_handlers
-
-    - name: Configure tmux settings
-      ansible.builtin.include_role:
-        name: tmux
       tags: macos
 
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
@@ -170,14 +170,6 @@
     - name: Configure flutter settings
       ansible.builtin.include_role:
         name: flutter
-      tags: macos
-
-    - name: Force all notified handlers to run at this point, not waiting for normal sync points
-      ansible.builtin.meta: flush_handlers
-
-    - name: Configure packages settings
-      ansible.builtin.include_role:
-        name: packages
       tags: macos
 
     - name: Force all notified handlers to run at this point, not waiting for normal sync points

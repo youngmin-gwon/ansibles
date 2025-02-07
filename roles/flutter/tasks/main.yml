@@ -44,7 +44,9 @@
   tags: unix
 
 - name: Set global Flutter version
-  ansible.builtin.command: asdf global flutter {{ flutter_latest.stdout }}
+  ansible.builtin.command: asdf set flutter {{ flutter_latest.stdout }}
+  args:
+    chdir: "{{ ansible_env.HOME }}"
   when: flutter_latest.stdout not in flutter_list.stdout
   changed_when: flutter_install.changed
   become: false

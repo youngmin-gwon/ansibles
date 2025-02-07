@@ -53,7 +53,6 @@ packages_mac_gui_packages:
   - xquartz
   - spotify
   - chatgpt
-  - linear-linear
   - font-meslo-lg-nerd-font
 
 packages_mac_gui_app_store_packages:

@@ -8,7 +8,7 @@
   tags: unix
 
 - name: Add Java plugin if not already added
-  ansible.builtin.command: asdf plugin-add java https://github.com/halcyon/asdf-java.git
+  ansible.builtin.command: asdf plugin add java {{ java_directory_url }}
   when: "'java' not in plugin_list.stdout"
   register: plugin_added
   changed_when: plugin_added.rc == 0
@@ -23,16 +23,18 @@
   tags: unix
 
 - name: Install 21 version of Java if not already installed
-  ansible.builtin.command: asdf install java temurin-17.0.13+11
-  when: "'temurin-21.0.2+13.0.LTS' not in java_list.stdout"
+  ansible.builtin.command: asdf install java {{ java_version }}
+  when: "java_version not in java_list.stdout"
   register: java_install
   failed_when: "'already installed' not in java_install.stdout and java_install.rc != 0"
   changed_when: java_install.rc == 0
   tags: unix
 
 - name: Set global Java version
-  ansible.builtin.command: asdf global java temurin-17.0.13+11
-  when: "'temurin-21.0.2+13.0.LTS' not in java_list.stdout"
+  ansible.builtin.command: asdf set java {{ java_version }}
+  args:
+    chdir: "{{ ansible_env.HOME }}"
+  when: "java_version not in java_list.stdout"
   changed_when: java_install.changed
   become: false
   tags: unix
