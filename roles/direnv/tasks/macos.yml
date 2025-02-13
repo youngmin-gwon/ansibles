@@ -1,0 +1,8 @@
+---
+- name: Ensure direnv in macOS
+  community.general.homebrew:
+    name: direnv
+    state: present
+  become: false
+  when: ansible_os_family == "Darwin"
+  tags: macos

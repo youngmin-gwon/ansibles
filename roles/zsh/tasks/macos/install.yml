@@ -18,6 +18,13 @@
   changed_when: false
   tags: macos
 
+- name: Ensure .zshrc exists
+  ansible.builtin.file:
+    path: "{{ home_path }}/.zshrc"
+    state: touch
+    mode: "0644"
+  tags: unix
+
 - name: Ensure .zshrc includes Homebrew path for Apple Silicon-based machine
   ansible.builtin.blockinfile:
     path: "{{ home_path }}/.zshrc"

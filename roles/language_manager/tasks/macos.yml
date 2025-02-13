@@ -10,6 +10,13 @@
   become: false
   tags: macos
 
+- name: Ensure .zshrc exists
+  ansible.builtin.file:
+    path: "{{ home_path }}/.zshrc"
+    state: touch
+    mode: "0644"
+  tags: unix
+
 - name: Ensure .zshrc includes asdf initialization
   ansible.builtin.blockinfile:
     path: "{{ home_path }}/.zshrc"

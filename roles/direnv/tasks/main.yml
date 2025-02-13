@@ -1,46 +1,24 @@
 ---
-- name: Check if Direnv plugin is already added
-  ansible.builtin.command: asdf plugin list
-  register: plugin_list
-  changed_when: false
-  failed_when: false
+- name: Ensure direnv in macOS
+  ansible.builtin.include_tasks: macos.yml
+  tags: macos
+
+- name: Ensure .zshrc exists
+  ansible.builtin.file:
+    path: "{{ home_path }}/.zshrc"
+    state: touch
+    mode: "0644"
+  tags: unix
+
+- name: Ensure .zshrc includes direnv initialization
+  ansible.builtin.blockinfile:
+    path: "{{ home_path }}/.zshrc"
+    block: 'eval "$(direnv hook zsh)"'
+    state: present
+    mode: "0644"
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+    marker: "# --- {mark} direnv ---"
   become: false
-  tags: unix
-
-- name: Add Direnv plugin if not already added
-  ansible.builtin.command: asdf plugin add direnv
-  when: "'direnv' not in plugin_list.stdout"
-  register: plugin_added
-  changed_when: plugin_added.rc == 0
-  become: false
-  tags: unix
-
-- name: Check if Direnv is already installed
-  ansible.builtin.command: asdf list direnv
-  register: direnv_list
-  failed_when: false
-  changed_when: false
-  tags: unix
-
-- name: Get the latest version of Direnv
-  ansible.builtin.command: asdf latest direnv
-  register: direnv_latest
-  changed_when: false
-  tags: unix
-
-- name: Install latest version of Direnv if not already installed
-  ansible.builtin.command: asdf install direnv {{ direnv_latest.stdout }}
-  when: direnv_latest.stdout not in direnv_list.stdout
-  register: direnv_install
-  failed_when: "'already installed' not in direnv_install.stdout and direnv_install.rc != 0"
-  changed_when: direnv_install.rc == 0
-  tags: unix
-
-- name: Set global Direnv version
-  ansible.builtin.command: asdf set direnv {{ direnv_latest.stdout }}
-  args:
-    chdir: "{{ ansible_env.HOME }}"
-  when: direnv_latest.stdout not in direnv_list.stdout
-  changed_when: direnv_install.changed
-  become: false
+  notify: Reload shell
+  when: ansible_env.SHELL is search("zsh")
   tags: unix
