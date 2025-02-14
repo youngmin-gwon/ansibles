@@ -1,36 +1,26 @@
 ---
 packages_common_packages:
-  - git
-  - git-lfs
   - gnupg
   - coreutils
   - curl
   - wget
-  - zsh
   - bash-language-server
-  - bat
   - entr
   - ffmpeg
   - fzf
   - lcov
-  - lf
   - llvm
   - ncdu
   - neofetch
   - protobuf
-  - ripgrep
   - shellcheck
   - tldr
-  - tmux
   - trash-cli
   - tree
   - lsd
-  - asdf
-  - git-crypt
   - zellij
   - ghostscript
   - imagemagick
-  - gitui
 
 packages_mac_only_packages:
   - awk
@@ -41,7 +31,6 @@ packages_mac_only_packages:
   - cocoapods
 
 packages_mac_gui_packages:
-  - alacritty
   - android-commandlinetools
   - cheatsheet
   - figma
@@ -54,6 +43,7 @@ packages_mac_gui_packages:
   - spotify
   - chatgpt
   - font-meslo-lg-nerd-font
+  - swiftformat-for-xcode
 
 packages_mac_gui_app_store_packages:
   - 497799835 # Xcode

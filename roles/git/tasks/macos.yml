@@ -1,7 +1,10 @@
 ---
 - name: Ensure git in macOS
   community.general.homebrew:
-    name: git
+    name:
+      - git
+      - git-lfs
+      - git-crypt
     state: present
   become: false
   when: ansible_os_family == "Darwin"
