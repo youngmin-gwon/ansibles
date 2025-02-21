@@ -154,6 +154,14 @@
   become: false
   tags: unix
 
+- name: Set commit.gpgsign
+  community.general.git_config:
+    name: commit.gpgsign
+    scope: global
+    value: true
+  become: false
+  tags: unix
+
 - name: Set gpg.program
   community.general.git_config:
     name: gpg.program
