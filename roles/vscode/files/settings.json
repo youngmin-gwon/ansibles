@@ -70,6 +70,14 @@
     "editor.tabCompletion": "onlySnippets",
     "editor.wordBasedSuggestions": "off"
   },
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "codemagic.yaml"
+      ],
+      "url": "https://codemagic.io/codemagic-schema.json"
+    }
+  ],
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "editor.insertSpaces": true,
