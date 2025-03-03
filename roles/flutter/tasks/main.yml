@@ -51,3 +51,12 @@
   changed_when: flutter_install.changed
   become: false
   tags: unix
+
+- name: Add pub cache line to .zshrc if Flutter is installed
+  ansible.builtin.blockinfile:
+    path: "{{ home_path }}/.zshrc"
+    block: 'export PATH="$PATH":"$HOME/.pub-cache/bin"'
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+    marker: "# --- {mark} dart ---"
+    state: present
+  tags: unix
