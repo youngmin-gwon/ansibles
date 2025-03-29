@@ -1,0 +1,13 @@
+---
+- name: Ensure IntelliJ CE in macOS
+  ansible.builtin.include_tasks: macos.yml
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Install IntelliJ plugins
+  ansible.builtin.include_tasks: plugins.yml
+  tags: unix
+
+- name: Configure IntelliJ
+  ansible.builtin.include_tasks: config.yml
+  tags: unix

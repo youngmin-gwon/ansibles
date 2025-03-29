@@ -1,0 +1,38 @@
+---
+- name: Ensure IntelliJ in macOS
+  community.general.homebrew_cask:
+    state: present
+    name: intellij-idea-ce
+  become: false
+  tags: macos
+
+- name: Get the version number of IntelliJ
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail #
+      brew list --versions --cask | grep intellij-idea-ce | awk '{print $2}' | cut -d. -f1,2
+    executable: "{{ lookup('pipe', 'which $SHELL') }}"
+  register: intellij_version_number
+  failed_when: false
+  changed_when: false
+  tags: macos
+
+- name: Set IntelliJ version as a variable
+  ansible.builtin.set_fact:
+    intellij_version: "IdeaIC{{ intellij_version_number.stdout }}"
+  tags: macos
+
+- name: Set IntelliJ config path as a variable
+  ansible.builtin.set_fact:
+    intellij_config_path: "{{ home_path }}/Library/Application Support/JetBrains/{{ intellij_version }}"
+  tags: macos
+
+- name: Set IntelliJ plugins path as a variable
+  ansible.builtin.set_fact:
+    intellij_plugins_path: "{{ intellij_config_path }}/plugins"
+  tags: macos
+
+- name: Set IntelliJ system path as a variable
+  ansible.builtin.set_fact:
+    intellij_system_path: "{{ home_path }}Caches/JetBrains/{{ intellij_version }}"
+  tags: macos

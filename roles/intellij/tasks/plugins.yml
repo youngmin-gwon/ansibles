@@ -1,0 +1,75 @@
+---
+- name: Ensure IntelliJ config directory exists
+  ansible.builtin.file:
+    path: "{{ intellij_config_path }}"
+    state: directory
+    mode: "0755"
+  become: false
+  tags: unix
+
+- name: Ensure IntelliJ plugins directory exists
+  ansible.builtin.file:
+    path: "{{ intellij_plugins_path }}"
+    state: directory
+    mode: "0755"
+  become: false
+  tags: unix
+
+- name: Check if plugins are installed
+  ansible.builtin.stat:
+    path: "{{ intellij_plugins_path }}/{{ item.key }}"
+  register: plugin_stat
+  loop: "{{ intellij_plugins | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+  become: false
+  tags: unix
+
+- name: Download and install plugins if not installed
+  ansible.builtin.get_url:
+    url: "{{ intellij_plugins[item.item.key] }}"
+    dest: "/tmp/{{ item.item.key }}.zip"
+    mode: "0644"
+    force: no
+  when: not item.stat.exists
+  loop: "{{ plugin_stat.results }}"
+  loop_control:
+    label: "{{ item.item.key }}"
+  become: false
+  tags: unix
+
+- name: Unzip the plugin if not already extracted
+  ansible.builtin.unarchive:
+    src: "/tmp/{{ item.item.key }}.zip"
+    dest: "{{ intellij_plugins_path }}"
+    remote_src: yes
+    creates: "{{ intellij_plugins_path }}/{{ item.item.key }}"
+  when: not item.stat.exists and item.item.key is not match(".*\.jar$")
+  loop: "{{ plugin_stat.results }}"
+  loop_control:
+    label: "{{ item.item.key }}"
+  become: false
+  tags: unix
+
+- name: Move the plugin directly if it is a .jar file
+  ansible.builtin.copy:
+    src: "/tmp/{{ item.item.key }}.zip"
+    dest: "{{ intellij_plugins_path }}/{{ item.item.key }}"
+    mode: "0644"
+  when: not item.stat.exists and item.item.key is match(".*\.jar$")
+  loop: "{{ plugin_stat.results }}"
+  loop_control:
+    label: "{{ item.item.key }}"
+  become: false
+  tags: unix
+
+- name: Clean up temporary files after plugin installation
+  ansible.builtin.file:
+    path: "/tmp/{{ item.item.key }}.zip"
+    state: absent
+  when: not item.stat.exists
+  loop: "{{ plugin_stat.results }}"
+  loop_control:
+    label: "{{ item.item.key }}"
+  become: false
+  tags: unix

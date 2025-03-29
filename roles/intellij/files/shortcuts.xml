@@ -1,0 +1,14 @@
+<keymap version="1" name="VSCode OSX (Migrated)" parent="VSCode OSX">
+  <action id="ActivateProjectToolWindow">
+    <keyboard-shortcut first-keystroke="shift meta e" />
+    <keyboard-shortcut first-keystroke="ctrl e" />
+  </action>
+  <action id="ActivateRunToolWindow">
+    <keyboard-shortcut first-keystroke="shift meta u" />
+    <keyboard-shortcut first-keystroke="shift ctrl 2" />
+  </action>
+  <action id="ActivateTerminalToolWindow">
+    <keyboard-shortcut first-keystroke="ctrl back_quote" />
+    <keyboard-shortcut first-keystroke="shift ctrl 4" />
+  </action>
+</keymap>

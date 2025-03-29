@@ -1,0 +1,84 @@
+---
+- name: Ensure ideavim directory exists
+  ansible.builtin.file:
+    path: "{{ dotfiles_directory_path }}/ideavim"
+    state: directory
+    mode: "0755"
+  become: false
+  tags: unix
+
+- name: Link vimrc file from role files to destination
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/ideavimrc"
+    dest: "{{ dotfiles_directory_path }}/ideavim/ideavimrc"
+    state: link
+    mode: "0755"
+    force: true
+    follow: false
+  become: false
+  tags: unix
+
+- name: Ensure IntelliJ config directory exists
+  ansible.builtin.file:
+    path: "{{ intellij_config_path }}"
+    state: directory
+    mode: "0755"
+  become: false
+  tags: unix
+
+- name: Ensure options directory exists
+  ansible.builtin.file:
+    path: "{{ intellij_config_path }}/options"
+    state: directory
+    mode: "0755"
+  become: false
+  tags: unix
+
+- name: Ensure mac directory exists
+  ansible.builtin.file:
+    path: "{{ intellij_config_path }}/options/mac"
+    state: directory
+    mode: "0755"
+  become: false
+  tags: macos
+
+- name: Link keymap file from role files to destination
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/vscode-keymap.xml"
+    dest: "{{ intellij_config_path }}/options/mac/keymap.xml"
+    state: link
+    mode: "0755"
+    force: true
+    follow: false
+  become: false
+  tags: macos
+
+- name: Link theme file from role files to destination
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/theme.xml"
+    dest: "{{ intellij_config_path }}/options/colors.scheme.xml"
+    state: link
+    mode: "0755"
+    force: true
+    follow: false
+  become: false
+  tags: unix
+
+- name: Ensure IntelliJ config directory exists
+  ansible.builtin.file:
+    path: "{{ intellij_config_path }}/keymaps"
+    state: directory
+    mode: "0755"
+  become: false
+  tags: unix
+
+- name: Link keymap file from role files to destination
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/shortcuts.xml"
+    dest: "{{ intellij_config_path }}/keymaps/VSCode OSX _Migrated_.xml"
+    state: link
+    mode: "0755"
+    force: true
+    follow: false
+  become: false
+  tags: macos
