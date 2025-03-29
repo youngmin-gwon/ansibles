@@ -608,6 +608,7 @@
     "LTWH",
     "Memoizer",
     "microtask",
+    "mocktail",
     "neovim",
     "noescape",
     "nums",
@@ -627,6 +628,7 @@
     "riverpod",
     "roadmap",
     "scrollbars",
+    "Serverpod",
     "sponsers",
     "TLDR",
     "unfocus",
@@ -696,5 +698,11 @@
   "editor.renderWhitespace": "all",
   "editor.copyWithSyntaxHighlighting": true,
   "diffEditor.codeLens": true,
-  "diffEditor.ignoreTrimWhitespace": false
+  "diffEditor.ignoreTrimWhitespace": false,
+  "roo-cline.allowedCommands": [
+    "git log",
+    "git diff",
+    "git show"
+  ],
+  "find-it-faster.general.useTerminalInEditor": true,
 }

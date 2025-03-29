@@ -140,11 +140,6 @@
         "when": "terminal.active"
     },
     {
-        "key": "cmd+w",
-        "command": "workbench.action.terminal.killInstance",
-        "when": "terminalFocus && terminalHasBeenCreated || terminalIsOpen && terminalTabsFocus || terminalProcessSupported && terminalFocus"
-    },
-    {
         "key": "cmd+t",
         "command": "workbench.action.terminal.new",
         "when": "terminalFocus && terminalProcessSupported || terminalWebExtensionContributedProfile"
