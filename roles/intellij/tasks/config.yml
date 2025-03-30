@@ -18,7 +18,7 @@
   become: false
   tags: unix
 
-- name: Ensure IntelliJ config directory exists
+- name: Ensure config directory exists
   ansible.builtin.file:
     path: "{{ intellij_config_path }}"
     state: directory
@@ -64,7 +64,7 @@
   become: false
   tags: unix
 
-- name: Ensure IntelliJ config directory exists
+- name: Ensure keymaps directory exists
   ansible.builtin.file:
     path: "{{ intellij_config_path }}/keymaps"
     state: directory
@@ -72,7 +72,7 @@
   become: false
   tags: unix
 
-- name: Link keymap file from role files to destination
+- name: Link shortcuts file from role files to destination
   ansible.builtin.file:
     src: "{{ role_path }}/files/shortcuts.xml"
     dest: "{{ intellij_config_path }}/keymaps/VSCode OSX _Migrated_.xml"
@@ -82,3 +82,14 @@
     follow: false
   become: false
   tags: macos
+
+- name: Link font file from role files to destination
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/font.xml"
+    dest: "{{ intellij_config_path }}/options/editor-font.xml"
+    state: link
+    mode: "0755"
+    force: true
+    follow: false
+  become: false
+  tags: unix
