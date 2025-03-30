@@ -13,3 +13,4 @@ intellij_plugins:
   Atom Material Icons: "https://plugins.jetbrains.com/plugin/download?rel=true&updateId=670968"
   DBNavigator: "https://plugins.jetbrains.com/plugin/download?rel=true&updateId=698107"
   pojo2json: "https://plugins.jetbrains.com/plugin/download?rel=true&updateId=634522"
+  lombok: "https://plugins.jetbrains.com/plugin/download?rel=true&updateId=700133"
