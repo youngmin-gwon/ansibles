@@ -8,7 +8,7 @@ local config = wezterm.config_builder()
 config.window_close_confirmation = "NeverPrompt"
 
 -- Font
-config.font = wezterm.font("MesloLGL Nerd Font")
+config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.font_size = 15
 
 -- Theme

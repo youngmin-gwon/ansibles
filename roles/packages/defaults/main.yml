@@ -42,7 +42,7 @@ packages_mac_gui_packages:
   - xquartz
   - spotify
   - chatgpt
-  - font-meslo-lg-nerd-font
+  - font-jetbrains-mono-nerd-font
   - swiftformat-for-xcode
 
 packages_mac_gui_app_store_packages:
