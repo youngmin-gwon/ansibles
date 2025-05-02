@@ -119,14 +119,6 @@
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
       ansible.builtin.meta: flush_handlers
 
-    - name: Configure intellij settings
-      ansible.builtin.include_role:
-        name: intellij
-      tags: macos
-
-    - name: Force all notified handlers to run at this point, not waiting for normal sync points
-      ansible.builtin.meta: flush_handlers
-
     - name: Configure Language Manager settings
       ansible.builtin.include_role:
         name: language_manager
@@ -151,6 +143,14 @@
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
       ansible.builtin.meta: flush_handlers
 
+    - name: Configure zig settings
+      ansible.builtin.include_role:
+        name: zig
+      tags: macos
+
+    - name: Force all notified handlers to run at this point, not waiting for normal sync points
+      ansible.builtin.meta: flush_handlers
+
     - name: Configure java settings
       ansible.builtin.include_role:
         name: java
@@ -162,14 +162,6 @@
     - name: Configure kotlin settings
       ansible.builtin.include_role:
         name: kotlin
-      tags: macos
-
-    - name: Force all notified handlers to run at this point, not waiting for normal sync points
-      ansible.builtin.meta: flush_handlers
-
-    - name: Configure android settings
-      ansible.builtin.include_role:
-        name: android
       tags: macos
 
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
