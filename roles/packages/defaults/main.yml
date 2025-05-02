@@ -31,16 +31,12 @@ packages_mac_only_packages:
   - cocoapods
 
 packages_mac_gui_packages:
-  - android-commandlinetools
-  - cheatsheet
   - figma
   - google-chrome
   - keka
   - openinterminal
   - raycast
   - visual-studio-code
-  - xquartz
-  - spotify
   - chatgpt
   - font-jetbrains-mono-nerd-font
   - swiftformat-for-xcode
@@ -59,4 +55,3 @@ packages_mac_gui_app_store_packages:
 packages_debian_gui_packages:
   - google-chrome-stable
   - code
-  - spotify-client
