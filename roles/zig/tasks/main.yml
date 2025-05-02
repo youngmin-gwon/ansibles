@@ -1,0 +1,46 @@
+---
+- name: Check if Zig plugin is already added
+  ansible.builtin.command: asdf plugin list
+  register: plugin_list
+  changed_when: false
+  failed_when: false
+  become: false
+  tags: unix
+
+- name: Add Zig plugin if not already added
+  ansible.builtin.command: asdf plugin add zig https://github.com/asdf-community/asdf-zig.git
+  when: "'zig' not in plugin_list.stdout"
+  register: plugin_added
+  changed_when: plugin_added.rc == 0
+  become: false
+  tags: unix
+
+- name: Check if Zig is already installed
+  ansible.builtin.command: asdf list zig
+  register: zig_list
+  failed_when: false
+  changed_when: false
+  tags: unix
+
+- name: Get the latest version of Zig
+  ansible.builtin.command: asdf latest zig
+  register: zig_latest
+  changed_when: false
+  tags: unix
+
+- name: Install latest version of Zig if not already installed
+  ansible.builtin.command: asdf install zig {{ zig_latest.stdout }}
+  when: zig_latest.stdout not in zig_list.stdout
+  register: zig_install
+  failed_when: "'already installed' not in zig_install.stdout and zig_install.rc != 0"
+  changed_when: zig_install.rc == 0
+  tags: unix
+
+- name: Set global Zig version
+  ansible.builtin.command: asdf set zig {{ zig_latest.stdout }}
+  args:
+    chdir: "{{ ansible_env.HOME }}"
+  when: zig_latest.stdout not in zig_list.stdout
+  changed_when: zig_install.changed
+  become: false
+  tags: unix
