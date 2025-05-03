@@ -29,6 +29,8 @@ packages_mac_only_packages:
   - marksman
   - mas
   - cocoapods
+  - docker
+  - colima
 
 packages_mac_gui_packages:
   - figma
@@ -37,9 +39,10 @@ packages_mac_gui_packages:
   - openinterminal
   - raycast
   - visual-studio-code
-  - chatgpt
   - font-jetbrains-mono-nerd-font
   - swiftformat-for-xcode
+  - rustdesk
+  - claude
 
 packages_mac_gui_app_store_packages:
   - 497799835 # Xcode
