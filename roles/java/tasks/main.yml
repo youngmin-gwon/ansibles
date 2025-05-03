@@ -22,7 +22,7 @@
   changed_when: false
   tags: unix
 
-- name: Install 21 version of Java if not already installed
+- name: Install 17 version of Java if not already installed
   ansible.builtin.command: asdf install java {{ java_version }}
   when: "java_version not in java_list.stdout"
   register: java_install
