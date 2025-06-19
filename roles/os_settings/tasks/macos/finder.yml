@@ -20,6 +20,8 @@
     - { key: "ShowHardDrivesOnDesktop", type: "bool", value: "true" }
     - { key: "ShowMountedServersOnDesktop", type: "bool", value: "true" }
     - { key: "ShowRemovableMediaOnDesktop", type: "bool", value: "true" }
+    # show dotfiles
+    - { key: "AppleShowAllFiles", type: "bool", value: "true" }
     # Show status bar
     - { key: "ShowStatusBar", type: "bool", value: "true" }
     # Show path bar
