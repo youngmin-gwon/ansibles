@@ -43,6 +43,8 @@ packages_mac_gui_packages:
   - swiftformat-for-xcode
   - rustdesk
   - claude
+  - xcodes-app
+  - jetbrains-toolbox
 
 packages_mac_gui_app_store_packages:
   - 497799835 # Xcode
