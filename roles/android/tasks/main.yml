@@ -1,5 +1,16 @@
 ---
-- name: Configure Android Command Line Tools in macOS
+- name: Configure Jetbrains toolbox in macOS
   ansible.builtin.include_tasks: macos.yml
   when: ansible_os_family == "Darwin"
   tags: macos
+
+- name: Link vim configuration files
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/.vimrc"
+    dest: "{{ home_path }}/.ideavimrc"
+    state: link
+    mode: "0644"
+    force: true
+    follow: false
+  become: false
+  tags: unix
