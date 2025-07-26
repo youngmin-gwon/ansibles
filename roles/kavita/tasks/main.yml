@@ -1,53 +1,59 @@
 ---
-- name: Check if Docker Compose is installed
-  ansible.builtin.command: docker -v
-  register: docker_compose_installed
-  changed_when: false
-  become: false
+- name: Set OS-specific variables
+  ansible.builtin.set_fact:
+    docker_host_env: "{{ os_config[ansible_system].docker_host_env }}"
+    kavita_directory: "{{ os_config[ansible_system].kavita_directory }}"
+    become_enabled: "{{ os_config[ansible_system].become_enabled }}"
+  vars:
+    os_config:
+      Darwin:
+        docker_host_env: "unix:///Users/{{ ansible_user_id }}/.colima/default/docker.sock"
+        kavita_directory: "{{ ansible_user_dir }}/Library/Application Support/Kavita"
+        become_enabled: false
+      Linux:
+        docker_host_env: "unix:///var/run/docker.sock"
+        kavita_directory: "/var/lib/kavita"
+        become_enabled: true
   tags: unix
 
-- name: Install Docker (if not installed)
+- name: Ensure Docker exists
   ansible.builtin.include_role:
     name: docker
-  when: docker_compose_installed.rc != 0
   tags: unix
 
-- name: Create directory for books
+- name: Ensure Kavita directories
   ansible.builtin.file:
-    path: "{{ kavita_books_directory }}"
+    path: "{{ item }}"
     state: directory
     mode: '0755'
-  become: true
+  loop:
+    - "{{ kavita_directory }}"
+    - "{{ kavita_directory }}/config"
+    - "{{ kavita_directory }}/documents"
+    - "{{ kavita_directory }}/documents/books"
+    - "{{ kavita_directory }}/documents/comics"
+  become: "{{ become_enabled }}"
   tags: unix
 
-- name: Create directory for comics
-  ansible.builtin.file:
-    path: "{{ kavita_comics_directory }}"
-    state: directory
-    mode: '0755'
-  become: true
-  tags: unix
-
-- name: Create directory for Kavita
-  ansible.builtin.file:
-    path: "{{ kavita_config_directory }}"
-    state: directory
-    mode: "0755"
-  become: true
-  tags: unix
-
-- name: Copy Docker Compose file
-  ansible.builtin.template:
-    src: "docker-compose.yml.j2"
-    dest: "{{ kavita_config_directory }}/docker-compose.yml"
-    mode: "0664"
-  become: true
-  tags: unix
-
-- name: Deploy Kavita with Docker Compose
-  community.docker.docker_compose_v2:
-    project_src: "{{ kavita_config_directory }}"
-    files:
-      - docker-compose.yml
-  become: true
+- name: Ensure Kavita Docker container is running and configured
+  community.docker.docker_container:
+    name: kavita # Sets the Docker container name
+    image: jvmilazz0/kavita:latest # Specifies the Docker image to pull and run
+    state: started # Ensures the container is in a 'started' state (creates if not exists)
+    restart_policy: unless-stopped # Container restarts automatically unless explicitly stopped
+    ports:
+      - "15000:5000" # Maps host port 18080 to container port 8080 (as per your docker-compose)
+    volumes:
+      # Mounts the host data directory to /data inside the container for persistent storage
+      - "{{ kavita_directory }}/config:/kavita/config"
+      - "{{ kavita_directory }}/documents/books:/books"
+      - "{{ kavita_directory }}/documents/comics:/comics"
+    env: # Sets environment variables inside the container, as per your docker-compose
+      TZ: "{{ timezone }}" # No '=' needed here, it's a key-value pair
+  become: "{{ become_enabled }}" # Apply sudo based on OS for Docker operations
+  environment:
+    # Conditionally set DOCKER_HOST for macOS (Colima).
+    # This environment variable will only be effective on macOS hosts when become_enabled_for_os is true.
+    # On Linux, this variable is generally not needed as Docker client defaults to /var/run/docker.sock.
+    DOCKER_HOST: "{{ docker_host_env }}" # Use 'omit' to not set it on Linux
   tags: unix

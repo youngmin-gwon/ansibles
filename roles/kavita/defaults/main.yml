@@ -1,4 +1,2 @@
 ---
-kavita_books_directory: /path/to/books
-kavita_comics_directory: /path/to/comics
-kavita_config_directory: /path/to/config
+kavita_directory: /var/lib/kavita
