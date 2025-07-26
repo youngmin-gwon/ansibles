@@ -8,8 +8,9 @@ This playbook installs and configures most of the software I use on my Mac for w
   2. [Install Ansible](https://docs.ansible.com/ansible/latest/installation_guide/index.html):
 
      1. Install [Python](https://www.python.org/downloads/) and set path
-     2. Upgrade Pip: `sudo pip3 install --upgrade pip`
-     3. Install Ansible: `pip3 install ansible`
+     2. Set Python Virtual Environment `python -m venv .venv && source .venv/bin/activate`
+     3. Upgrade Pip: `sudo pip3 install --upgrade pip`
+     4. Install Ansible: `pip3 install ansible requests docker`
 
   3. Clone or download this repository to your local drive.
   4. Run `ansible-galaxy install -r requirements.yml` inside this directory to install required Ansible roles.

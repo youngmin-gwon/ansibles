@@ -1,0 +1,16 @@
+---
+- name: Ensure Docker is installed
+  community.general.homebrew:
+    state: present
+    name:
+      - docker
+      - colima
+  become: false
+  tags: macos
+
+- name: Start Docker daemon
+  ansible.builtin.command: colima start
+  args:
+    creates: /Users/{{ ansible_user_id }}/.colima/default/docker.sock # Colima가 이미 실행 중이면 다시 시작하지 않음
+  become: false
+  tags: macos
