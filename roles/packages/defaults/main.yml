@@ -15,7 +15,6 @@ packages_common_packages:
   - protobuf
   - shellcheck
   - tldr
-  - trash-cli
   - tree
   - lsd
   - zellij

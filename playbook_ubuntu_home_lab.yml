@@ -45,11 +45,6 @@
         name: ripgrep
       tags: server, debian
 
-    - name: Configure trash-cli
-      ansible.builtin.include_role:
-        name: trash_cli
-      tags: server, debian
-
     - name: Configure helix
       ansible.builtin.include_role:
         name: helix

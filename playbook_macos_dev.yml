@@ -95,22 +95,6 @@
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
       ansible.builtin.meta: flush_handlers
 
-    - name: Configure trash-cli settings
-      ansible.builtin.include_role:
-        name: trash_cli
-      tags: macos
-
-    - name: Force all notified handlers to run at this point, not waiting for normal sync points
-      ansible.builtin.meta: flush_handlers
-
-    - name: Configure WezTerm settings
-      ansible.builtin.include_role:
-        name: wezterm
-      tags: macos
-
-    - name: Force all notified handlers to run at this point, not waiting for normal sync points
-      ansible.builtin.meta: flush_handlers
-
     - name: Configure vscode settings
       ansible.builtin.include_role:
         name: vscode
