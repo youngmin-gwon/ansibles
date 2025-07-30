@@ -1,0 +1,15 @@
+{
+    "ansible.python.interpreterPath": "/usr/local/bin/python3",
+    "cSpell.words": [
+        "cocoapods",
+        "duckdns",
+        "gitmoji",
+        "homeassistant",
+        "kavita",
+        "keka",
+        "plexmediaserver",
+        "venv",
+        "wezterm",
+        "yazi"
+    ]
+}
