@@ -1,3 +1,3 @@
 ---
 homeassistant_directory: "path/to/config"
-homeassistant_config_directory: "path/to/config"
+homeassistant_external_devices: []

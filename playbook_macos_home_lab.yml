@@ -1,0 +1,76 @@
+---
+- name: Configure apple silicon macos server
+  hosts: macos
+  tasks:
+    # - name: Configure zsh
+    #   ansible.builtin.include_role:
+    #     name: zsh
+    #   tags: server, macos, unix
+
+    # - name: Force all notified handlers to run at this point, not waiting for normal sync points
+    #   ansible.builtin.meta: flush_handlers
+    #   tags: server, macos, unix
+
+    - name: Configure docker
+      ansible.builtin.include_role:
+        name: docker
+      tags: server, macos, unix
+
+    # - name: Configure starship
+    #   ansible.builtin.include_role:
+    #     name: starship
+    #   tags: server, macos, unix
+
+    # - name: Force all notified handlers to run at this point, not waiting for normal sync points
+    #   ansible.builtin.meta: flush_handlers
+
+    # - name: Configure bat
+    #   ansible.builtin.include_role:
+    #     name: bat
+    #   tags: server, macos, unix
+
+    # - name: Force all notified handlers to run at this point, not waiting for normal sync points
+    #   ansible.builtin.meta: flush_handlers
+
+    # - name: Configure lsd
+    #   ansible.builtin.include_role:
+    #     name: lsd
+    #   tags: server, macos, unix
+
+    # - name: Force all notified handlers to run at this point, not waiting for normal sync points
+    #   ansible.builtin.meta: flush_handlers
+
+    # - name: Configure ripgrep
+    #   ansible.builtin.include_role:
+    #     name: ripgrep
+    #   tags: server, macos, unix
+
+    # - name: Configure helix
+    #   ansible.builtin.include_role:
+    #     name: helix
+    #   tags: server, macos, unix
+
+    - name: Configure homeassistant
+      ansible.builtin.include_role:
+        name: homeassistant
+      tags: server, macos, unix
+
+    - name: Configure duckdns
+      ansible.builtin.include_role:
+        name: duckdns
+      tags: server, macos, unix
+
+    - name: Configure vaultwarden
+      ansible.builtin.include_role:
+        name: vaultwarden
+      tags: server, macos, unix
+
+    - name: Configure kavita
+      ansible.builtin.include_role:
+        name: kavita
+      tags: server, macos, unix
+
+    - name: Configure nginx manager
+      ansible.builtin.include_role:
+        name: nginx
+      tags: server, macos, unix

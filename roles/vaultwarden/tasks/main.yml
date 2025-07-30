@@ -1,5 +1,4 @@
 ---
-
 - name: Set OS-specific variables
   ansible.builtin.set_fact:
     docker_host_env: "{{ os_config[ansible_system].docker_host_env }}"
@@ -22,9 +21,9 @@
     name: docker
   tags: unix
 
-- name: Ensure Vaultwarden directories exists
+- name: Ensure Vaultwarden directories exist
   ansible.builtin.file:
-    path: "{{ vaultwarden_data_directory }}" # Iterates through the list of paths
+    path: "{{ vaultwarden_data_directory }}"
     state: directory
     mode: '0755'
   become: "{{ become_enabled }}"
@@ -32,20 +31,19 @@
 
 - name: Ensure Vaultwarden Docker container is running and configured
   community.docker.docker_container:
-    name: vaultwarden # Sets the Docker container name
-    image: vaultwarden/server:latest # Specifies the Docker image to pull and run
-    state: started # Ensures the container is in a 'started' state (creates if not exists)
-    restart_policy: unless-stopped # Container restarts automatically unless explicitly stopped
+    name: vaultwarden
+    image: vaultwarden/server:latest
+    state: started
+    restart_policy: unless-stopped
     ports:
-      - "18080:8080" # Maps host port 18080 to container port 8080 (as per your docker-compose)
+      - "18080:8080"
     volumes:
-      # Mounts the host data directory to /data inside the container for persistent storage
       - "{{ vaultwarden_data_directory }}:/data"
-    env: # Sets environment variables inside the container, as per your docker-compose
+    env:
       DOMAIN: "https://vw.domain.tld"
       ROCKET_PORT: "8080" # Note: Environment variables are usually strings, even if they are numbers
       SIGNUPS_ALLOWED: "false"
-      ADMIN_TOKEN: "{{ vaultwarden_token }}" # No '=' needed here, it's a key-value pair
+      ADMIN_TOKEN: "{{ vaultwarden_token }}"
   become: "{{ become_enabled }}" # Apply sudo based on OS for Docker operations
   environment:
     # Conditionally set DOCKER_HOST for macOS (Colima).

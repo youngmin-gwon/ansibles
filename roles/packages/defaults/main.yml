@@ -28,8 +28,10 @@ packages_mac_only_packages:
   - marksman
   - mas
   - cocoapods
+  - qemu
   - docker
   - colima
+  - xcodesorg/made/xcodes
 
 packages_mac_gui_packages:
   - figma
@@ -42,7 +44,6 @@ packages_mac_gui_packages:
   - swiftformat-for-xcode
   - rustdesk
   - claude
-  - xcodes-app
   - jetbrains-toolbox
 
 packages_mac_gui_app_store_packages:

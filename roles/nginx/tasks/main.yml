@@ -1,37 +1,61 @@
 ---
-- name: Check if Docker Compose is installed
-  ansible.builtin.command: docker -v
-  register: docker_compose_installed
-  changed_when: false
-  become: false
+- name: Set OS-specific variables
+  ansible.builtin.set_fact:
+    docker_host_env: "{{ os_config[ansible_system].docker_host_env }}"
+    nginx_directory: "{{ os_config[ansible_system].nginx_directory }}"
+    become_enabled: "{{ os_config[ansible_system].become_enabled }}"
+    npm_container_uid: "{{ os_config[ansible_system].npm_container_uid }}"
+    npm_container_gid: "{{ os_config[ansible_system].npm_container_gid }}"
+  vars:
+    os_config:
+      Darwin:
+        docker_host_env: "unix:///Users/{{ ansible_user_id }}/.colima/default/docker.sock"
+        nginx_directory: "{{ ansible_user_dir }}/Library/Application Support/Nginx Proxy Manager"
+        become_enabled: false
+        npm_container_uid: "{{ ansible_user_uid | default(501) }}"  # macOS 기본값
+        npm_container_gid: "{{ ansible_user_gid | default(20) }}"   # macOS 기본값
+      Linux:
+        docker_host_env: "unix:///var/run/docker.sock"
+        nginx_directory: "/var/lib/nginx"
+        become_enabled: true
+        npm_container_uid: 1000  # Linux 기본값
+        npm_container_gid: 1000  # Linux 기본값
   tags: unix
 
-- name: Install Docker (if not installed)
+- name: Ensure Docker exists
   ansible.builtin.include_role:
     name: docker
-  when: docker_compose_installed.rc != 0
   tags: unix
 
-- name: Create nginx directories
-  ansible.builtin.file:
-    path: "{{ nginx_directory }}"
-    state: directory
-    mode: '0755'
-  become: true
+- name: Create Docker volumes for Nginx Proxy Manager
+  community.docker.docker_volume:
+    name: "{{ item }}"
+  loop:
+    - nginx_proxy_manager_data      # 더 명확한 이름
+    - nginx_proxy_manager_ssl       # 더 명확한 이름
+  become: "{{ become_enabled }}"
+  environment:
+    DOCKER_HOST: "{{ docker_host_env }}"
   tags: unix
 
-- name: Copy Docker Compose file
-  ansible.builtin.template:
-    src: "docker-compose.yml.j2"
-    dest: "{{ nginx_directory }}/docker-compose.yml"
-    mode: "0664"
-  become: true
-  tags: unix
-
-- name: Deploy nginx with Docker Compose
-  community.docker.docker_compose_v2:
-    project_src: "{{ nginx_directory }}"
-    files:
-      - docker-compose.yml
-  become: true
+- name: Ensure Nginx Proxy Manager Docker container is running and configured
+  community.docker.docker_container:
+    name: nginx_proxy_manager
+    image: jc21/nginx-proxy-manager:latest
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "80:80"
+      - "18081:81"
+      - "443:443"
+    volumes:
+      - "nginx_proxy_manager_data:/data"
+      - "nginx_proxy_manager_ssl:/etc/letsencrypt"
+    env:
+      TZ: "{{ timezone }}"
+      PUID: "{{ npm_container_uid }}"
+      PGID: "{{ npm_container_gid }}"
+  become: "{{ become_enabled }}"
+  environment:
+    DOCKER_HOST: "{{ docker_host_env }}" # Use 'omit' to not set it on Linux
   tags: unix

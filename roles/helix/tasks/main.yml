@@ -1,10 +1,10 @@
 ---
-- name: Ensure Helix in macOS
+- name: Ensure helix in macOS
   ansible.builtin.include_tasks: macos/install.yml
   when: ansible_os_family == "Darwin"
   tags: macos
 
-- name: Ensure Helix in debian
+- name: Ensure helix in debian
   ansible.builtin.include_tasks: debian/install.yml
   when: ansible_os_family == "Debian"
   tags: debian

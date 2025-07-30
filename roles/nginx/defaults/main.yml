@@ -1,4 +1,0 @@
----
-nginx_directory: "/path/to/nginx"
-nginx_data_directory: "/path/to/nginx/data"
-nginx_lets_encrypt_directory: "/path/to/nginx/lets_encrypt"
