@@ -1,0 +1,18 @@
+<!--
+location:
+
+macos: ~/Library/Application\ Support/Google/AndroidStudio{version}/keymaps/default.xml
+-->
+
+<keymap version="1" name="custom-default" parent="Mac OS X 10.5+">
+  <action id="Macro.Save&amp;Format">
+    <keyboard-shortcut first-keystroke="meta s" />
+  </action>
+  <action id="SaveAll" />
+  <action id="android.deploy.ApplyChanges">
+    <keyboard-shortcut first-keystroke="ctrl meta e" />
+  </action>
+  <action id="android.deploy.CodeSwap">
+    <keyboard-shortcut first-keystroke="shift ctrl meta e" />
+  </action>
+</keymap>

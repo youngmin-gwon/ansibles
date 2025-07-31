@@ -1,8 +1,112 @@
 ---
-- name: Ensure Jetbrains toolbox in macOS
+- name: Ensure Android Command Line Tools in macOS
   community.general.homebrew_cask:
-    name: jetbrains-toolbox
+    name:
+      - android-commandlinetools
+      - android-studio
     state: present
+  when: ansible_os_family == "Darwin"
+  become: false
+  tags: macos
+
+- name: Find sdkmanager path
+  ansible.builtin.command: which sdkmanager
+  register: sdkmanager_path_result
+  changed_when: false
+  # sdkmanager가 PATH에 없을 경우를 대비하여 오류를 무시합니다.
+  # 다음 태스크에서 이 변수를 기반으로 조건을 설정할 것입니다.
+  failed_when: false
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Set Android SDK Root fact
+  ansible.builtin.set_fact:
+    # sdkmanager 경로에서 'cmdline-tools/latest/bin/sdkmanager' 부분을 제거하여 SDK 루트를 찾습니다.
+    # 예: /opt/homebrew/share/android-commandlinetools/cmdline-tools/latest/bin/sdkmanager
+    # => /opt/homebrew/share/android-commandlinetools
+    android_sdk_root: "{{ sdkmanager_path_result.stdout | regex_replace('/cmdline-tools/latest/bin/sdkmanager$', '') }}"
+  # sdkmanager_path_result.stdout이 비어 있지 않을 때만 실행
+  when:
+    - ansible_os_family == "Darwin"
+    - sdkmanager_path_result.stdout is defined and sdkmanager_path_result.stdout != ""
+  tags: macos
+
+- name: Fail if Android SDK Root could not be determined
+  ansible.builtin.fail:
+    msg: "Could not determine ANDROID_SDK_ROOT. Is Android Command Line Tools installed and in PATH?"
+  when:
+    - ansible_os_family == "Darwin"
+    - android_sdk_root is not defined or android_sdk_root == ""
+  tags: macos
+
+- name: Define required Android SDK directories
+  ansible.builtin.set_fact:
+    android_sdk_directories:
+      - name: "platform-tools"
+        sdkmanager_arg: "platform-tools"
+      - name: "platforms"
+        sdkmanager_arg: "platforms;android-36"
+      - name: "system-images"
+        sdkmanager_arg: "system-images;android-36;google_atd;arm64-v8a"
+      - name: "build-tools"
+        sdkmanager_arg: "build-tools;36.0.0"
+  tags: macos
+
+# --- SDK 컴포넌트 설치 멱등성 강화 (동적 경로 사용) ---
+- name: Check currently installed Android SDK components
+  ansible.builtin.command: "{{ sdkmanager_path_result.stdout }} --list"
+  register: sdk_list_output
+  changed_when: false # 이 명령은 상태를 변경하지 않음
+  tags: macos
+
+- name: Install missing Android SDK components
+  ansible.builtin.command: '{{ sdkmanager_path_result.stdout }} --install "{{ item.sdkmanager_arg }}"'
+  args:
+    stdin: "y\n"
+  # sdkmanager --list 출력을 기반으로 이미 설치된 컴포넌트는 건너뛰기
+  when: item.sdkmanager_arg not in sdk_list_output.stdout or "Installed" not in sdk_list_output.stdout_lines | join('\n') | regex_search('^.*' + item.sdkmanager_arg + '.*Installed$', multiline=True)
+  with_items: "{{ android_sdk_directories }}"
+  changed_when: true # 설치를 시도하면 변경된 것으로 간주
+  register: sdkmanager_install
+  tags: macos
+
+# --- 라이선스 동의 멱등성 강화 (동적 경로 사용) ---
+- name: Check if Android SDK licenses are already accepted
+  ansible.builtin.command: "{{ sdkmanager_path_result.stdout }} --licenses"
+  args:
+    stdin: "n\n" # 'n'을 입력하여 라이선스 동의를 하지 않고 상태만 확인
+  register: sdkmanager_licenses_check
+  failed_when: false # 명령이 실패하더라도 다음 태스크로 진행
+  changed_when: false
+  tags: macos
+
+- name: Agree on Android licenses
+  ansible.builtin.shell: |
+    "{{ sdkmanager_path_result.stdout }}" --licenses <<EOF
+    y
+    y
+    y
+    y
+    y
+    y
+    EOF
+  # 'All SDK package licenses accepted.' 메시지가 출력되지 않은 경우에만 실행
+  when: "'All SDK package licenses accepted.' not in sdkmanager_licenses_check.stdout"
+  changed_when: true # 라이선스 동의를 시도하면 변경된 것으로 간주
+  become: false
+  tags: macos
+
+# --- PATH 추가 (동적 경로 사용) ---
+- name: Add Android Command Line Tools to PATH
+  ansible.builtin.blockinfile:
+    path: "{{ home_path }}/.zshrc"
+    block: |
+      export ANDROID_SDK_ROOT={{ android_sdk_root }}
+      export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
+      export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+    state: present
+    marker: "# --- {mark} Android SDK ---"
   when: ansible_os_family == "Darwin"
   become: false
   tags: macos
