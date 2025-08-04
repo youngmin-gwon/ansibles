@@ -1,9 +1,3 @@
-<!--
-location:
-
-macos: ~/Library/Application\ Support/Google/AndroidStudio{version}/keymaps/default.xml
--->
-
 <keymap version="1" name="custom-default" parent="Mac OS X 10.5+">
   <action id="Macro.Save&amp;Format">
     <keyboard-shortcut first-keystroke="meta s" />

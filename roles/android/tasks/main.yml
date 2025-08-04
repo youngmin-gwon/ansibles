@@ -1,8 +1,67 @@
 ---
-- name: Configure Jetbrains toolbox in macOS
+- name: Set OS-specific variables
+  ansible.builtin.set_fact:
+    android_sdk_path: "{{ os_config[ansible_system].android_sdk_path }}"
+    android_studio_base_path: "{{ os_config[ansible_system].android_studio_base_path }}"
+  vars:
+    os_config:
+      Darwin:
+        android_sdk_path: "/opt/homebrew/share/android-commandlinetools"
+        android_studio_base_path: "{{ ansible_user_dir }}/Library/Application Support/Google"
+      Linux:
+        android_sdk_path: "/opt/homebrew/share/android-commandlinetools"
+        android_studio_base_path: "{{ ansible_user_dir }}/.config/Google"
+  tags: unix
+
+- name: Ensure Android tools in macOS
   ansible.builtin.include_tasks: macos.yml
   when: ansible_os_family == "Darwin"
   tags: macos
+
+
+- name: Find Android Studio installation directories
+  ansible.builtin.find:
+    paths: "{{ android_studio_base_path }}"
+    file_type: directory
+    recurse: yes
+    patterns: "AndroidStudio*"
+  register: android_studio_dirs
+  when: ansible_os_family == "Darwin"
+  tags: unix
+
+- name: Set common Android Studio options directory
+  ansible.builtin.set_fact:
+    # Android Studio 버전 디렉토리 아래의 options 폴더
+    common_options_subdir: "options"
+    # Android Studio 버전 디렉토리 아래의 keymaps 폴더
+    common_keymaps_subdir: "keymaps"
+  tags: unix
+
+- name: Get list of static config files to link (options)
+  ansible.builtin.find:
+    paths: "{{ role_path }}/files/options"
+    file_type: file
+    # android.sdk.path.xml은 템플릿으로 처리하므로 제외합니다.
+    excludes: "android.sdk.path.xml"
+  register: static_config_files_options
+  tags: unix
+
+- name: Get list of static keymaps files to link
+  ansible.builtin.find:
+    paths: "{{ role_path }}/files/keymaps"
+    file_type: file
+  register: static_config_files_keymaps
+  tags: unix
+
+- name: Process Android Studio configuration for each installation
+  ansible.builtin.include_tasks: configure_studio_instance.yml
+  loop: "{{ android_studio_dirs.files | default([]) }}"
+  loop_control:
+    loop_var: current_android_studio_dir # 중요: 이 변수로 하위 태스크에 전달됩니다.
+    label: "Including tasks for {{ current_android_studio_dir.path }}"
+  when:
+    - android_studio_dirs.files is defined and android_studio_dirs.files | length > 0
+  tags: unix
 
 - name: Link vim configuration files
   ansible.builtin.file:

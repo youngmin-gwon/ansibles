@@ -3,7 +3,6 @@
   community.general.homebrew_cask:
     name:
       - android-commandlinetools
-      - android-studio
     state: present
   when: ansible_os_family == "Darwin"
   become: false
@@ -13,19 +12,13 @@
   ansible.builtin.command: which sdkmanager
   register: sdkmanager_path_result
   changed_when: false
-  # sdkmanager가 PATH에 없을 경우를 대비하여 오류를 무시합니다.
-  # 다음 태스크에서 이 변수를 기반으로 조건을 설정할 것입니다.
   failed_when: false
   when: ansible_os_family == "Darwin"
   tags: macos
 
 - name: Set Android SDK Root fact
   ansible.builtin.set_fact:
-    # sdkmanager 경로에서 'cmdline-tools/latest/bin/sdkmanager' 부분을 제거하여 SDK 루트를 찾습니다.
-    # 예: /opt/homebrew/share/android-commandlinetools/cmdline-tools/latest/bin/sdkmanager
-    # => /opt/homebrew/share/android-commandlinetools
     android_sdk_root: "{{ sdkmanager_path_result.stdout | regex_replace('/cmdline-tools/latest/bin/sdkmanager$', '') }}"
-  # sdkmanager_path_result.stdout이 비어 있지 않을 때만 실행
   when:
     - ansible_os_family == "Darwin"
     - sdkmanager_path_result.stdout is defined and sdkmanager_path_result.stdout != ""
@@ -46,10 +39,10 @@
         sdkmanager_arg: "platform-tools"
       - name: "platforms"
         sdkmanager_arg: "platforms;android-36"
-      - name: "system-images"
-        sdkmanager_arg: "system-images;android-36;google_atd;arm64-v8a"
       - name: "build-tools"
         sdkmanager_arg: "build-tools;36.0.0"
+      - name: "system-images"
+        sdkmanager_arg: "system-images;android-Baklava;google_apis_ps16k;arm64-v8a"
   tags: macos
 
 # --- SDK 컴포넌트 설치 멱등성 강화 (동적 경로 사용) ---
@@ -57,6 +50,11 @@
   ansible.builtin.command: "{{ sdkmanager_path_result.stdout }} --list"
   register: sdk_list_output
   changed_when: false # 이 명령은 상태를 변경하지 않음
+  failed_when: sdkmanager_path_result.stdout == "" or sdk_list_output.rc != 0
+  when:
+    - sdkmanager_path_result.stdout is defined and sdkmanager_path_result.stdout != "" # sdkmanager 경로가 있을 때만 실행
+  environment:
+    ANDROID_SDK_ROOT: "{{ android_sdk_root }}"
   tags: macos
 
 - name: Install missing Android SDK components
@@ -64,10 +62,16 @@
   args:
     stdin: "y\n"
   # sdkmanager --list 출력을 기반으로 이미 설치된 컴포넌트는 건너뛰기
-  when: item.sdkmanager_arg not in sdk_list_output.stdout or "Installed" not in sdk_list_output.stdout_lines | join('\n') | regex_search('^.*' + item.sdkmanager_arg + '.*Installed$', multiline=True)
+  when:
+    - ansible_os_family == "Darwin"
+    - sdkmanager_path_result.stdout is defined and sdkmanager_path_result.stdout != ""
+    - sdk_list_output.stdout is defined # sdk_list_output.stdout이 None이 아닌지 확인
   with_items: "{{ android_sdk_directories }}"
-  changed_when: true # 설치를 시도하면 변경된 것으로 간주
+  changed_when: true
   register: sdkmanager_install
+  environment:
+    ANDROID_SDK_ROOT: "{{ android_sdk_root }}"
+  failed_when: sdkmanager_install.rc != 0
   tags: macos
 
 # --- 라이선스 동의 멱등성 강화 (동적 경로 사용) ---
@@ -78,6 +82,8 @@
   register: sdkmanager_licenses_check
   failed_when: false # 명령이 실패하더라도 다음 태스크로 진행
   changed_when: false
+  environment:
+    ANDROID_SDK_ROOT: "{{ android_sdk_root }}"
   tags: macos
 
 - name: Agree on Android licenses
@@ -94,6 +100,8 @@
   when: "'All SDK package licenses accepted.' not in sdkmanager_licenses_check.stdout"
   changed_when: true # 라이선스 동의를 시도하면 변경된 것으로 간주
   become: false
+  environment:
+    ANDROID_SDK_ROOT: "{{ android_sdk_root }}"
   tags: macos
 
 # --- PATH 추가 (동적 경로 사용) ---
