@@ -37,7 +37,7 @@
     common_keymaps_subdir: "keymaps"
   tags: unix
 
-- name: Get list of static config files to link (options)
+- name: Find static config files to link (options)
   ansible.builtin.find:
     paths: "{{ role_path }}/files/options"
     file_type: file
@@ -46,7 +46,7 @@
   register: static_config_files_options
   tags: unix
 
-- name: Get list of static keymaps files to link
+- name: Find static keymaps files to link
   ansible.builtin.find:
     paths: "{{ role_path }}/files/keymaps"
     file_type: file

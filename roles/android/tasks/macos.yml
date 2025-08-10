@@ -3,6 +3,7 @@
   community.general.homebrew_cask:
     name:
       - android-commandlinetools
+      - android-studio-preview@canary
     state: present
   when: ansible_os_family == "Darwin"
   become: false
@@ -61,11 +62,11 @@
   ansible.builtin.command: '{{ sdkmanager_path_result.stdout }} --install "{{ item.sdkmanager_arg }}"'
   args:
     stdin: "y\n"
-  # sdkmanager --list 출력을 기반으로 이미 설치된 컴포넌트는 건너뛰기
   when:
     - ansible_os_family == "Darwin"
     - sdkmanager_path_result.stdout is defined and sdkmanager_path_result.stdout != ""
-    - sdk_list_output.stdout is defined # sdk_list_output.stdout이 None이 아닌지 확인
+    - sdk_list_output.stdout is defined
+    - item.sdkmanager_arg not in sdk_list_output.stdout
   with_items: "{{ android_sdk_directories }}"
   changed_when: true
   register: sdkmanager_install
@@ -74,7 +75,6 @@
   failed_when: sdkmanager_install.rc != 0
   tags: macos
 
-# --- 라이선스 동의 멱등성 강화 (동적 경로 사용) ---
 - name: Check if Android SDK licenses are already accepted
   ansible.builtin.command: "{{ sdkmanager_path_result.stdout }} --licenses"
   args:
@@ -96,9 +96,8 @@
     y
     y
     EOF
-  # 'All SDK package licenses accepted.' 메시지가 출력되지 않은 경우에만 실행
   when: "'All SDK package licenses accepted.' not in sdkmanager_licenses_check.stdout"
-  changed_when: true # 라이선스 동의를 시도하면 변경된 것으로 간주
+  changed_when: true
   become: false
   environment:
     ANDROID_SDK_ROOT: "{{ android_sdk_root }}"
@@ -117,4 +116,47 @@
     marker: "# --- {mark} Android SDK ---"
   when: ansible_os_family == "Darwin"
   become: false
+  tags: macos
+
+# --- Android Studio 애플리케이션 경로 동적 찾기 ---
+- name: Find Android Studio application bundle path
+  ansible.builtin.find:
+    paths: "/Applications"
+    file_type: directory
+    patterns: "Android Studio Preview Canary.app" # 또는 설치된 Android Studio 버전에 맞는 패턴
+    recurse: no
+  register: android_studio_app_bundle_result
+  changed_when: false
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Set Android Studio application bundle path fact
+  ansible.builtin.set_fact:
+    android_studio_app_bundle_path: "{{ android_studio_app_bundle_result.files[0].path }}"
+  when:
+    - android_studio_app_bundle_result.files is defined
+    - android_studio_app_bundle_result.files | length > 0
+    - ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Get PIDs of running Android Studio instances using full path
+  # 🚨 수정: pgrep -f 옵션으로 전체 명령줄을 대상으로 검색하여 PID를 얻음
+  ansible.builtin.command: "pgrep -f '{{ android_studio_app_bundle_path }}'"
+  register: studio_process_pids
+  changed_when: false
+  failed_when: false # 프로세스가 없으면 1이 반환되므로 실패로 간주하지 않음
+  when:
+    - ansible_os_family == "Darwin"
+    - android_studio_app_bundle_path is defined # 앱 경로가 정의된 경우에만 실행
+  tags: macos
+
+- name: Terminate Android Studio processes by PID
+  # 🚨 수정: kill 명령어를 사용하여 각 PID를 명시적으로 종료
+  ansible.builtin.command: "kill -SIGTERM {{ item }}"
+  loop: "{{ studio_process_pids.stdout_lines }}" # pgrep의 출력은 PID 목록이므로 라인별로 반복
+  when:
+    - ansible_os_family == "Darwin"
+    - studio_process_pids.rc == 0 # 프로세스가 실행 중일 때 (즉, PID가 발견될 때)만 종료 명령 실행
+  changed_when: true # 종료 명령이 실행되면 변경된 것으로 간주
+  ignore_errors: true # 이미 종료되었거나 종료 중일 수 있으므로 에러 무시
   tags: macos

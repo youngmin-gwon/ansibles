@@ -1,0 +1,22 @@
+---
+- name: Check if plugin '{{ current_plugin.id }}' directory exists for '{{ current_android_studio_dir.path }}'
+  ansible.builtin.stat:
+    path: "{{ current_android_studio_dir.path }}/plugins/{{ current_plugin.dir_name }}"
+  register: plugin_stat_result
+  changed_when: false
+  when: current_android_studio_dir.path is defined and ansible_os_family == "Darwin"
+  tags: unix
+
+- name: Install plugin '{{ current_plugin.id }}' via Android Studio CLI for '{{ current_android_studio_dir.path }}'
+  # 🚨 수정: 공백이 포함된 경로를 위해 실행 파일 경로를 이중 따옴표로 감쌈
+  ansible.builtin.command: "{{ android_studio_app_bundle_path | quote }}/Contents/MacOS/studio installPlugins {{ current_plugin.id }}"
+  when:
+    - current_android_studio_dir.path is defined
+    - ansible_os_family == "Darwin"
+    - android_studio_app_bundle_path is defined
+    - not plugin_stat_result.stat.exists # 🚨 멱등성 핵심: 플러그인 디렉터리가 존재하지 않을 때만 실행
+  changed_when: true # 이 명령이 실행되면 변경이 발생했다고 가정
+  # stderr에 에러 메시지(예: already installed)가 포함될 경우에도 성공으로 처리
+  failed_when: "'already installed' not in studio_plugin_install_result.stderr and studio_plugin_install_result.rc != 0"
+  register: studio_plugin_install_result
+  tags: unix
