@@ -1,0 +1,71 @@
+---
+- name: Find the latest tag of zigbee2mqtt repo
+  community.general.github_release:
+    user: Koenkk
+    repo: zigbee2mqtt
+    action: latest_release
+  register: github_download_result
+  tags: unix
+
+- name: Ensure zigbee2mqtt repo
+  ansible.builtin.git:
+    repo: "https://github.com/Koenkk/zigbee2mqtt.git"
+    dest: "{{ zigbee2mqtt_directory }}"
+    version: "{{ github_download_result.tag }}"
+  tags: unix
+
+- name: Check for USB devices
+  ansible.builtin.shell: "ls /dev/tty.usb*"
+  register: usb_devices_result
+  changed_when: false
+  failed_when: usb_devices_result.rc != 0 or usb_devices_result.stdout_lines | length == 0
+  tags: macos
+
+- name: Set fact with the first USB device path
+  ansible.builtin.set_fact:
+    usb_device_path: "{{ usb_devices_result.stdout_lines[0] }}"
+  tags: unix
+
+- name: Render Zigbee2MQTT configuration file
+  ansible.builtin.template:
+    src: "config.yaml.j2"
+    dest: "{{ zigbee2mqtt_directory }}/data/configuration.yaml"
+    mode: "0644"
+  tags: unix
+
+- name: Ensure Node.js exists
+  ansible.builtin.include_role:
+    name: nodejs
+  tags: unix
+
+- name: Find the npm executable path
+  ansible.builtin.shell: "which npm"
+  register: npm_path_result
+  changed_when: false
+  tags: unix
+
+- name: Set npm_path fact
+  ansible.builtin.set_fact:
+    npm_path: "{{ npm_path_result.stdout }}"
+  tags: unix
+
+- name: Install Node.js packages for Zigbee2MQtt
+  community.general.npm:
+    path: "{{ zigbee2mqtt_directory }}"
+    state: present
+  tags: unix
+
+- name: Create a systemd service file
+  ansible.builtin.template:
+    src: z2m.service.j2
+    dest: "/etc/systemd/system/z2m.service"
+    mode: "0644"
+  notify: Reload systemd daemon
+  tags: unix
+
+- name: Ensure the service is started and enabled
+  ansible.builtin.systemd:
+    name: z2m.service
+    state: started
+    enabled: yes
+  tags: unix

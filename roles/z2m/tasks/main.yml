@@ -1,0 +1,16 @@
+---
+- name: Set OS-specific variables
+  ansible.builtin.set_fact:
+    zigbee2mqtt_directory: "{{ os_config[ansible_system].zigbee2mqtt_directory }}"
+  vars:
+    os_config:
+      Darwin:
+        zigbee2mqtt_directory: "{{ ansible_user_dir }}/src/zigbee2mqtt"
+      Linux:
+        zigbee2mqtt_directory: "{{ ansible_user_dir }}/src/zigbee2mqtt"
+  tags: unix
+
+- name: Configure zigbee2mQtt on macOS
+  ansible.builtin.include_tasks: macos.yml
+  when: ansible_os_family == "Darwin"
+  tags: macos

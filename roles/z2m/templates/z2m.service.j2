@@ -1,0 +1,13 @@
+[Unit]
+Description=zigbee2mqtt
+After=network.target
+
+[Service]
+ExecStart={{ npm_path }} start
+WorkingDirectory={{ zigbee2mqtt_directory }}
+User={{ ansible_user_id }}
+Group={{ ansible_user_gid }}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

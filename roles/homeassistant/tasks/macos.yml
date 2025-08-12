@@ -1,0 +1,16 @@
+---
+- name: Ensure MQTT-related Tools in macOS
+  community.general.homebrew:
+    name:
+      - mosquitto
+    state: present
+  when: ansible_os_family == "Darwin"
+  become: false
+  tags: macos
+
+- name: Start MQTT service
+  community.general.homebrew_services:
+    name: mosquitto
+    state: present
+  when: ansible_os_family == "Darwin"
+  tags: macos

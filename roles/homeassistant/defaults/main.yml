@@ -1,3 +1,4 @@
 ---
 homeassistant_directory: "path/to/config"
 homeassistant_external_devices: []
+homeassistant_zigbee_serials: []

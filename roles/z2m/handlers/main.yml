@@ -1,0 +1,10 @@
+---
+- name: Reload launchd service
+  ansible.builtin.command: launchctl unload -w "{{ ansible_user_dir }}/Library/LaunchAgents/com.zigbee2mqtt.{{ ansible_user }}.plist"
+  changed_when: false
+  listen: "Reload launchd service"
+
+- name: Load launchd service
+  ansible.builtin.command: launchctl load -w "{{ ansible_user_dir }}/Library/LaunchAgents/com.zigbee2mqtt.{{ ansible_user }}.plist"
+  changed_when: false
+  listen: "Reload launchd service"
