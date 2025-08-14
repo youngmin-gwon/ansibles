@@ -1,17 +1,16 @@
 ---
-- name: Find the latest tag of zigbee2mqtt repo
-  community.general.github_release:
-    user: Koenkk
-    repo: zigbee2mqtt
-    action: latest_release
-  register: github_download_result
+- name: Check if zigbee2mqtt directory exists
+  ansible.builtin.stat:
+    path: "{{ zigbee2mqtt_directory }}"
+  register: zigbee2mqtt_dir_stat
   tags: unix
 
-- name: Ensure zigbee2mqtt repo
+- name: Clone zigbee2mqtt repo if the directory does not exist
   ansible.builtin.git:
     repo: "https://github.com/Koenkk/zigbee2mqtt.git"
     dest: "{{ zigbee2mqtt_directory }}"
-    version: "{{ github_download_result.tag }}"
+    version: 2.6.0
+  when: not zigbee2mqtt_dir_stat.stat.exists
   tags: unix
 
 - name: Check for USB devices
@@ -26,46 +25,52 @@
     usb_device_path: "{{ usb_devices_result.stdout_lines[0] }}"
   tags: unix
 
-- name: Render Zigbee2MQTT configuration file
+- name: Check if the configuration file exists
+  ansible.builtin.stat:
+    path: "{{ zigbee2mqtt_directory }}/data/configuration.yaml"
+  register: config_file
+  tags: unix
+
+- name: Render Zigbee2MQTT configuration file if not exists
   ansible.builtin.template:
     src: "config.yaml.j2"
     dest: "{{ zigbee2mqtt_directory }}/data/configuration.yaml"
     mode: "0644"
   tags: unix
+  when: not config_file.stat.exists
 
 - name: Ensure Node.js exists
   ansible.builtin.include_role:
     name: nodejs
   tags: unix
 
-- name: Find the npm executable path
-  ansible.builtin.shell: "which npm"
-  register: npm_path_result
+- name: Get node executable path
+  ansible.builtin.command: which node
+  register: node_path_result
+  failed_when: false
   changed_when: false
   tags: unix
 
-- name: Set npm_path fact
+- name: Set node fact
   ansible.builtin.set_fact:
-    npm_path: "{{ npm_path_result.stdout }}"
+    node_path: "{{ node_path_result.stdout }}"
   tags: unix
 
-- name: Install Node.js packages for Zigbee2MQtt
-  community.general.npm:
+- name: Install Node.js packages for zigbee2mqtt
+  community.general.pnpm:
     path: "{{ zigbee2mqtt_directory }}"
-    state: present
+    state: latest
   tags: unix
 
-- name: Create a systemd service file
+- name: Create a launchd service file
   ansible.builtin.template:
-    src: z2m.service.j2
-    dest: "/etc/systemd/system/z2m.service"
+    src: z2m.plist.j2
+    dest: "{{ zigbee2mqtt_service_manager_file }}"
     mode: "0644"
-  notify: Reload systemd daemon
-  tags: unix
+  tags: macos
 
-- name: Ensure the service is started and enabled
-  ansible.builtin.systemd:
-    name: z2m.service
-    state: started
-    enabled: yes
-  tags: unix
+- name: Run launchd
+  community.general.launchd:
+    name: "{{ zigbee2mqtt_service_name }}"
+    state: restarted
+  tags: macos

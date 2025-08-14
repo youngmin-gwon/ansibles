@@ -1,3 +1,4 @@
+---
 # Indicates the configuration version (used by configuration migrations)
 version: 4
 
@@ -21,7 +22,7 @@ mqtt:
 {% if usb_device_path is defined %}
 serial:
     port: {{ usb_device_path }}
-    adapter: zstack
+    adapter: ezsp
 {% else %}
 # serial:
 #   port: /dev/serial/by-id/usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00124B0018ED3DDF-if00

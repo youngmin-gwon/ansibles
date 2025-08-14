@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>{{ zigbee2mqtt_service_name }}</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{ node_path }}</string>
+        <string>{{ zigbee2mqtt_directory }}/index.js</string>
+    </array>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+    <key>WorkingDirectory</key>
+    <string>{{ zigbee2mqtt_directory }}</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardErrorPath</key>
+    <string>{{ zigbee2mqtt_directory }}/z2m.err.log</string>
+    <key>StandardOutPath</key>
+    <string>{{ zigbee2mqtt_directory }}/z2m.out.log</string>
+</dict>
+</plist>
