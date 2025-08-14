@@ -1,0 +1,72 @@
+---
+- name: Set OS-specific variables
+  ansible.builtin.set_fact:
+    docker_host_env: "{{ os_config[ansible_system].docker_host_env }}"
+    zigbee2mqtt_directory: "{{ os_config[ansible_system].common_directory }}/zigbee2mqtt"
+    mosquitto_directory: "{{ os_config[ansible_system].common_directory }}/mosquitto"
+    become_enabled: "{{ os_config[ansible_system].become_enabled }}"
+  vars:
+    os_config:
+      Darwin:
+        docker_host_env: "unix:///Users/{{ ansible_user_id }}/.colima/default/docker.sock"
+        common_directory: "{{ ansible_user_dir }}/Library/Application Support"
+        become_enabled: false
+      Linux:
+        docker_host_env: "unix:///var/run/docker.sock"
+        common_directory: "/mnt/shared"
+        become_enabled: true
+  tags: unix
+
+- name: Ensure Home Assistant directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ zigbee2mqtt_directory }}"
+    - "{{ zigbee2mqtt_directory }}/data"
+    - "{{ zigbee2mqtt_directory }}/run/udev"
+    - "{{ mosquitto_directory }}"
+    - "{{ mosquitto_directory }}/config"
+    - "{{ mosquitto_directory }}/data"
+    - "{{ mosquitto_directory }}/log"
+  become: "{{ become_enabled }}"
+  tags: unix
+
+- name: Ensure mosquitto Docker container is running and configured
+  community.docker.docker_container:
+    name: mosquitto
+    image: eclipse-mosquitto:latest
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "18883:1883" # default port
+      - "18126:9001" # websockets
+    volumes:
+      - "{{ mosquitto_directory }}/config:/mosquitto/config"
+      - "{{ mosquitto_directory }}/data:/mosquitto/data"
+      - "{{ mosquitto_directory }}/log:/mosquitto/log"
+  become: "{{ become_enabled }}"
+  environment:
+    DOCKER_HOST: "{{ docker_host_env }}"
+  tags: unix
+
+- name: Ensure zigbee2mqtt Docker container is running and configured
+  community.docker.docker_container:
+    name: zigbee2mqtt
+    image: ghcr.io/koenkk/zigbee2mqtt:latest
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "18124:8080"
+    volumes:
+      - "{{ zigbee2mqtt_directory }}/data:/app/data"
+      - "{{ zigbee2mqtt_directory }}/run/udev:/run/udev:ro"
+    env:
+      TZ: "{{ timezone }}"
+    devices:
+      - "{{ z2m_usb_device_path }}"
+  become: "{{ become_enabled }}"
+  environment:
+    DOCKER_HOST: "{{ docker_host_env }}"
+  tags: unix

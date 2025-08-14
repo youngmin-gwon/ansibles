@@ -1,4 +1,20 @@
 ---
+- name: Ensure mosquitto in macOS
+  community.general.homebrew:
+    name:
+      - mosquitto
+    state: present
+  when: ansible_os_family == "Darwin"
+  become: false
+  tags: macos
+
+- name: Start mosquitto as login item
+  community.general.homebrew_services:
+    name: mosquitto
+    state: present
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
 - name: Check if zigbee2mqtt directory exists
   ansible.builtin.stat:
     path: "{{ zigbee2mqtt_directory }}"
@@ -11,18 +27,6 @@
     dest: "{{ zigbee2mqtt_directory }}"
     version: 2.6.0
   when: not zigbee2mqtt_dir_stat.stat.exists
-  tags: unix
-
-- name: Check for USB devices
-  ansible.builtin.shell: "ls /dev/tty.usb*"
-  register: usb_devices_result
-  changed_when: false
-  failed_when: usb_devices_result.rc != 0 or usb_devices_result.stdout_lines | length == 0
-  tags: macos
-
-- name: Set fact with the first USB device path
-  ansible.builtin.set_fact:
-    usb_device_path: "{{ usb_devices_result.stdout_lines[0] }}"
   tags: unix
 
 - name: Check if the configuration file exists

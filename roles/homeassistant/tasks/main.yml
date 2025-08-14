@@ -3,8 +3,6 @@
   ansible.builtin.set_fact:
     docker_host_env: "{{ os_config[ansible_system].docker_host_env }}"
     homeassistant_directory: "{{ os_config[ansible_system].common_directory }}/homeassistant"
-    zigbee2mqtt_directory: "{{ os_config[ansible_system].common_directory }}/zigbee2mqtt"
-    mosquitto_directory: "{{ os_config[ansible_system].common_directory }}/mosquitto"
     become_enabled: "{{ os_config[ansible_system].become_enabled }}"
   vars:
     os_config:
@@ -18,12 +16,7 @@
         become_enabled: true
   tags: unix
 
-- name: Ensure MQTT-related tools in macOS
-  ansible.builtin.include_tasks: macos.yml
-  when: ansible_os_family == "Darwin"
-  tags: macos
-
-- name: Ensure zigbee2mqtt exists
+- name: Ensure zigbee2mqtt setup completed
   ansible.builtin.include_role:
     name: z2m
   tags: unix
@@ -33,81 +26,33 @@
     name: docker
   tags: unix
 
-# - name: Ensure Home Assistant directories exist
-#   ansible.builtin.file:
-#     path: "{{ item }}" # Iterates through the list of paths
-#     state: directory
-#     mode: '0755'
-#   loop:
-#     - "{{ homeassistant_directory }}"
-#     - "{{ homeassistant_directory }}/config"
-#     - "{{ zigbee2mqtt_directory }}"
-#     - "{{ zigbee2mqtt_directory }}/data"
-#     - "{{ zigbee2mqtt_directory }}/run/udev"
-#     - "{{ mosquitto_directory }}"
-#     - "{{ mosquitto_directory }}/config"
-#     - "{{ mosquitto_directory }}/data"
-#     - "{{ mosquitto_directory }}/log"
-#   become: "{{ become_enabled }}"
-#   tags: unix
+- name: Ensure Home Assistant directories exist
+  ansible.builtin.file:
+    path: "{{ item }}" # Iterates through the list of paths
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ homeassistant_directory }}"
+    - "{{ homeassistant_directory }}/config"
+  become: "{{ become_enabled }}"
+  tags: unix
 
-# # - name: Ensure mosquitto Docker container is running and configured
-# #   community.docker.docker_container:
-# #     name: mosquitto
-# #     image: eclipse-mosquitto:latest
-# #     state: started
-# #     restart_policy: unless-stopped
-# #     ports:
-# #       - "18125:1883" # default port
-# #       - "18126:9001" # websockets
-# #     volumes:
-# #       - "{{ mosquitto_directory }}/config:/mosquitto/config"
-# #       - "{{ mosquitto_directory }}/data:/mosquitto/data"
-# #       - "{{ mosquitto_directory }}/log:/mosquitto/log"
-# #   become: "{{ become_enabled }}"
-# #   environment:
-# #     DOCKER_HOST: "{{ docker_host_env }}"
-# #   tags: unix
-
-# # - name: Ensure zigbee2mqtt Docker container is running and configured
-# #   community.docker.docker_container:
-# #     name: zigbee2mqtt
-# #     image: ghcr.io/koenkk/zigbee2mqtt:latest
-# #     state: started
-# #     restart_policy: unless-stopped
-# #     ports:
-# #       - "18124:8080"
-# #     volumes:
-# #       - "{{ zigbee2mqtt_directory }}/data:/app/data"
-# #       - "{{ zigbee2mqtt_directory }}/run/udev:/run/udev:ro"
-# #     env:
-# #       TZ: "{{ timezone }}"
-# #     devices: "{{ homeassistant_external_devices | default([]) }}"
-# #   become: "{{ become_enabled }}"
-# #   environment:
-# #     DOCKER_HOST: "{{ docker_host_env }}"
-# #   tags: unix
-
-# - name: Ensure Home Assistant Docker container is running and configured
-#   community.docker.docker_container:
-#     name: homeassistant
-#     image: ghcr.io/home-assistant/home-assistant:stable
-#     state: started
-#     privileged: true
-#     restart_policy: unless-stopped
-#     ports:
-#       - "18123:8123"
-#     volumes:
-#       - "{{ homeassistant_directory }}/config:/config"
-#       - "/etc/localtime:/etc/localtime:ro"
-#       - "/run/dbus:/run/dbus:ro"
-#     env:
-#       TZ: "{{ timezone }}"
-#     devices: "{{ homeassistant_external_devices | default([]) }}"
-#   become: "{{ become_enabled }}"
-#   environment:
-#     # Conditionally set DOCKER_HOST for macOS (Colima).
-#     # This environment variable will only be effective on macOS hosts when become_enabled_for_os is true.
-#     # On Linux, this variable is generally not needed as Docker client defaults to /var/run/docker.sock.
-#     DOCKER_HOST: "{{ docker_host_env }}" # Use 'omit' to not set it on Linux
-#   tags: unix
+- name: Ensure Home Assistant Docker container is running and configured
+  community.docker.docker_container:
+    name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    state: started
+    privileged: true
+    restart_policy: unless-stopped
+    ports:
+      - "18123:8123"
+    volumes:
+      - "{{ homeassistant_directory }}/config:/config"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/run/dbus:/run/dbus:ro"
+    env:
+      TZ: "{{ timezone }}"
+  become: "{{ become_enabled }}"
+  environment:
+    DOCKER_HOST: "{{ docker_host_env }}"
+  tags: unix
