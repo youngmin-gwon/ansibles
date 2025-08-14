@@ -10,8 +10,8 @@
 - name: Add Node.js plugin if not already added
   ansible.builtin.command: asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
   when: "'nodejs' not in plugin_list.stdout"
-  register: plugin_added
-  changed_when: plugin_added.rc == 0
+  register: nodejs_plugin_added
+  changed_when: nodejs_plugin_added.rc == 0
   become: false
   tags: unix
 
@@ -22,7 +22,7 @@
   changed_when: false
   tags: unix
 
-- name: Install 22 version of Node.js if not already installed
+- name: Install LTS version of Node.js if not already installed
   ansible.builtin.command: asdf install nodejs {{ nodejs_version }}
   when: "nodejs_version not in nodejs_list.stdout"
   register: nodejs_install
@@ -37,4 +37,25 @@
   when: "nodejs_version not in nodejs_list.stdout"
   changed_when: nodejs_install.changed
   become: false
+  tags: unix
+
+- name: Find the pnpm executable path
+  ansible.builtin.command: "which pnpm"
+  register: pnpm_path_result
+  failed_when: false
+  changed_when: false
+  tags: unix
+
+- name: Prepare corepack for pnpm when pnpm not installed
+  ansible.builtin.command: corepack enable
+  register: pnpm_prepare
+  when: pnpm_path_result.rc != 0
+  changed_when: pnpm_prepare.rc == 0
+  tags: unix
+
+- name: Install pnpm when pnpm not installed
+  ansible.builtin.command: corepack prepare pnpm@latest --activate
+  register: pnpm_install
+  when: pnpm_path_result.rc != 0
+  changed_when: pnpm_install.rc == 0
   tags: unix
