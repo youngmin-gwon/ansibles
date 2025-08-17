@@ -48,8 +48,8 @@
       - "18123:8123"
     volumes:
       - "{{ homeassistant_directory }}/config:/config"
+      - "{{ homeassistant_directory }}/run/dbus:/run/dbus:ro"
       - "/etc/localtime:/etc/localtime:ro"
-      - "/run/dbus:/run/dbus:ro"
     env:
       TZ: "{{ timezone }}"
   become: "{{ become_enabled }}"

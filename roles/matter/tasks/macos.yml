@@ -1,0 +1,20 @@
+---
+- name: Ensure prerequisites in macOS
+  community.general.homebrew:
+    name:
+      - openssl
+      - pkg-config
+    state: present
+  when: ansible_os_family == "Darwin"
+  become: false
+  tags: macos
+
+- name: Add configuration line to .zshrc if pkg-config is installed
+  ansible.builtin.blockinfile:
+    path: "{{ home_path }}/.zshrc"
+    block: 'export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:"/opt/homebrew/opt/openssl@3/lib/pkgconfig"'
+    insertbefore: "^{{ custom_config_end_delimiter }}"
+    state: present
+    marker: "# --- {mark} pkg-config ---"
+  notify: Reload shell
+  tags: macos

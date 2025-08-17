@@ -1,0 +1,19 @@
+---
+- name: Set OS-specific variables
+  ansible.builtin.set_fact:
+    matter_service_name: "{{ os_config[ansible_system].matter_service_name }}"
+    matter_directory: "{{ os_config[ansible_system].matter_directory }}"
+  vars:
+    os_config:
+      Darwin:
+        matter_directory: "{{ ansible_user_dir }}/src/matter-server"
+        matter_service_name: "matter-server"
+      Linux:
+        matter_directory: "{{ ansible_user_dir }}/src/matter"
+        matter_service_name: "matter-server"
+  tags: unix
+
+- name: Configure Matter on macOS
+  ansible.builtin.include_tasks: macos.yml
+  when: ansible_os_family == "Darwin"
+  tags: macos
