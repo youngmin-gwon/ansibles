@@ -1,15 +1,26 @@
 {
     "ansible.python.interpreterPath": "/usr/local/bin/python3",
     "cSpell.words": [
+        "chdir",
+        "cmdline",
         "cocoapods",
+        "dbus",
         "duckdns",
+        "ezsp",
         "gitmoji",
         "homeassistant",
         "kavita",
         "keka",
+        "Koenkk",
+        "localtime",
+        "mosquitto",
+        "mqtt",
         "plexmediaserver",
+        "sdkmanager",
+        "usbserial",
         "venv",
         "wezterm",
-        "yazi"
+        "yazi",
+        "zigbee"
     ]
 }
