@@ -26,22 +26,20 @@
     recurse: yes
     patterns: "AndroidStudio*"
   register: android_studio_dirs
-  when: ansible_os_family == "Darwin"
   tags: unix
 
 - name: Set common Android Studio options directory
   ansible.builtin.set_fact:
-    # Android Studio 버전 디렉토리 아래의 options 폴더
     common_options_subdir: "options"
-    # Android Studio 버전 디렉토리 아래의 keymaps 폴더
     common_keymaps_subdir: "keymaps"
+    common_plugins_subdir: "plugins"
   tags: unix
 
 - name: Find static config files to link (options)
   ansible.builtin.find:
     paths: "{{ role_path }}/files/options"
     file_type: file
-    # android.sdk.path.xml은 템플릿으로 처리하므로 제외합니다.
+    # android.sdk.path.xml은 템플릿으로 처리하므로 제외
     excludes: "android.sdk.path.xml"
   register: static_config_files_options
   tags: unix
@@ -54,7 +52,7 @@
   tags: unix
 
 - name: Process Android Studio configuration for each installation
-  ansible.builtin.include_tasks: configure_studio_instance.yml
+  ansible.builtin.include_tasks: configure_each_instance.yml
   loop: "{{ android_studio_dirs.files | default([]) }}"
   loop_control:
     loop_var: current_android_studio_dir # 중요: 이 변수로 하위 태스크에 전달됩니다.
@@ -63,10 +61,19 @@
     - android_studio_dirs.files is defined and android_studio_dirs.files | length > 0
   tags: unix
 
+- name: Ensure ideavim config directory
+  ansible.builtin.file:
+    path: "{{ home_path }}/.config/ideavim"
+    state: directory
+    mode: "0755"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+  tags: unix
+
 - name: Link vim configuration files
   ansible.builtin.file:
     src: "{{ role_path }}/files/.vimrc"
-    dest: "{{ home_path }}/.ideavimrc"
+    dest: "{{ home_path }}/.config/ideavim/ideavimrc"
     state: link
     mode: "0644"
     force: true

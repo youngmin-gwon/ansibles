@@ -1,0 +1,119 @@
+---
+- name: Ensure target options directory exists for {{ current_android_studio_dir.path }}
+  ansible.builtin.file:
+    path: "{{ current_android_studio_dir.path }}/{{ common_options_subdir }}"
+    state: directory
+    mode: "0755" # 적절한 권한 설정
+    owner: "{{ ansible_user_id }}" # 현재 사용자 소유로 설정 (macOS 환경에서 중요)
+    group: "{{ ansible_user_gid }}"
+  when: current_android_studio_dir.path is defined
+  tags: unix
+
+- name: Ensure target keymaps directory exists for {{ current_android_studio_dir.path }}
+  ansible.builtin.file:
+    path: "{{ current_android_studio_dir.path }}/{{ common_keymaps_subdir }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+  when: current_android_studio_dir.path is defined
+  tags: unix
+
+- name: Ensure target plugins directory exists for {{ current_android_studio_dir.path }}
+  ansible.builtin.file:
+    path: "{{ current_android_studio_dir.path }}/{{ common_plugins_subdir }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+  when: current_android_studio_dir.path is defined
+  tags: unix
+
+- name: Link static Android Studio option files
+  ansible.builtin.file:
+    src: "{{ item.path }}"
+    dest: "{{ current_android_studio_dir.path }}/{{ common_options_subdir }}/{{ item.path | basename }}"
+    state: link
+    force: yes
+  loop: "{{ static_config_files_options.files }}"
+  loop_control:
+    label: "Linking option file {{ item.path | basename }}"
+  tags: unix
+
+- name: Link static Android Studio keymaps files
+  ansible.builtin.file:
+    src: "{{ item.path }}"
+    dest: "{{ current_android_studio_dir.path }}/{{ common_keymaps_subdir }}/{{ item.path | basename }}"
+    state: link
+    force: yes
+  loop: "{{ static_config_files_keymaps.files }}"
+  loop_control:
+    label: "Linking keymap file {{ item.path | basename }}"
+  tags: unix
+
+- name: Create or update dynamic Android Studio config file (android.sdk.path.xml)
+  ansible.builtin.template:
+    src: "options/android.sdk.path.xml.j2"
+    dest: "{{ current_android_studio_dir.path }}/{{ common_options_subdir }}/android.sdk.path.xml"
+    mode: "0644"
+  when: android_sdk_root is defined
+  tags: unix
+
+- name: Check if plugins are installed
+  ansible.builtin.stat:
+    path: "{{ current_android_studio_dir.path }}/{{ common_plugins_subdir }}/{{ item.key }}"
+  register: plugin_stat
+  loop: "{{ android_plugins | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+  become: false
+  tags: unix
+
+- name: Download and install plugins if not installed
+  ansible.builtin.get_url:
+    url: "{{ android_plugins[item.item.key] }}"
+    dest: "/tmp/{{ item.item.key }}.zip"
+    mode: "0644"
+    force: no
+  when: not item.stat.exists
+  loop: "{{ plugin_stat.results }}"
+  loop_control:
+    label: "{{ item.item.key }}"
+  become: false
+  tags: unix
+
+- name: Unzip the plugin if not already extracted
+  ansible.builtin.unarchive:
+    src: "/tmp/{{ item.item.key }}.zip"
+    dest: "{{ current_android_studio_dir.path }}/{{ common_plugins_subdir }}"
+    remote_src: yes
+    creates: "{{ current_android_studio_dir.path }}/{{ common_plugins_subdir }}/{{ item.item.key }}"
+  when: not item.stat.exists and item.item.key is not match(".*\.jar$")
+  loop: "{{ plugin_stat.results }}"
+  loop_control:
+    label: "{{ item.item.key }}"
+  become: false
+  tags: unix
+
+- name: Move the plugin directly if it is a .jar file
+  ansible.builtin.copy:
+    src: "/tmp/{{ item.item.key }}.zip"
+    dest: "{{ current_android_studio_dir.path }}/{{ common_plugins_subdir }}/{{ item.item.key }}"
+    mode: "0644"
+  when: not item.stat.exists and item.item.key is match(".*\.jar$")
+  loop: "{{ plugin_stat.results }}"
+  loop_control:
+    label: "{{ item.item.key }}"
+  become: false
+  tags: unix
+
+- name: Clean up temporary files after plugin installation
+  ansible.builtin.file:
+    path: "/tmp/{{ item.item.key }}.zip"
+    state: absent
+  when: not item.stat.exists
+  loop: "{{ plugin_stat.results }}"
+  loop_control:
+    label: "{{ item.item.key }}"
+  become: false
+  tags: unix

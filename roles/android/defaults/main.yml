@@ -1,0 +1,9 @@
+---
+android_plugins:
+  IdeaVim: "https://plugins.jetbrains.com/plugin/download?rel=true&updateId=704953"
+  github-theme.jar: "https://plugins.jetbrains.com/plugin/download?rel=true&updateId=686085"
+  Indent Rainbow: "https://plugins.jetbrains.com/plugin/download?rel=true&updateId=370912"
+  CodeGlancePro: "https://plugins.jetbrains.com/plugin/download?rel=true&updateId=694222"
+  Key Promoter X: "https://plugins.jetbrains.com/plugin/download?rel=true&updateId=633158"
+  Atom Material Icons: "https://plugins.jetbrains.com/plugin/download?rel=true&updateId=670968"
+  pojo2json: "https://plugins.jetbrains.com/plugin/download?rel=true&updateId=634522"
