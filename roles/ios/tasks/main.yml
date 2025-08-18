@@ -15,3 +15,16 @@
   when: ansible_os_family == "Darwin"
   notify: Install simulator runtime
   tags: macos
+
+
+# Format on save
+# https://stackoverflow.com/questions/26993977/how-to-use-code-formatter-in-xcode-for-swift
+# https://stackoverflow.com/questions/5975026/xcode-4-idekeybindings-multiple-commands-for-one-keystroke
+
+# vim mode
+# KeyBindingsMode = "Vi"
+
+# theme
+# XCFontAndColorCurrentDarkTheme = "Github (Dark).xccolortheme";
+# XCFontAndColorCurrentLightTheme = "Github (Light).xccolortheme";
+# XCFontAndColorCurrentTheme = "Github (Dark).xccolortheme";
