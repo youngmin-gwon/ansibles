@@ -2,29 +2,57 @@
 - name: Ensure Xcode license is accepted
   ansible.builtin.command: xcodebuild -license accept
   when: ansible_os_family == "Darwin"
-  register: xcode_license_check
   changed_when: false
   become: true
   tags: macos
 
-- name: Ensure package manager is installed
-  community.general.homebrew:
-    state: present
-    name: cocoapods
+- name: Ensure Xcode UserData directories exist
+  ansible.builtin.file:
+    path: "{{ item }}" # Iterates through the list of paths
+    state: directory
+    mode: '0755'
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+  loop:
+    - "{{ ios_xcode_preference_directory }}"
+    - "{{ ios_xcode_preference_directory }}/KeyBindings"
+    - "{{ ios_xcode_preference_directory }}/FontAndColorThemes"
+  tags: unix
+
+- name: Find static config files to link
+  ansible.builtin.file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+    mode: "0644"
+    force: true
+    follow: false
+  with_items:
+    - { src: "{{ role_path }}/files/themes/github_light_theme.xml", dest: "{{ ios_xcode_preference_directory }}/FontAndColorThemes/Github (Light).xccolortheme"}
+    - { src: "{{ role_path }}/files/themes/github_dark_theme.xml", dest: "{{ ios_xcode_preference_directory }}/FontAndColorThemes/Github (Dark).xccolortheme"}
+    - { src: "{{ role_path }}/files/keybindings/custom_keybinding.xml", dest: "{{ ios_xcode_preference_directory }}/KeyBindings/Default.idekeybindings"}
   become: false
-  when: ansible_os_family == "Darwin"
-  notify: Install simulator runtime
+  tags: macos
+
+- name: Set Xcode Preferences
+  community.general.osx_defaults:
+    domain: com.apple.dt.Xcode
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    # current theme
+    - { key: "XCFontAndColorCurrentTheme", type: "string", value: "Github (Dark).xccolortheme" }
+    # light theme
+    - { key: "XCFontAndColorCurrentLightTheme", type: "string", value: "Github (Light).xccolortheme" }
+    # dark theme
+    - { key: "XCFontAndColorCurrentDarkTheme", type: "string", value: "Github (Dark).xccolortheme" }
+    # vim mode
+    - { key: "KeyBindingsMode", type: "string", value: "Vi" }
   tags: macos
 
 
 # Format on save
 # https://stackoverflow.com/questions/26993977/how-to-use-code-formatter-in-xcode-for-swift
 # https://stackoverflow.com/questions/5975026/xcode-4-idekeybindings-multiple-commands-for-one-keystroke
-
-# vim mode
-# KeyBindingsMode = "Vi"
-
-# theme
-# XCFontAndColorCurrentDarkTheme = "Github (Dark).xccolortheme";
-# XCFontAndColorCurrentLightTheme = "Github (Light).xccolortheme";
-# XCFontAndColorCurrentTheme = "Github (Dark).xccolortheme";
