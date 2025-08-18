@@ -1,20 +1,70 @@
 ---
-- name: Ensure prerequisites in macOS
-  community.general.homebrew:
+- name: Check if matter directory exists
+  ansible.builtin.stat:
+    path: "{{ matter_directory }}"
+  register: matter_dir_stat
+  tags: unix
+
+- name: Clone matter repo if the directory does not exist
+  ansible.builtin.git:
+    repo: "https://github.com/home-assistant-libs/python-matter-server.git"
+    dest: "{{ matter_directory }}"
+    version: 8.1.0
+  when: not matter_dir_stat.stat.exists
+  tags: unix
+
+- name: Ensure Python virtual environment exists
+  ansible.builtin.command:
+    cmd: python3 -m venv .venv
+    chdir: "{{ matter_directory }}"
+  args:
+    creates: "{{ matter_directory }}/.venv"
+  tags: unix
+
+- name: Install prerequisites
+  ansible.builtin.pip:
     name:
-      - openssl
-      - pkg-config
-    state: present
-  when: ansible_os_family == "Darwin"
+      - packaging
+    virtualenv: "{{ matter_directory }}/.venv"
+  tags: unix
+
+- name: Install server development dependencies
+  ansible.builtin.pip:
+    name: ".[server]"
+    virtualenv: "{{ matter_directory }}/.venv"
+    chdir: "{{ matter_directory }}"
+    editable: yes
+  tags: unix
+
+- name: Install test dependencies
+  ansible.builtin.pip:
+    name: ".[test]"
+    virtualenv: "{{ matter_directory }}/.venv"
+    chdir: "{{ matter_directory }}"
+    editable: yes
+  tags: unix
+
+- name: Ensure matter data directory exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+    mode: "0755"
+  loop:
+    - "{{ matter_directory }}/data"
   become: false
+  tags: unix
+
+- name: Create a launchd service file
+  ansible.builtin.template:
+    src: matter-server.plist.j2
+    dest: "{{ matter_service_manager_file }}"
+    mode: "0644"
   tags: macos
 
-- name: Add configuration line to .zshrc if pkg-config is installed
-  ansible.builtin.blockinfile:
-    path: "{{ home_path }}/.zshrc"
-    block: 'export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:"/opt/homebrew/opt/openssl@3/lib/pkgconfig"'
-    insertbefore: "^{{ custom_config_end_delimiter }}"
-    state: present
-    marker: "# --- {mark} pkg-config ---"
-  notify: Reload shell
+- name: Run launchd
+  community.general.launchd:
+    name: "{{ matter_service_name }}"
+    state: restarted
   tags: macos

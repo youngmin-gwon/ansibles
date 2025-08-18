@@ -1,16 +1,21 @@
 ---
 - name: Set OS-specific variables
   ansible.builtin.set_fact:
-    matter_service_name: "{{ os_config[ansible_system].matter_service_name }}"
     matter_directory: "{{ os_config[ansible_system].matter_directory }}"
+    matter_service_name: "{{ os_config[ansible_system].matter_service_name }}"
+    matter_service_manager_file: "{{ os_config[ansible_system].matter_service_manager_directory }}/{{ os_config[ansible_system].matter_service_name }}.{{ os_config[ansible_system].file_format }}"
   vars:
     os_config:
       Darwin:
         matter_directory: "{{ ansible_user_dir }}/src/matter-server"
-        matter_service_name: "matter-server"
+        matter_service_manager_directory: "{{ ansible_user_dir }}/Library/LaunchAgents"
+        matter_service_name: "com.matter.ha"
+        file_format: "plist"
       Linux:
         matter_directory: "{{ ansible_user_dir }}/src/matter"
+        matter_service_manager_directory: "/etc/systemd/system"
         matter_service_name: "matter-server"
+        file_format: "service"
   tags: unix
 
 - name: Configure Matter on macOS

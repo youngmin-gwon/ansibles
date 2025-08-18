@@ -21,6 +21,11 @@
     name: z2m
   tags: unix
 
+- name: Ensure matter setup completed
+  ansible.builtin.include_role:
+    name: matter
+  tags: unix
+
 - name: Ensure Docker exists
   ansible.builtin.include_role:
     name: docker
@@ -34,6 +39,8 @@
   loop:
     - "{{ homeassistant_directory }}"
     - "{{ homeassistant_directory }}/config"
+    - "{{ homeassistant_directory }}/run"
+    - "{{ homeassistant_directory }}/run/dbus"
   become: "{{ become_enabled }}"
   tags: unix
 
