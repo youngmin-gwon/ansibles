@@ -18,18 +18,16 @@
     <frame x="0" y="25" width="2560" height="1415" extendedState="6" />
   </component>
   <component name="WindowStateApplicationService">
-    <state width="721" height="139" key="ShowUsagesActions.dimensionServiceKey" timestamp="1750406143407">
+    <state width="494" height="255" key="ShowUsagesActions.dimensionServiceKey" timestamp="1755693763527">
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
     <state width="692" height="163" key="ShowUsagesActions.dimensionServiceKey/-1728.361.1728.1079/0.25.2560.1415/2560.385.1920.1055" timestamp="1748331043663" />
-    <state width="721" height="139" key="ShowUsagesActions.dimensionServiceKey/-1728.361.1728.1079/2560.385.1920.1055/0.25.2560.1415" timestamp="1750406143407" />
+    <state width="494" height="255" key="ShowUsagesActions.dimensionServiceKey/-1728.361.1728.1079/2560.385.1920.1055/0.25.2560.1415" timestamp="1755693763527" />
     <state x="1280" y="605" width="800" height="650" key="WELCOME_SCREEN" timestamp="1750728643927">
       <screen x="0" y="25" width="2560" height="1415" />
     </state>
     <state x="1280" y="605" width="800" height="650" key="WELCOME_SCREEN/-1728.361.1728.1079/0.25.2560.1415/2560.385.1920.1055" timestamp="1750728643927" />
     <state x="1280" y="605" width="800" height="650" key="WELCOME_SCREEN/-1728.361.1728.1079/2560.385.1920.1055/0.25.2560.1415" timestamp="1750313418917" />
-    <state x="1280" y="605" width="800" height="650" key="WELCOME_SCREEN/-1728.753.1728.1079/0.25.2560.1415/2560.307.1920.1055" timestamp="1742862228179" />
-    <state x="1280" y="605" width="800" height="650" key="WELCOME_SCREEN/-1728.753.1728.1079/2560.307.1920.1055/0.25.2560.1415" timestamp="1742810330245" />
     <state x="864" y="506" width="800" height="650" key="WELCOME_SCREEN/0.38.1728.1079" timestamp="1750728515029" />
   </component>
 </application>
