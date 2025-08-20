@@ -1,0 +1,35 @@
+<application>
+  <component name="DimensionService">
+    <location key="WELCOME_SCREEN.0.0.1920.1080" x="960" y="300" />
+    <location key="find.popup.0.0.1920.1080" x="724" y="187" />
+    <location key="find.popup.0.0.2560.1440" x="964" y="242" />
+    <size key="find.popup.0.0.1920.1080" width="656" height="834" />
+    <size key="GridCell.Tab.0.left.0.0.1920.1080" width="1818" height="298" />
+    <size key="GridCell.Tab.0.center.0.0.1920.1080" width="1818" height="298" />
+    <size key="GridCell.Tab.0.right.0.0.1920.1080" width="1818" height="298" />
+    <size key="GridCell.Tab.0.bottom.0.0.1920.1080" width="1818" height="298" />
+    <size key="find.popup.0.0.2560.1440" width="875" height="1119" />
+    <size key="GridCell.Tab.0.left.0.0.2560.1440" width="2478" height="299" />
+    <size key="GridCell.Tab.0.center.0.0.2560.1440" width="2478" height="299" />
+    <size key="GridCell.Tab.0.right.0.0.2560.1440" width="2478" height="299" />
+    <size key="GridCell.Tab.0.bottom.0.0.2560.1440" width="2478" height="299" />
+  </component>
+  <component name="WindowManager">
+    <frame x="0" y="25" width="2560" height="1415" extendedState="6" />
+  </component>
+  <component name="WindowStateApplicationService">
+    <state width="721" height="139" key="ShowUsagesActions.dimensionServiceKey" timestamp="1750406143407">
+      <screen x="0" y="25" width="2560" height="1415" />
+    </state>
+    <state width="692" height="163" key="ShowUsagesActions.dimensionServiceKey/-1728.361.1728.1079/0.25.2560.1415/2560.385.1920.1055" timestamp="1748331043663" />
+    <state width="721" height="139" key="ShowUsagesActions.dimensionServiceKey/-1728.361.1728.1079/2560.385.1920.1055/0.25.2560.1415" timestamp="1750406143407" />
+    <state x="1280" y="605" width="800" height="650" key="WELCOME_SCREEN" timestamp="1750728643927">
+      <screen x="0" y="25" width="2560" height="1415" />
+    </state>
+    <state x="1280" y="605" width="800" height="650" key="WELCOME_SCREEN/-1728.361.1728.1079/0.25.2560.1415/2560.385.1920.1055" timestamp="1750728643927" />
+    <state x="1280" y="605" width="800" height="650" key="WELCOME_SCREEN/-1728.361.1728.1079/2560.385.1920.1055/0.25.2560.1415" timestamp="1750313418917" />
+    <state x="1280" y="605" width="800" height="650" key="WELCOME_SCREEN/-1728.753.1728.1079/0.25.2560.1415/2560.307.1920.1055" timestamp="1742862228179" />
+    <state x="1280" y="605" width="800" height="650" key="WELCOME_SCREEN/-1728.753.1728.1079/2560.307.1920.1055/0.25.2560.1415" timestamp="1742810330245" />
+    <state x="864" y="506" width="800" height="650" key="WELCOME_SCREEN/0.38.1728.1079" timestamp="1750728515029" />
+  </component>
+</application>
