@@ -1,5 +1,5 @@
 <keymap version="1" name="custom-default" parent="Mac OS X 10.5+">
-  <action id="Macro.Save&amp;Format">
+  <action id="Macro.Orgainze&amp;Save">
     <keyboard-shortcut first-keystroke="meta s" />
   </action>
   <action id="SaveAll" />

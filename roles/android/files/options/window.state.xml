@@ -8,11 +8,11 @@
     <size key="GridCell.Tab.0.center.0.0.1920.1080" width="1818" height="298" />
     <size key="GridCell.Tab.0.right.0.0.1920.1080" width="1818" height="298" />
     <size key="GridCell.Tab.0.bottom.0.0.1920.1080" width="1818" height="298" />
-    <size key="find.popup.0.0.2560.1440" width="875" height="1119" />
-    <size key="GridCell.Tab.0.left.0.0.2560.1440" width="2478" height="299" />
-    <size key="GridCell.Tab.0.center.0.0.2560.1440" width="2478" height="299" />
-    <size key="GridCell.Tab.0.right.0.0.2560.1440" width="2478" height="299" />
-    <size key="GridCell.Tab.0.bottom.0.0.2560.1440" width="2478" height="299" />
+    <size key="find.popup.0.0.2560.1440" width="649" height="556" />
+    <size key="GridCell.Tab.0.left.0.0.2560.1440" width="2478" height="424" />
+    <size key="GridCell.Tab.0.center.0.0.2560.1440" width="2478" height="424" />
+    <size key="GridCell.Tab.0.right.0.0.2560.1440" width="2478" height="424" />
+    <size key="GridCell.Tab.0.bottom.0.0.2560.1440" width="2478" height="424" />
   </component>
   <component name="WindowManager">
     <frame x="0" y="25" width="2560" height="1415" extendedState="6" />
