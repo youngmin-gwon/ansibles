@@ -32,6 +32,8 @@ packages_mac_only_packages:
   - docker
   - colima
   - xcodesorg/made/xcodes
+  - mermaid-cli
+  - chafa
 
 packages_mac_gui_packages:
   - figma

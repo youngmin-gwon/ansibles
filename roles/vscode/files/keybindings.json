@@ -1,4 +1,3 @@
-// Place your key bindings in this file to override the defaultsauto[]
 [
     {
         "key": "shift+ctrl+e",
@@ -147,5 +146,33 @@
     {
         "key": "cmd+n", // "cmd+n" on mac
         "command": "extension.advancedNewFile"
+    },
+    {
+        "key": "cmd+escape",
+        "command": "-claude-code.runClaude.keyboard"
+    },
+    {
+        "key": "cmd+escape",
+        "command": "-claude-vscode.editor.open"
+    },
+    {
+        "key": "shift+cmd+escape",
+        "command": "-claude-vscode.editor.open",
+        "when": "!config.claudeCode.useTerminal"
+    },
+    {
+        "key": "cmd+n",
+        "command": "-claude-vscode.newConversation",
+        "when": "config.claudeCode.enableNewConversationShortcut && activeWebviewPanelId == 'claudeVSCodePanel' || claude-vscode.sideBarActive && config.claudeCode.enableNewConversationShortcut && !editorFocus && !panelFocus"
+    },
+    {
+        "key": "cmd+escape",
+        "command": "-claude-vscode.terminal.open.keyboard",
+        "when": "config.claudeCode.useTerminal"
+    },
+    {
+        "key": "cmd+escape",
+        "command": "-claude-vscode.focus",
+        "when": "editorTextFocus && !config.claudeCode.useTerminal"
     }
 ]

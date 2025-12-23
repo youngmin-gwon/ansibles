@@ -2,32 +2,39 @@
   <component name="DimensionService">
     <location key="WELCOME_SCREEN.0.0.1920.1080" x="960" y="300" />
     <location key="find.popup.0.0.1920.1080" x="724" y="187" />
-    <location key="find.popup.0.0.2560.1440" x="964" y="242" />
+    <location key="find.popup.0.0.2560.1440" x="964" y="246" />
+    <location key="find.popup.2560.360.1920.1080" x="3283" y="552" />
+    <location key="WELCOME_SCREEN.0.0.2560.1440" x="1280" y="339" />
     <size key="find.popup.0.0.1920.1080" width="656" height="834" />
     <size key="GridCell.Tab.0.left.0.0.1920.1080" width="1818" height="298" />
     <size key="GridCell.Tab.0.center.0.0.1920.1080" width="1818" height="298" />
     <size key="GridCell.Tab.0.right.0.0.1920.1080" width="1818" height="298" />
     <size key="GridCell.Tab.0.bottom.0.0.1920.1080" width="1818" height="298" />
-    <size key="find.popup.0.0.2560.1440" width="649" height="556" />
-    <size key="GridCell.Tab.0.left.0.0.2560.1440" width="2478" height="424" />
-    <size key="GridCell.Tab.0.center.0.0.2560.1440" width="2478" height="424" />
-    <size key="GridCell.Tab.0.right.0.0.2560.1440" width="2478" height="424" />
-    <size key="GridCell.Tab.0.bottom.0.0.2560.1440" width="2478" height="424" />
+    <size key="find.popup.0.0.2560.1440" width="875" height="1116" />
+    <size key="GridCell.Tab.0.left.0.0.2560.1440" width="2478" height="422" />
+    <size key="GridCell.Tab.0.center.0.0.2560.1440" width="2478" height="422" />
+    <size key="GridCell.Tab.0.right.0.0.2560.1440" width="2478" height="422" />
+    <size key="GridCell.Tab.0.bottom.0.0.2560.1440" width="2478" height="422" />
+    <size key="find.popup.2560.360.1920.1080" width="657" height="831" />
   </component>
   <component name="WindowManager">
-    <frame x="0" y="25" width="2560" height="1415" extendedState="6" />
+    <frame x="0" y="30" width="1280" height="1410" />
   </component>
   <component name="WindowStateApplicationService">
-    <state width="494" height="255" key="ShowUsagesActions.dimensionServiceKey" timestamp="1755693763527">
-      <screen x="0" y="25" width="2560" height="1415" />
+    <state width="974" height="255" key="ShowUsagesActions.dimensionServiceKey" timestamp="1763012232133">
+      <screen x="0" y="31" width="2560" height="1409" />
     </state>
-    <state width="692" height="163" key="ShowUsagesActions.dimensionServiceKey/-1728.361.1728.1079/0.25.2560.1415/2560.385.1920.1055" timestamp="1748331043663" />
-    <state width="494" height="255" key="ShowUsagesActions.dimensionServiceKey/-1728.361.1728.1079/2560.385.1920.1055/0.25.2560.1415" timestamp="1755693763527" />
-    <state x="1280" y="605" width="800" height="650" key="WELCOME_SCREEN" timestamp="1750728643927">
-      <screen x="0" y="25" width="2560" height="1415" />
+    <state width="974" height="255" key="ShowUsagesActions.dimensionServiceKey/-1728.357.1728.1083/0.31.2560.1409/2560.391.1920.1049" timestamp="1763012232133" />
+    <state width="1331" height="159" key="ShowUsagesActions.dimensionServiceKey/-1728.357.1728.1083/2560.391.1920.1049/0.31.2560.1409" timestamp="1762159428643" />
+    <state x="1280" y="339" width="800" height="650" key="WELCOME_SCREEN" timestamp="1766451606214">
+      <screen x="0" y="30" width="2560" height="1410" />
     </state>
-    <state x="1280" y="605" width="800" height="650" key="WELCOME_SCREEN/-1728.361.1728.1079/0.25.2560.1415/2560.385.1920.1055" timestamp="1750728643927" />
-    <state x="1280" y="605" width="800" height="650" key="WELCOME_SCREEN/-1728.361.1728.1079/2560.385.1920.1055/0.25.2560.1415" timestamp="1750313418917" />
-    <state x="864" y="506" width="800" height="650" key="WELCOME_SCREEN/0.38.1728.1079" timestamp="1750728515029" />
+    <state x="1280" y="339" key="WELCOME_SCREEN/-1728.356.1728.1084/0.30.2560.1410/2560.390.1920.1050" timestamp="1766451606214" />
+    <state x="1280" y="609" width="800" height="650" key="WELCOME_SCREEN/-1728.357.1728.1083/0.31.2560.1409/2560.391.1920.1049" timestamp="1764896674785" />
+    <state x="1280" y="609" width="800" height="650" key="WELCOME_SCREEN/-1728.357.1728.1083/2560.391.1920.1049/0.31.2560.1409" timestamp="1766035316579" />
+    <state width="300" height="524" key="manage.recent.projects.popup" timestamp="1762300735692">
+      <screen x="0" y="31" width="2560" height="1409" />
+    </state>
+    <state width="300" height="524" key="manage.recent.projects.popup/-1728.357.1728.1083/2560.391.1920.1049/0.31.2560.1409" timestamp="1762300735692" />
   </component>
 </application>

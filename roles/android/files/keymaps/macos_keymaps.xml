@@ -1,12 +1,21 @@
 <keymap version="1" name="custom-default" parent="Mac OS X 10.5+">
+  <action id="CopyElement" />
   <action id="Macro.Orgainze&amp;Save">
     <keyboard-shortcut first-keystroke="meta s" />
   </action>
+  <action id="Run">
+    <keyboard-shortcut first-keystroke="f5" />
+  </action>
   <action id="SaveAll" />
+  <action id="Terminal.SearchInCommandHistory" />
+  <action id="UsageFiltering.ReadAccess" />
   <action id="android.deploy.ApplyChanges">
     <keyboard-shortcut first-keystroke="ctrl meta e" />
   </action>
   <action id="android.deploy.CodeSwap">
     <keyboard-shortcut first-keystroke="shift ctrl meta e" />
+  </action>
+  <action id="android.streaming.xr.recenter">
+    <keyboard-shortcut first-keystroke="meta r" />
   </action>
 </keymap>

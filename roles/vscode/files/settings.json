@@ -582,6 +582,7 @@
   },
   "cSpell.userWords": [
     "actix",
+    "agentic",
     "androidx",
     "Animatable",
     "ARGB",
@@ -707,12 +708,29 @@
   "editor.copyWithSyntaxHighlighting": true,
   "diffEditor.codeLens": true,
   "diffEditor.ignoreTrimWhitespace": false,
-  "roo-cline.allowedCommands": [
-    "git log",
-    "git diff",
-    "git show"
-  ],
-  "find-it-faster.general.useTerminalInEditor": true,
   "zig.zls.enabled": "on",
   "ansible.lightspeed.enabled": false,
+  "code-runner.clearPreviousOutput": true,
+  "code-runner.saveFileBeforeRun": true,
+  "code-runner.runInTerminal": true,
+  "git.blame.editorDecoration.enabled": true,
+  "[dockercompose]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    },
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "dart.devToolsLocation": {
+    "default": "beside",
+    "inspector": "sidebar"
+  },
+  "claudeCode.preferredLocation": "sidebar",
 }
