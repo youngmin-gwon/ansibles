@@ -1,0 +1,29 @@
+{{ template_config_delimiter }}
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+# Shell options (converted from zsh setopt)
+# Note: autocd requires bash 4.0+
+if [[ ${BASH_VERSINFO[0]} -ge 4 ]]; then
+    shopt -s autocd           # AUTO_CD: change dir without cd
+fi
+shopt -s extglob          # EXTENDED_GLOB: extended pattern matching
+shopt -s nocaseglob       # NO_CASE_GLOB: case insensitive globbing
+shopt -s histappend       # INC_APPEND_HISTORY: append to history
+shopt -s cmdhist          # Save multi-line commands as one entry
+
+# History settings (converted from zsh setopt)
+HISTCONTROL=ignoreboth:erasedups  # HIST_IGNORE_DUPS + HIST_IGNORE_SPACE
+HISTSIZE=10000
+HISTFILESIZE=20000
+HISTTIMEFORMAT="%F %T "   # extended_history: record timestamp
+
+# Disable bell
+bind 'set bell-style none'  # NO_LIST_BEEP
+
+# Repository settings
+DISABLE_UNTRACKED_FILES_DIRTY="true"
+DISABLE_AUTO_TITLE="true"
+
+{{ custom_config_start_delimiter }}
+{{ custom_config_end_delimiter }}

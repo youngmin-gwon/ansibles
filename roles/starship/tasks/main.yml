@@ -33,8 +33,8 @@
 
 - name: Add Starship init line to .zshrc if Starship is installed
   ansible.builtin.blockinfile:
-    path: "{{ home_path }}/.zshrc"
-    block: 'eval "$(starship init zsh)"'
+    path: "{{ home_path }}/.bashrc"
+    block: 'eval "$(starship init bash)"'
     insertbefore: "^{{ custom_config_end_delimiter }}"
     marker: "# --- {mark} starship ---"
     state: present

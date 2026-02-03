@@ -13,7 +13,6 @@
       - fzf
       - zoxide
       - imagemagick
-      - font-symbols-only-nerd-font
   become: false
   tags: macos
 

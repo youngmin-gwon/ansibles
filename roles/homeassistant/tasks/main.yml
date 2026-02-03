@@ -53,6 +53,7 @@
     restart_policy: unless-stopped
     ports:
       - "18123:8123"
+    network_mode: host
     volumes:
       - "{{ homeassistant_directory }}/config:/config"
       - "{{ homeassistant_directory }}/run/dbus:/run/dbus:ro"

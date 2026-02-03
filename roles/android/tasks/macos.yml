@@ -41,12 +41,31 @@
       - name: "platforms"
         sdkmanager_arg: "platforms;android-36"
       - name: "build-tools"
-        sdkmanager_arg: "build-tools;36.0.0"
+        sdkmanager_arg: "build-tools;36.1.0"
       - name: "system-images"
         sdkmanager_arg: "system-images;android-Baklava;google_apis_ps16k;arm64-v8a"
   tags: macos
 
-# --- SDK 컴포넌트 설치 멱등성 강화 (동적 경로 사용) ---
+- name: Get JAVA_HOME from asdf
+  ansible.builtin.shell: "asdf where java"
+  register: asdf_java_home
+  changed_when: false
+  failed_when: false
+  environment:
+    PATH: "/opt/homebrew/bin:{{ ansible_env.HOME }}/.asdf/shims:{{ ansible_env.PATH }}"
+  tags: macos
+
+- name: Fail if Java is not installed via asdf
+  ansible.builtin.fail:
+    msg: "Java is not installed via asdf. Please run the 'java' role first."
+  when: asdf_java_home.rc != 0 or asdf_java_home.stdout == ""
+  tags: macos
+
+- name: Set JAVA_HOME fact
+  ansible.builtin.set_fact:
+    java_home: "{{ asdf_java_home.stdout | trim }}"
+  tags: macos
+
 - name: Check currently installed Android SDK components
   ansible.builtin.command: "{{ sdkmanager_path_result.stdout }} --list"
   register: sdk_list_output
@@ -56,6 +75,7 @@
     - sdkmanager_path_result.stdout is defined and sdkmanager_path_result.stdout != "" # sdkmanager 경로가 있을 때만 실행
   environment:
     ANDROID_SDK_ROOT: "{{ android_sdk_root }}"
+    JAVA_HOME: "{{ java_home }}"
   tags: macos
 
 - name: Install missing Android SDK components
@@ -68,11 +88,14 @@
     - sdk_list_output.stdout is defined
     - item.sdkmanager_arg not in sdk_list_output.stdout
   with_items: "{{ android_sdk_directories }}"
-  changed_when: true
   register: sdkmanager_install
   environment:
     ANDROID_SDK_ROOT: "{{ android_sdk_root }}"
-  failed_when: sdkmanager_install.rc != 0
+    JAVA_HOME: "{{ java_home }}"
+  failed_when:
+    - sdkmanager_install.rc != 0
+    - "'Failed to find package' not in sdkmanager_install.stderr"
+  changed_when: sdkmanager_install.rc == 0
   tags: macos
 
 - name: Check if Android SDK licenses are already accepted
@@ -84,6 +107,7 @@
   changed_when: false
   environment:
     ANDROID_SDK_ROOT: "{{ android_sdk_root }}"
+    JAVA_HOME: "{{ java_home }}"
   tags: macos
 
 - name: Agree on Android licenses
@@ -101,12 +125,12 @@
   become: false
   environment:
     ANDROID_SDK_ROOT: "{{ android_sdk_root }}"
+    JAVA_HOME: "{{ java_home }}"
   tags: macos
 
-# --- PATH 추가 (동적 경로 사용) ---
 - name: Add Android Command Line Tools to PATH
   ansible.builtin.blockinfile:
-    path: "{{ home_path }}/.zshrc"
+    path: "{{ home_path }}/.bashrc"
     block: |
       export ANDROID_SDK_ROOT={{ android_sdk_root }}
       export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin

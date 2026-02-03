@@ -1,0 +1,104 @@
+---
+- name: Ensure bash on macOS
+  ansible.builtin.include_tasks: macos/install.yml
+  when: ansible_system == "Darwin"
+  tags: macos
+
+- name: Ensure bash on Debian-based Linux
+  ansible.builtin.include_tasks: debian/install.yml
+  when: ansible_facts['os_family'] == 'Debian'
+  tags: debian
+
+- name: Set the $DOTFILES path in bash
+  ansible.builtin.set_fact:
+    dotfiles_bash_path: "{{ dotfiles_directory_path }}/bash"
+  become: false
+  tags: unix
+
+- name: Ensure destination directory exists
+  ansible.builtin.file:
+    path: "{{ dotfiles_bash_path }}"
+    state: directory
+    mode: "0755"
+  become: false
+  tags: unix
+
+- name: Link bash packages file from role files to local destination when local
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/packages.bash"
+    dest: "{{ dotfiles_bash_path }}/packages.bash"
+    state: link
+    mode: "0644"
+    force: true
+    follow: false
+  when: is_local_connection
+  become: false
+  tags: unix
+
+- name: Copy bash packages file from role files to local destination when not local
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/packages.bash"
+    dest: "{{ dotfiles_bash_path }}/packages.bash"
+    mode: "0644"
+    force: true
+  when: not is_local_connection
+  become: false
+  tags: unix
+
+- name: Generate .bashrc from template
+  ansible.builtin.template:
+    src: "bashrc.j2"
+    dest: "{{ home_path }}/.bashrc"
+    mode: "0664"
+  become: false
+  tags: unix
+
+- name: Generate alias file for bash from template
+  ansible.builtin.template:
+    src: "bash_aliases.j2"
+    dest: "{{ dotfiles_bash_path }}/aliases.bash"
+    mode: "0664"
+  become: false
+  tags: unix
+
+- name: Generate configuration file for bash from template
+  ansible.builtin.template:
+    src: "bash_configs.j2"
+    dest: "{{ dotfiles_bash_path }}/configs.bash"
+    mode: "0664"
+  become: false
+  tags: unix
+
+- name: Generate function file for bash from template
+  ansible.builtin.template:
+    src: "bash_functions.j2"
+    dest: "{{ dotfiles_bash_path }}/functions.bash"
+    mode: "0664"
+  become: false
+  tags: unix
+
+- name: Ensure .bashrc exists
+  ansible.builtin.file:
+    path: "{{ home_path }}/.bashrc"
+    state: touch
+    mode: "0644"
+  tags: unix
+
+- name: Ensure .bashrc includes Homebrew path for Apple Silicon-based machine
+  ansible.builtin.blockinfile:
+    path: "{{ home_path }}/.bashrc"
+    block: "export PATH=/opt/homebrew/bin:$PATH"
+    state: present
+    insertafter: "^{{ custom_config_start_delimiter }}"
+    marker: "# --- {mark} Homebrew ---"
+    mode: "0644"
+  become: false
+  when:
+    - ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Reload shell
+  ansible.builtin.command: "bash -c \"source {{ home_path }}/.bashrc\""
+  failed_when: false
+  changed_when: false
+  ignore_errors: false

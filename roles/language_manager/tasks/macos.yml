@@ -10,16 +10,16 @@
   become: false
   tags: macos
 
-- name: Ensure .zshrc exists
+- name: Ensure .bashrc exists
   ansible.builtin.file:
-    path: "{{ home_path }}/.zshrc"
+    path: "{{ home_path }}/.bashrc"
     state: touch
     mode: "0644"
   tags: unix
 
-- name: Ensure .zshrc includes asdf initialization
+- name: Ensure .bashrc includes asdf initialization
   ansible.builtin.blockinfile:
-    path: "{{ home_path }}/.zshrc"
+    path: "{{ home_path }}/.bashrc"
     block: 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"'
     state: present
     mode: "0644"

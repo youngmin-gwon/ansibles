@@ -15,9 +15,9 @@
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
       ansible.builtin.meta: flush_handlers
 
-    - name: Configure zsh
+    - name: Configure bash
       ansible.builtin.include_role:
-        name: zsh
+        name: bash
       tags: macos
 
     - name: Force all notified handlers to run at this point, not waiting for normal sync points

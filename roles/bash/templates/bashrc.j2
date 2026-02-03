@@ -1,0 +1,14 @@
+{{ custom_config_start_delimiter }}
+{{ custom_config_end_delimiter }}
+
+{{ template_config_delimiter }}
+
+# Declare $DOTFILES_BASH path
+DOTFILES_BASH="{{ dotfiles_bash_path }}"
+
+# Iterate through all files in the directory
+for file in "$DOTFILES_BASH"/*; do
+  if [ -f "$file" ]; then
+    source "$file"
+  fi
+done

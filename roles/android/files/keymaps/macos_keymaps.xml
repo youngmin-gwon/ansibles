@@ -1,6 +1,9 @@
 <keymap version="1" name="custom-default" parent="Mac OS X 10.5+">
   <action id="CopyElement" />
-  <action id="Macro.Orgainze&amp;Save">
+  <action id="Debug">
+    <keyboard-shortcut first-keystroke="shift f5" />
+  </action>
+  <action id="Macro.Organize&amp;Save">
     <keyboard-shortcut first-keystroke="meta s" />
   </action>
   <action id="Run">

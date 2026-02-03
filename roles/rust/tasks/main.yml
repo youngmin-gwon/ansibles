@@ -27,7 +27,7 @@
 # Ensure the environment variables are set for Rust
 - name: Ensure Cargo bin directory is in PATH
   ansible.builtin.blockinfile:
-    path: "{{ home_path }}/.zshrc"
+    path: "{{ home_path }}/.bashrc"
     block: 'export PATH="$HOME/.cargo/bin:$PATH"'
     insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present

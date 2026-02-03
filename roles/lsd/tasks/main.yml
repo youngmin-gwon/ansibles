@@ -11,7 +11,7 @@
 
 - name: Add aliases in zsh configuration
   ansible.builtin.lineinfile:
-    path: "{{ dotfiles_directory_path }}/zsh/aliases.zsh"
+    path: "{{ dotfiles_directory_path }}/bash/aliases.bash"
     line: alias ls='lsd'
     insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
@@ -20,7 +20,7 @@
 
 - name: Add aliases in zsh configuration
   ansible.builtin.lineinfile:
-    path: "{{ dotfiles_directory_path }}/zsh/aliases.zsh"
+    path: "{{ dotfiles_directory_path }}/bash/aliases.bash"
     line: alias ll='lsd -alh'
     insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present

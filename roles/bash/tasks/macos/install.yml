@@ -1,22 +1,24 @@
 ---
-- name: Ensure Homebrew is installed
-  ansible.builtin.stat:
-    path: /opt/homebrew/bin/brew
-  register: homebrew_installed
-  failed_when: false
-  changed_when: false
-  ignore_errors: true
+- name: Ensure bash is installed (latest version via Homebrew)
+  community.general.homebrew:
+    name:
+      - bash
+      - bash-completion@2
+    state: present
   become: false
-  when: ansible_system == "Darwin"
   tags: macos
 
-- name: Install Homebrew if the package manager is not installed
-  ansible.builtin.shell: >
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  become: false
-  when:
-    - ansible_os_family == "Darwin"
-    - not homebrew_installed.stat.exists
+- name: Add Homebrew bash to allowed shells
+  ansible.builtin.lineinfile:
+    path: /etc/shells
+    line: /opt/homebrew/bin/bash
+    state: present
+  become: true
+  tags: macos
+
+- name: Change default shell to bash
+  ansible.builtin.shell: chsh -s /opt/homebrew/bin/bash $(whoami)
+  become: true
   changed_when: false
   tags: macos
 
@@ -25,9 +27,7 @@
     path: "{{ home_path }}/.bashrc"
     state: touch
     mode: "0644"
-  when:
-    - ansible_os_family == "Darwin"
-  tags: macos
+  tags: unix
 
 - name: Ensure .bashrc includes Homebrew path for Apple Silicon-based machine
   ansible.builtin.blockinfile:

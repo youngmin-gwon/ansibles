@@ -6,16 +6,16 @@
   become: false
   tags: macos
 
-- name: Ensure .zshrc exists
+- name: Ensure .bashrc exists
   ansible.builtin.file:
-    path: "{{ home_path }}/.zshrc"
+    path: "{{ home_path }}/.bashrc"
     state: touch
     mode: "0644"
   tags: unix
 
-- name: Add GPG line to .zshrc if GPG is installed
+- name: Add GPG line to .bashrc if GPG is installed
   ansible.builtin.blockinfile:
-    path: "{{ home_path }}/.zshrc"
+    path: "{{ home_path }}/.bashrc"
     block: "export GPG_TTY=$(tty)"
     insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present

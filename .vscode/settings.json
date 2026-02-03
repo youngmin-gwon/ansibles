@@ -42,5 +42,6 @@
                 "xcodes",
                 "xcodesorg",
                 "yazi"
-        ]
+        ],
+        "idf.pythonInstallPath": "/opt/homebrew/bin/python3"
 }

@@ -31,27 +31,27 @@
   become: false
   tags: unix
 
-- name: Add aliases in zsh configuration
+- name: Add aliases in bash configuration
   ansible.builtin.lineinfile:
-    path: "{{ dotfiles_directory_path }}/zsh/aliases.zsh"
+    path: "{{ dotfiles_directory_path }}/bash/aliases.bash"
     line: alias vi='hx'
     insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
   become: false
   tags: unix
 
-- name: Add configurations in zsh configuration
+- name: Add configurations in bash configuration
   ansible.builtin.lineinfile:
-    path: "{{ dotfiles_directory_path }}/zsh/configs.zsh"
+    path: "{{ dotfiles_directory_path }}/bash/configs.bash"
     line: export VISUAL=hx
     insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
   become: false
   tags: unix
 
-- name: Add configurations in zsh configuration
+- name: Add configurations in bash configuration
   ansible.builtin.lineinfile:
-    path: "{{ dotfiles_directory_path }}/zsh/configs.zsh"
+    path: "{{ dotfiles_directory_path }}/bash/configs.bash"
     line: export EDITOR=hx
     insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
