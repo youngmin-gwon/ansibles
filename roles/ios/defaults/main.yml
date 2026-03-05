@@ -1,2 +1,0 @@
----
-ios_xcode_preference_directory: "{{ home_path }}/Library/Developer/Xcode/UserData"

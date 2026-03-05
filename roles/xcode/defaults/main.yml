@@ -1,0 +1,3 @@
+---
+xcode_userdata_directory: "{{ home_path }}/Library/Developer/Xcode/UserData"
+xcode_bundle_identifier_prefix: "dev.youngmin"

@@ -1,0 +1,80 @@
+---
+- name: Ensure Xcode license is accepted
+  ansible.builtin.command: xcodebuild -license accept
+  when: ansible_os_family == "Darwin"
+  changed_when: false
+  become: true
+  tags: macos
+
+- name: Ensure Xcode UserData directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+  loop:
+    - "{{ xcode_userdata_directory }}"
+    - "{{ xcode_userdata_directory }}/KeyBindings"
+    - "{{ xcode_userdata_directory }}/FontAndColorThemes"
+  become: false
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Ensure JetBrains Mono Nerd Font Mono is installed
+  community.general.homebrew_cask:
+    name: font-jetbrains-mono-nerd-font
+    state: present
+  become: false
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Link static Xcode config files
+  ansible.builtin.file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+    mode: "0644"
+    force: true
+    follow: false
+  with_items:
+    - src: "{{ role_path }}/files/github_light_theme.xml"
+      dest: "{{ xcode_userdata_directory }}/FontAndColorThemes/Github (Light).xccolortheme"
+    - src: "{{ role_path }}/files/github_dark_theme.xml"
+      dest: "{{ xcode_userdata_directory }}/FontAndColorThemes/Github (Dark).xccolortheme"
+    - src: "{{ role_path }}/files/custom_keybinding.xml"
+      dest: "{{ xcode_userdata_directory }}/KeyBindings/Default.idekeybindings"
+  become: false
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Set Xcode preferences
+  # Settings are stored in ~/Library/Preferences/com.apple.dt.Xcode.plist
+  community.general.osx_defaults:
+    domain: com.apple.dt.Xcode
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+    state: present
+  loop:
+    - { key: "XCFontAndColorCurrentTheme", type: "string", value: "Github (Dark).xccolortheme" }
+    - { key: "XCFontAndColorCurrentLightTheme", type: "string", value: "Github (Light).xccolortheme" }
+    - { key: "XCFontAndColorCurrentDarkTheme", type: "string", value: "Github (Dark).xccolortheme" }
+    - { key: "KeyBindingsMode", type: "string", value: "Vi" }
+  become: false
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Set Xcode new project template options
+  # IDETemplateOptions is a dict value; must be set as a whole via defaults write
+  ansible.builtin.command: >
+    defaults write com.apple.dt.Xcode IDETemplateOptions
+    -dict
+    bundleIdentifierPrefix "{{ xcode_bundle_identifier_prefix }}"
+    hostInCloudKit -bool NO
+    storageType None
+    testingSystem "Swift Testing"
+  become: false
+  changed_when: false
+  when: ansible_os_family == "Darwin"
+  tags: macos
