@@ -21,9 +21,21 @@
   when: ansible_os_family == "Darwin"
   tags: macos
 
-- name: Ensure JetBrains Mono Nerd Font Mono is installed
+- name: Ensure Swift tooling is installed
+  community.general.homebrew:
+    name:
+      - swiftlint
+      - swiftformat
+    state: present
+  become: false
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Ensure JetBrains Mono Nerd Font Mono and SwiftFormat extension are installed
   community.general.homebrew_cask:
-    name: font-jetbrains-mono-nerd-font
+    name:
+      - font-jetbrains-mono-nerd-font
+      - swiftformat-for-xcode
     state: present
   become: false
   when: ansible_os_family == "Darwin"
@@ -44,6 +56,10 @@
       dest: "{{ xcode_userdata_directory }}/FontAndColorThemes/Github (Dark).xccolortheme"
     - src: "{{ role_path }}/files/custom_keybinding.xml"
       dest: "{{ xcode_userdata_directory }}/KeyBindings/Default.idekeybindings"
+    - src: "{{ role_path }}/files/.swiftlint.yml"
+      dest: "{{ home_path }}/.swiftlint.yml"
+    - src: "{{ role_path }}/files/.swiftformat"
+      dest: "{{ home_path }}/.swiftformat"
   become: false
   when: ansible_os_family == "Darwin"
   tags: macos
@@ -57,9 +73,21 @@
     value: "{{ item.value }}"
     state: present
   loop:
-    - { key: "XCFontAndColorCurrentTheme", type: "string", value: "Github (Dark).xccolortheme" }
-    - { key: "XCFontAndColorCurrentLightTheme", type: "string", value: "Github (Light).xccolortheme" }
-    - { key: "XCFontAndColorCurrentDarkTheme", type: "string", value: "Github (Dark).xccolortheme" }
+    - {
+        key: "XCFontAndColorCurrentTheme",
+        type: "string",
+        value: "Github (Dark).xccolortheme",
+      }
+    - {
+        key: "XCFontAndColorCurrentLightTheme",
+        type: "string",
+        value: "Github (Light).xccolortheme",
+      }
+    - {
+        key: "XCFontAndColorCurrentDarkTheme",
+        type: "string",
+        value: "Github (Dark).xccolortheme",
+      }
     - { key: "KeyBindingsMode", type: "string", value: "Vi" }
   become: false
   when: ansible_os_family == "Darwin"

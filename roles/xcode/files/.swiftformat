@@ -1,0 +1,36 @@
+--swiftversion 6.0
+
+# Indentation
+--indent 4
+--indentcase false
+--tabwidth 4
+--smarttabs enabled
+
+# Line breaks
+--linebreaks lf
+--maxwidth 130
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--closingparen balanced
+
+# Spacing
+--operatorfunc spaced
+--nospaceoperators ..<,...
+--ranges spaced
+
+# Braces & parentheses
+--allman false
+--elseposition same-line
+--guardelse auto
+--emptybraces no-space
+
+# Imports
+--importgrouping testable-bottom
+
+# Miscellaneous
+--trimwhitespace always
+--semicolons never
+--commas always
+--self insert
+--selfrequired
