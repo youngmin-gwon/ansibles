@@ -18,7 +18,6 @@
   when: ansible_os_family == "Darwin"
   tags: macos
 
-
 - name: Find Android Studio installation directories
   ansible.builtin.find:
     paths: "{{ android_studio_base_path }}"
