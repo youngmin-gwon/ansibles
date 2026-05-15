@@ -47,7 +47,7 @@
   tags: macos
 
 - name: Get JAVA_HOME from asdf
-  ansible.builtin.shell: "asdf where java"
+  ansible.builtin.command: "asdf where java"
   register: asdf_java_home
   changed_when: false
   failed_when: false
