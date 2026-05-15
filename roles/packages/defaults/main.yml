@@ -34,6 +34,7 @@ packages_mac_only_packages:
   - xcodesorg/made/xcodes
   - mermaid-cli
   - chafa
+  - bufbuild/buf/buf
 
 packages_mac_gui_packages:
   - figma
