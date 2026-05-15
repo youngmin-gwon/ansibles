@@ -3,3 +3,5 @@
 # related to personal information
 roles/git/files/config
 roles/*/vars/main.yml
+roles/android/files/options/window.state.xml
+roles/android/files/options/ide.general.xml
