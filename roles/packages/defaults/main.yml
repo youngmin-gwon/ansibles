@@ -35,6 +35,8 @@ packages_mac_only_packages:
   - mermaid-cli
   - chafa
   - bufbuild/buf/buf
+  - fop
+  - unixodbc
 
 packages_mac_gui_packages:
   - figma
