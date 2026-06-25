@@ -1,143 +1,92 @@
 ---
-- name: Ensure Android Command Line Tools in macOS
+- name: Uninstall legacy android-commandlinetools cask
   community.general.homebrew_cask:
-    name:
-      - android-commandlinetools
-      - android-studio-preview@canary
-    state: present
-  when: ansible_os_family == "Darwin"
+    name: android-commandlinetools
+    state: absent
   become: false
   tags: macos
 
-- name: Find sdkmanager path
-  ansible.builtin.command: which sdkmanager
-  register: sdkmanager_path_result
+- name: Check if android-studio-preview@canary is installed
+  ansible.builtin.command: brew list --cask android-studio-preview@canary
+  register: android_studio_preview_check
   changed_when: false
   failed_when: false
-  when: ansible_os_family == "Darwin"
+  become: false
   tags: macos
 
-- name: Set Android SDK Root fact
+- name: Install android-studio-preview@canary Cask
+  ansible.builtin.command: brew install --cask android-studio-preview@canary
+  when: android_studio_preview_check.rc != 0
+  become: false
+  tags: macos
+
+- name: Determine Android CLI architecture URL
   ansible.builtin.set_fact:
-    android_sdk_root: "{{ sdkmanager_path_result.stdout | regex_replace('/cmdline-tools/latest/bin/sdkmanager$', '') }}"
-  when:
-    - ansible_os_family == "Darwin"
-    - sdkmanager_path_result.stdout is defined and sdkmanager_path_result.stdout != ""
+    android_cli_url: "https://dl.google.com/android/cli/latest/{{ 'darwin_arm64' if ansible_architecture == 'arm64' else 'darwin_x86_64' }}/android"
   tags: macos
 
-- name: Fail if Android SDK Root could not be determined
-  ansible.builtin.fail:
-    msg: "Could not determine ANDROID_SDK_ROOT. Is Android Command Line Tools installed and in PATH?"
-  when:
-    - ansible_os_family == "Darwin"
-    - android_sdk_root is not defined or android_sdk_root == ""
+- name: Ensure ~/.local/bin exists
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/.local/bin"
+    state: directory
+    mode: "0755"
   tags: macos
 
-- name: Define required Android SDK directories
-  ansible.builtin.set_fact:
-    android_sdk_directories:
-      - name: "platform-tools"
-        sdkmanager_arg: "platform-tools"
-      - name: "platforms"
-        sdkmanager_arg: "platforms;android-36"
-      - name: "build-tools"
-        sdkmanager_arg: "build-tools;36.1.0"
-      - name: "system-images"
-        sdkmanager_arg: "system-images;android-Baklava;google_apis_ps16k;arm64-v8a"
+- name: Download Android CLI binary
+  ansible.builtin.get_url:
+    url: "{{ android_cli_url }}"
+    dest: "{{ ansible_user_dir }}/.local/bin/android"
+    mode: "0755"
   tags: macos
 
-- name: Get JAVA_HOME from asdf
-  ansible.builtin.command: "asdf where java"
-  register: asdf_java_home
-  changed_when: false
-  failed_when: false
-  environment:
-    PATH: "/opt/homebrew/bin:{{ ansible_env.HOME }}/.asdf/shims:{{ ansible_env.PATH }}"
-  tags: macos
-
-- name: Fail if Java is not installed via asdf
-  ansible.builtin.fail:
-    msg: "Java is not installed via asdf. Please run the 'java' role first."
-  when: asdf_java_home.rc != 0 or asdf_java_home.stdout == ""
-  tags: macos
-
-- name: Set JAVA_HOME fact
-  ansible.builtin.set_fact:
-    java_home: "{{ asdf_java_home.stdout | trim }}"
+- name: Initialize Android CLI environment
+  ansible.builtin.command: "{{ ansible_user_dir }}/.local/bin/android init"
+  register: android_cli_init
+  changed_when: "'Initialized' in android_cli_init.stdout"
   tags: macos
 
 - name: Check currently installed Android SDK components
-  ansible.builtin.command: "{{ sdkmanager_path_result.stdout }} --list"
+  ansible.builtin.command: "{{ ansible_user_dir }}/.local/bin/android sdk list"
   register: sdk_list_output
-  changed_when: false # 이 명령은 상태를 변경하지 않음
-  failed_when: sdkmanager_path_result.stdout == "" or sdk_list_output.rc != 0
-  when:
-    - sdkmanager_path_result.stdout is defined and sdkmanager_path_result.stdout != "" # sdkmanager 경로가 있을 때만 실행
-  environment:
-    ANDROID_SDK_ROOT: "{{ android_sdk_root }}"
-    JAVA_HOME: "{{ java_home }}"
+  changed_when: false
+  failed_when: false
   tags: macos
 
 - name: Install missing Android SDK components
-  ansible.builtin.command: '{{ sdkmanager_path_result.stdout }} --install "{{ item.sdkmanager_arg }}"'
-  args:
-    stdin: "y\n"
+  ansible.builtin.command: '{{ ansible_user_dir }}/.local/bin/android sdk install "{{ item.sdk_package }}"'
   when:
-    - ansible_os_family == "Darwin"
-    - sdkmanager_path_result.stdout is defined and sdkmanager_path_result.stdout != ""
     - sdk_list_output.stdout is defined
-    - item.sdkmanager_arg not in sdk_list_output.stdout
-  with_items: "{{ android_sdk_directories }}"
-  register: sdkmanager_install
-  environment:
-    ANDROID_SDK_ROOT: "{{ android_sdk_root }}"
-    JAVA_HOME: "{{ java_home }}"
-  failed_when:
-    - sdkmanager_install.rc != 0
-    - "'Failed to find package' not in sdkmanager_install.stderr"
-  changed_when: sdkmanager_install.rc == 0
+    - item.sdk_package not in sdk_list_output.stdout
+  loop:
+    - sdk_package: "platform-tools"
+    - sdk_package: "platforms/android-36"
+    - sdk_package: "build-tools/36.1.0"
+    - sdk_package: "system-images/android-36.1/google_apis_ps16k/arm64-v8a"
   tags: macos
 
-- name: Check if Android SDK licenses are already accepted
-  ansible.builtin.command: "{{ sdkmanager_path_result.stdout }} --licenses"
-  args:
-    stdin: "n\n" # 'n'을 입력하여 라이선스 동의를 하지 않고 상태만 확인
-  register: sdkmanager_licenses_check
-  failed_when: false # 명령이 실패하더라도 다음 태스크로 진행
-  changed_when: false
-  environment:
-    ANDROID_SDK_ROOT: "{{ android_sdk_root }}"
-    JAVA_HOME: "{{ java_home }}"
+- name: Ensure shell configuration files exist
+  ansible.builtin.copy:
+    content: ""
+    dest: "{{ home_path }}/{{ item }}"
+    force: false
+    mode: "0644"
+  loop:
+    - .bashrc
+    - .zshrc
   tags: macos
 
-- name: Agree on Android licenses
-  ansible.builtin.shell: |
-    "{{ sdkmanager_path_result.stdout }}" --licenses <<EOF
-    y
-    y
-    y
-    y
-    y
-    y
-    EOF
-  when: "'All SDK package licenses accepted.' not in sdkmanager_licenses_check.stdout"
-  changed_when: true
-  become: false
-  environment:
-    ANDROID_SDK_ROOT: "{{ android_sdk_root }}"
-    JAVA_HOME: "{{ java_home }}"
-  tags: macos
-
-- name: Add Android Command Line Tools to PATH
+- name: Ensure Android SDK paths are in shell configurations
   ansible.builtin.blockinfile:
-    path: "{{ home_path }}/.bashrc"
+    path: "{{ home_path }}/{{ item }}"
     block: |
-      export ANDROID_SDK_ROOT={{ android_sdk_root }}
-      export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
-      export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
+      export ANDROID_SDK_ROOT="{{ android_sdk_root }}"
+      export PATH="$HOME/.local/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH"
     insertbefore: "^{{ custom_config_end_delimiter }}"
     state: present
     marker: "# --- {mark} Android SDK ---"
-  when: ansible_os_family == "Darwin"
+  loop:
+    - .bashrc
+    - .zshrc
   become: false
   tags: macos
+  notify: Reload shell

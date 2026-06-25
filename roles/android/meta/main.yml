@@ -1,4 +1,2 @@
 ---
-dependencies:
-  - role: language_manager
-  - role: java
+dependencies: []

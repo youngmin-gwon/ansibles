@@ -2,16 +2,19 @@
 - name: Set OS-specific variables
   ansible.builtin.set_fact:
     android_sdk_path: "{{ os_config[ansible_system].android_sdk_path }}"
+    android_sdk_root: "{{ os_config[ansible_system].android_sdk_path }}"
     android_studio_base_path: "{{ os_config[ansible_system].android_studio_base_path }}"
   vars:
     os_config:
       Darwin:
-        android_sdk_path: "/opt/homebrew/share/android-commandlinetools"
+        android_sdk_path: "{{ ansible_user_dir }}/Library/Android/sdk"
         android_studio_base_path: "{{ ansible_user_dir }}/Library/Application Support/Google"
       Linux:
-        android_sdk_path: "/opt/homebrew/share/android-commandlinetools"
+        android_sdk_path: "{{ ansible_user_dir }}/Android/Sdk"
         android_studio_base_path: "{{ ansible_user_dir }}/.config/Google"
-  tags: unix
+  tags:
+    - macos
+    - unix
 
 - name: Ensure Android tools in macOS
   ansible.builtin.include_tasks: macos.yml
