@@ -5,3 +5,5 @@
 .bundle
 node_modules
 Thumbs.db
+
+**/.claude/settings.local.json
