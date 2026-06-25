@@ -1,4 +1,80 @@
 ---
+- name: Check current active developer directory
+  ansible.builtin.command: xcode-select -p
+  register: current_xcode_select_path
+  become: false
+  changed_when: false
+  failed_when: false
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Check if xcodes CLI is installed
+  ansible.builtin.command: which xcodes
+  register: xcodes_check
+  become: false
+  changed_when: false
+  failed_when: false
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Ensure xcodes CLI is installed
+  ansible.builtin.command: brew install xcodesorg/made/xcodes
+  register: brew_xcodes_install
+  changed_when: >
+    'Installing' in brew_xcodes_install.stdout or
+    'Poured' in brew_xcodes_install.stdout or
+    '✔︎' in brew_xcodes_install.stdout
+  become: false
+  when:
+    - ansible_os_family == "Darwin"
+    - xcodes_check.rc != 0
+  tags: macos
+
+- name: Find installed Xcode applications
+  ansible.builtin.find:
+    paths: /Applications
+    patterns: ["Xcode.app", "Xcode-*.app", "Xcode_*.app"]
+    file_type: directory
+  register: found_xcode_apps
+  become: false
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Install Xcode via App Store (mas) if not found
+  community.general.mas:
+    id: 497799835
+    state: present
+  become: false
+  when:
+    - ansible_os_family == "Darwin"
+    - found_xcode_apps.matched == 0
+  tags: macos
+
+- name: Set latest Xcode path fact (when Xcode was already installed)
+  ansible.builtin.set_fact:
+    latest_xcode_path: "{{ found_xcode_apps.files | map(attribute='path') | list | sort | last }}"
+  when:
+    - ansible_os_family == "Darwin"
+    - found_xcode_apps.matched > 0
+  tags: macos
+
+- name: Set latest Xcode path fact (when Xcode was newly installed via mas)
+  ansible.builtin.set_fact:
+    latest_xcode_path: "/Applications/Xcode.app"
+  when:
+    - ansible_os_family == "Darwin"
+    - found_xcode_apps.matched == 0
+  tags: macos
+
+- name: Ensure Xcode developer directory is set to the latest Xcode
+  ansible.builtin.command: "xcode-select -s {{ latest_xcode_path }}/Contents/Developer"
+  become: true
+  when:
+    - ansible_os_family == "Darwin"
+    - current_xcode_select_path.stdout | default('') != (latest_xcode_path ~ '/Contents/Developer')
+  tags: macos
+
+
 - name: Ensure Xcode license is accepted
   ansible.builtin.command: xcodebuild -license accept
   when: ansible_os_family == "Darwin"
@@ -22,21 +98,23 @@
   tags: macos
 
 - name: Ensure Swift tooling is installed
-  community.general.homebrew:
-    name:
-      - swiftlint
-      - swiftformat
-    state: present
+  ansible.builtin.command: brew install swiftlint swiftformat xcodegen
+  register: brew_formula_install
+  changed_when: >
+    'Installing' in brew_formula_install.stdout or
+    'Poured' in brew_formula_install.stdout or
+    '✔︎' in brew_formula_install.stdout
   become: false
   when: ansible_os_family == "Darwin"
   tags: macos
 
 - name: Ensure JetBrains Mono Nerd Font Mono and SwiftFormat extension are installed
-  community.general.homebrew_cask:
-    name:
-      - font-jetbrains-mono-nerd-font
-      - swiftformat-for-xcode
-    state: present
+  ansible.builtin.command: brew install --cask font-jetbrains-mono-nerd-font swiftformat-for-xcode
+  register: brew_cask_install
+  changed_when: >
+    'Installing' in brew_cask_install.stdout or
+    'Downloading' in brew_cask_install.stdout or
+    'Success' in brew_cask_install.stdout
   become: false
   when: ansible_os_family == "Darwin"
   tags: macos
@@ -105,4 +183,21 @@
   become: false
   changed_when: false
   when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Enable SwiftFormat for Xcode extension
+  ansible.builtin.command: pluginkit -e use -i com.charcoaldesign.SwiftFormat-for-Xcode.SourceEditorExtension
+  become: false
+  when: ansible_os_family == "Darwin"
+  changed_when: false
+  tags: macos
+
+- name: Set keyboard shortcut for SwiftFormat in Xcode
+  # Map 'Editor -> SwiftFormat -> Format File' to Cmd+S (@s)
+  ansible.builtin.shell: >
+    defaults write com.apple.dt.Xcode NSUserKeyEquivalents
+    -dict-add "Editor$(printf '\u001b')SwiftFormat$(printf '\u001b')Format File" "@s"
+  become: false
+  when: ansible_os_family == "Darwin"
+  changed_when: false
   tags: macos
