@@ -1,6 +1,9 @@
 ---
 - name: Set up macOS environment
   hosts: macos
+  environment:
+    HOMEBREW_NO_REQUIRE_TAP_TRUST: "1"
+    HOMEBREW_NO_ENV_HINTS: "1"
   tasks:
     - name: Configure OS settings
       ansible.builtin.include_role:
@@ -15,9 +18,9 @@
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
       ansible.builtin.meta: flush_handlers
 
-    - name: Configure bash
+    - name: Configure zsh
       ansible.builtin.include_role:
-        name: bash
+        name: zsh
       tags: macos
 
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
@@ -95,9 +98,9 @@
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
       ansible.builtin.meta: flush_handlers
 
-    - name: Configure vscode settings
+    - name: Configure antigravity settings
       ansible.builtin.include_role:
-        name: vscode
+        name: antigravity
       tags: macos
 
     - name: Force all notified handlers to run at this point, not waiting for normal sync points
