@@ -4,13 +4,6 @@
     name: package_manager
   tags: macos
 
-- name: Update Homebrew
-  community.general.homebrew:
-    update_homebrew: false
-  when: ansible_os_family == "Darwin"
-  become: false
-  tags: macos
-
 - name: Install Homebrew packages
   community.general.homebrew:
     state: present
