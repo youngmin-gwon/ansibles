@@ -1,0 +1,28 @@
+---
+- name: Configure Antigravity in macOS
+  ansible.builtin.include_tasks: macos.yml
+  when: ansible_os_family == "Darwin"
+  tags: macos
+
+- name: Get list of installed Antigravity IDE extensions
+  ansible.builtin.command:
+    cmd: antigravity-ide --list-extensions
+  register: installed_extensions
+  changed_when: false
+  tags:
+    - macos
+    - unix
+
+- name: Install missing extensions
+  ansible.builtin.command:
+    cmd: antigravity-ide --install-extension "{{ item }}"
+  loop: "{{ antigravity_extensions | difference(installed_extensions.stdout_lines) }}"
+  when: antigravity_extensions | difference(installed_extensions.stdout_lines) | length > 0
+  register: install_result
+  changed_when: >
+    install_result.results is defined and
+    install_result.results | selectattr('stdout', 'defined') | selectattr('stdout', 'search', 'was successfully installed') | list | length > 0
+  failed_when: false
+  tags:
+    - macos
+    - unix
