@@ -192,12 +192,3 @@
   changed_when: false
   tags: macos
 
-- name: Set keyboard shortcut for SwiftFormat in Xcode
-  # Map 'Editor -> SwiftFormat -> Format File' to Cmd+S (@s)
-  ansible.builtin.shell: >
-    defaults write com.apple.dt.Xcode NSUserKeyEquivalents
-    -dict-add "Editor$(printf '\u001b')SwiftFormat$(printf '\u001b')Format File" "@s"
-  become: false
-  when: ansible_os_family == "Darwin"
-  changed_when: false
-  tags: macos

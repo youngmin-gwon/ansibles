@@ -127,5 +127,15 @@
 		<key>Version</key>
 		<integer>3</integer>
 	</dict>
+	<key>Text Key Bindings</key>
+	<dict>
+		<key>Key Bindings</key>
+		<dict>
+			<key>^.</key>
+			<string>complete:</string>
+		</dict>
+		<key>Version</key>
+		<integer>3</integer>
+	</dict>
 </dict>
 </plist>
