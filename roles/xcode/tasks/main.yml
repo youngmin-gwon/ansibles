@@ -108,8 +108,8 @@
   when: ansible_os_family == "Darwin"
   tags: macos
 
-- name: Ensure JetBrains Mono Nerd Font Mono and SwiftFormat extension are installed
-  ansible.builtin.command: brew install --cask font-jetbrains-mono-nerd-font swiftformat-for-xcode
+- name: Ensure JetBrains Mono Nerd Font Mono is installed
+  ansible.builtin.command: brew install --cask font-jetbrains-mono-nerd-font
   register: brew_cask_install
   changed_when: >
     'Installing' in brew_cask_install.stdout or
@@ -167,6 +167,7 @@
         value: "Github (Dark).xccolortheme",
       }
     - { key: "KeyBindingsMode", type: "string", value: "Vi" }
+    - { key: "DVTTextLineNumbersStyle", type: "int", value: "1" }
   become: false
   when: ansible_os_family == "Darwin"
   tags: macos
@@ -185,10 +186,4 @@
   when: ansible_os_family == "Darwin"
   tags: macos
 
-- name: Enable SwiftFormat for Xcode extension
-  ansible.builtin.command: pluginkit -e use -i com.charcoaldesign.SwiftFormat-for-Xcode.SourceEditorExtension
-  become: false
-  when: ansible_os_family == "Darwin"
-  changed_when: false
-  tags: macos
 
